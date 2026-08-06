@@ -1,26 +1,203 @@
 @import "tailwindcss";
 
+/* The accent is a runtime variable, not a build-time token: the shell can
+   re-theme the whole app by setting --forte-accent on the root element.
+   Everything else below is fixed. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --forte-accent: #dccdfb;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* ---- ink & paper ---------------------------------------------------- */
+  --color-ink: #161513;
+  --color-ink-soft: #3a352c;
+  --color-ink-raised: #232220;
+  --color-paper: #fdfbea;
+  --color-surface: #fffef6;
+  --color-surface-sunk: #fbf6ea;
+  --color-muted: #5a594f;
+  --color-faint: #a3a294;
+  --color-line: #cbcabf;
+  --color-track: #eeecdd;
+
+  /* text sitting on an ink background */
+  --color-on-ink: #fdfbea;
+  --color-on-ink-strong: #e8e6d8;
+  --color-on-ink-muted: #b8b6aa;
+  --color-on-ink-faint: #9a998f;
+  --color-on-ink-dim: #6b6a62;
+
+  /* ---- accents -------------------------------------------------------- */
+  --color-accent: var(--forte-accent);
+  --color-sage: #dfe3d3;
+  --color-amber: #f6a64b;
+  --color-sky: #c9d7f0;
+  --color-good: #2f6b3a;
+  --color-warn: #b5701f;
+
+  /* ---- radii ---------------------------------------------------------- */
+  --radius-hair: 2px;
+  --radius-xs: 3px;
+  --radius-sm: 7px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 18px;
+  --radius-2xl: 22px;
+  --radius-3xl: 24px;
+  --radius-4xl: 26px;
+  --radius-pill: 999px;
+
+  /* ---- the offset-block shadows that define this design language ------- */
+  --shadow-hard-xs: 2px 2px 0 rgb(22 21 19 / 0.9);
+  --shadow-hard-sm: 3px 3px 0 rgb(22 21 19 / 0.9);
+  --shadow-hard-md: 4px 4px 0 rgb(22 21 19 / 0.9);
+  --shadow-hard: 5px 5px 0 rgb(22 21 19 / 0.9);
+  --shadow-hard-lg: 6px 6px 0 rgb(22 21 19 / 0.9);
+  --shadow-hard-xl: 9px 9px 0 rgb(22 21 19 / 0.9);
+  --shadow-soft: 6px 6px 0 rgb(22 21 19 / 0.1);
+  --shadow-soft-sm: 5px 5px 0 rgb(22 21 19 / 0.1);
+  --shadow-drop: 0 3px 0 rgb(22 21 19 / 0.9);
+  --shadow-accent-sm: 3px 3px 0 var(--forte-accent);
+  --shadow-accent-md: 5px 5px 0 var(--forte-accent);
+  --shadow-accent: 7px 7px 0 var(--forte-accent);
+  --shadow-amber-sm: 3px 3px 0 #f6a64b;
+  --shadow-amber: 6px 6px 0 #f6a64b;
+  --shadow-lift: 0 2px 10px rgb(22 21 19 / 0.06);
+  --shadow-bar: 0 -6px 24px rgb(22 21 19 / 0.18);
+
+  /* ---- type ----------------------------------------------------------- */
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
+
+  /* ---- motion --------------------------------------------------------- */
+  --animate-pulse-soft: pulseSoft 1.6s ease-in-out infinite;
+  --animate-floaty: floaty 3.6s ease-in-out infinite;
+  --animate-bob: bob 2.4s ease-in-out infinite;
+  --animate-rise: rise 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-fade-in: fadeIn 0.3s ease both;
+
+  /* ---- patterns ------------------------------------------------------- */
+  --background-image-dot-grid: radial-gradient(
+    circle at 1px 1px,
+    rgb(22 21 19 / 0.05) 1px,
+    transparent 0
+  );
+  --background-image-dash-rail: repeating-linear-gradient(
+    180deg,
+    #cbcabf 0 5px,
+    transparent 5px 10px
+  );
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Every border in this design is 1.5px. Not 1, not 2. */
+@utility border-hair {
+  border-width: 1.5px;
+}
+@utility border-t-hair {
+  border-top-width: 1.5px;
+}
+
+/* The signature press: the card slides into its own shadow on hover. */
+@utility press {
+  transition:
+    transform 0.14s ease,
+    box-shadow 0.14s ease;
+  &:hover {
+    transform: translate(2px, 2px);
+  }
+  &:active {
+    transform: translate(3px, 3px);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  button {
+    font-family: inherit;
+    cursor: pointer;
+    color: inherit;
+  }
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+    color: inherit;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(22 21 19 / 0.16);
+    border-radius: 999px;
+    border: 3px solid var(--color-paper);
+  }
+}
+
+/* iOS Safari zooms any control under 16px on focus. */
+@media (max-width: 640px) {
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+@keyframes pulseSoft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.28;
+  }
+}
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(-4deg);
+  }
+}
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

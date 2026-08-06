@@ -42,3 +42,6 @@ next-env.d.ts
 
 # design reference runtime (generated, not needed)
 .design/support.js
+
+# claude code local
+.claude/launch.json
