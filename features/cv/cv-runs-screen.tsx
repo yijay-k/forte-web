@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Chip } from "@/components/ui/chip";
+import { EntitledLink } from "@/features/billing/entitled-link";
 import { getCvRuns } from "@/lib/data/cv-runs";
 import { CvRunRow } from "./cv-run-row";
 
@@ -23,12 +23,12 @@ export function CvRunsScreen() {
             Every posting you paste gets its own score and its own coverage.
           </p>
         </div>
-        <Link
+        <EntitledLink
           href="/cv/new"
           className="press inline-flex items-center gap-2.25 rounded-pill border-hair border-ink bg-accent px-7 py-3.75 text-[15px] font-semibold shadow-hard-md hover:shadow-hard-xs"
         >
           + New posting
-        </Link>
+        </EntitledLink>
       </div>
 
       <div className="rounded-3xl border-hair border-ink bg-surface px-6.5 py-2 shadow-soft">

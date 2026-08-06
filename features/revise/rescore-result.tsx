@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { EntitledLink } from "@/features/billing/entitled-link";
 import { RESCORE_DELTAS } from "@/lib/data/claims";
 import { CURRENT_REP } from "@/lib/data/progress";
 
@@ -35,12 +35,12 @@ export function RescoreResult() {
         honest test of whether the fix stuck.
       </p>
 
-      <Link
+      <EntitledLink
         href="/interview"
         className="inline-block rounded-pill border-hair border-accent bg-accent px-7.5 py-3.75 text-[15px] font-semibold text-ink"
       >
         Re-run the same interview →
-      </Link>
+      </EntitledLink>
     </div>
   );
 }

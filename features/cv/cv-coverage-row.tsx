@@ -1,6 +1,6 @@
 import { cn } from "@/utils/cn";
 import { Chip } from "@/components/ui/chip";
-import { VERDICT_ROW } from "@/constants/scoring";
+import { VERDICT_CHIP, VERDICT_ROW } from "@/constants/scoring";
 import type { CoverageRow as Row } from "@/types/cv";
 
 /** One requirement from the posting, with the CV line that earns it — or doesn't. */
@@ -11,7 +11,7 @@ export function CvCoverageRow({ row }: { row: Row }) {
         <div className="min-w-50 flex-1 text-sm leading-snug font-semibold">
           {row.requirement}
         </div>
-        <Chip tone={row.kind}>{row.status}</Chip>
+        <Chip tone={VERDICT_CHIP[row.kind]}>{row.status}</Chip>
       </div>
       <p className="mt-2 text-[12.5px] leading-relaxed text-muted">{row.evidence}</p>
     </li>

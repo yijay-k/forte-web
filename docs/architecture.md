@@ -45,158 +45,243 @@ real URLs — linkable, back-button-correct, and server-renderable.
 | `/interview` | `interview` (all 3 stages) | one route — a live session is a session, not a page |
 | `/revise` | `revise` | claim resolution |
 | `/progress` | `progress` | loop history |
+| `/account` | `screen: profile`, `acctTab: profile` | entitlements, CV on file, history |
+| `/account/settings` | `screen: profile`, `acctTab: settings` | sign-in, notifications, billing, data |
 
 Interview stages stay internal state deliberately: a running clock and an in-flight
 session must not survive a URL change, and deep-linking to `/interview/live` with no
-session would be meaningless.
+session would be meaningless. The account tabs went the other way — they hold
+substantial, linkable content, so they are real routes.
+
+### Two gates, deliberately separate
+
+| Gate | Where | Behaviour |
+| --- | --- | --- |
+| **Account** — is the user signed in? | `features/auth/use-gate-guard.ts` | Private routes (`/`, `/cv`, `/interview`, `/revise`, `/progress`, `/account/**`) redirect to `/cv/new`. Sidebar items open the unlock wall instead of navigating. |
+| **Entitlement** — do they have an application left? | `features/billing/entitled-link.tsx` | Actions that *spend* an application open the plans modal instead of proceeding. Never blocks reading; everything already scored stays readable forever. |
+
+The paywall sits at the point of spend, not at the door — which is why the free
+report is fully readable and only *new* applications are gated.
 
 ## Tree
 
+Generated from the working tree; `[c]` marks a client component.
+
 ```
 app/
-  layout.tsx                        [s] fonts, metadata, globals.css
-  globals.css                       Tailwind v4 @theme token block
-  not-found.tsx                     [s]
-  icon.svg
   (app)/
-    layout.tsx                      [s] wraps children in AppShell + AuthProvider
-    page.tsx                        [s] → HomeScreen
-    cv/page.tsx                     [s] → CvRunsScreen
-    cv/new/page.tsx                 [s] → CvUploadScreen
-    cv/[runId]/page.tsx             [s] → CvResultsScreen
-    interview/page.tsx              [s] → InterviewScreen
-    revise/page.tsx                 [s] → ReviseScreen
-    progress/page.tsx               [s] → ProgressScreen
-
+    account/
+      page.tsx
+      settings/
+        page.tsx
+    cv/
+      [runId]/
+        page.tsx
+      new/
+        page.tsx
+      page.tsx
+    interview/
+      page.tsx
+    layout.tsx
+    page.tsx
+    progress/
+      page.tsx
+    revise/
+      page.tsx
+  globals.css
+  layout.tsx
+  not-found.tsx
 components/
   brand/
-    forte-mark.tsx                  [s] 3-bar logo + Newsreader wordmark
+    forte-mark.tsx
   layout/
-    app-shell.tsx                   [c] flex row; owns the <main> scroll container
-    sidebar.tsx                     [c] left rail composition
-    sidebar-nav.tsx                 [c] 5 nav items, lock pips, revise badge
-    sidebar-loop-rail.tsx           [c] "the loop · rep N" dotted rail
-    sidebar-footer.tsx              [c] readiness card + account, or unlock CTA
-    flow-stepper.tsx                [c] 4-step horizontal stepper, derived from pathname
+    app-shell.tsx [c]
+    flow-stepper.tsx [c]
+    scroll-container.tsx [c]
+    sidebar-footer.tsx [c]
+    sidebar-loop-rail.tsx
+    sidebar-nav.tsx [c]
+    sidebar-plan-card.tsx [c]
+    sidebar-user-menu.tsx [c]
+    sidebar.tsx [c]
   ui/
-    paper-card.tsx                  [s] the bordered card — tone × shadow variants
-    pill-button.tsx                 [c] 999px button — ink/accent/paper/ghost, press effect
-    chip.tsx                        [s] status pill — ok/weak/miss/neutral/accent/amber
-    stat-card.tsx                   [s] label + Newsreader numeral + delta + sparkline
-    sparkline.tsx                   [s] inline SVG polyline
-    score-dial.tsx                  [s] 132px SVG donut + centred numeral
-    progress-bar.tsx                [s] track + fill
-    section-heading.tsx             [s] uppercase eyebrow + optional right action
-    toggle.tsx                      [c] track/knob switch
-    sticker.tsx                     [s] rotated amber floating label
-    modal.tsx                       [c] portal, escape, scroll lock
-    empty-state.tsx                 [s]
-
+    chip.tsx
+    icon-list-row.tsx
+    modal.tsx [c]
+    paper-card.tsx
+    pill-button.tsx [c]
+    progress-bar.tsx
+    score-dial.tsx
+    section-heading.tsx
+    section-rule.tsx
+    setting-row.tsx [c]
+    sparkline.tsx
+    stat-card.tsx
+    sticker.tsx
+    toggle.tsx [c]
+constants/
+  navigation.ts
+  scoring.ts
 features/
+  account/
+    account-header.tsx [c]
+    account-screen.tsx
+    account-tabs.tsx [c]
+    application-row.tsx
+    applications-section.tsx
+    coaching-section.tsx
+    cv-on-file.tsx
+    data-section.tsx [c]
+    entitlements-card.tsx [c]
+    notification-settings.tsx [c]
+    payment-section.tsx [c]
+    profile-tab.tsx [c]
+    recording-settings.tsx [c]
+    saved-card.tsx
+    settings-tab.tsx [c]
+    sign-in-section.tsx
+    use-account-settings.ts [c]
   auth/
-    auth-provider.tsx               [c] authed, wall open/seen, unlock, gated nav
-    use-auth.ts                     [c] context hook
-    gated-section.tsx               [c] blur gate + sentinel + unlock overlay
-    use-wall-sentinel.ts            [c] IntersectionObserver → opens the wall once
-    unlock-wall.tsx                 [c] the email modal
-    unlock-sticky-bar.tsx           [c] bottom bar after the wall is dismissed
-  home/
-    home-screen.tsx                 [s] composition
-    home-header.tsx                 [s] greeting chips + serif headline
-    revise-callout.tsx              [s] the black step-4 CTA card
-    four-numbers.tsx                [s] rubric grid + heading
-    quick-actions.tsx               [s] the two action cards
-    recent-activity.tsx             [s] card wrapper
-    activity-row.tsx                [s] repeating row
+    auth-provider.tsx [c]
+    gated-section.tsx [c]
+    unlock-sticky-bar.tsx [c]
+    unlock-wall.tsx [c]
+    use-auth.ts [c]
+    use-gate-guard.ts [c]
+    use-wall-sentinel.ts [c]
+  billing/
+    billing-provider.tsx [c]
+    entitled-link.tsx [c]
+    pack-card.tsx [c]
+    pay-mark.tsx
+    pay-modal.tsx [c]
+    use-billing.ts [c]
   cv/
-    cv-runs-screen.tsx              [s] saved evaluations list
-    cv-run-row.tsx                  [s] repeating row
-    cv-upload-screen.tsx            [c] wizard shell: attach + JD + analyzing
-    cv-attach-panel.tsx             [c] file attach / remove
-    jd-paste-panel.tsx              [c] textarea, sample, parse, role fallback
-    jd-parsed-summary.tsx           [s] parsed requirement preview
-    cv-analyzing.tsx                [c] dark animated progress screen
-    use-cv-analysis.ts              [c] 900ms step interval → completion
-    use-jd-input.ts                 [c] jd text + parsed + fallback state
-    cv-results-screen.tsx           [s] report composition
-    cv-headline-fix.tsx             [s] free: black diagnosis + before/after
-    cv-overall-score.tsx            [s] free: dial + shown arithmetic
-    cv-four-numbers.tsx             [s] gated: breakdown bars
-    cv-coverage-matrix.tsx          [s] gated: requirement card
-    cv-coverage-row.tsx             [s] repeating requirement row
-    cv-remaining-fixes.tsx          [s] gated: fixes 2–3
-    cv-marked-up.tsx                [s] gated: annotated CV
-    cv-interview-cta.tsx            [s] gated: hand-off to interview
+    cv-analyzing.tsx
+    cv-attach-panel.tsx [c]
+    cv-coverage-matrix.tsx
+    cv-coverage-row.tsx
+    cv-four-numbers.tsx
+    cv-headline-fix.tsx
+    cv-interview-cta.tsx
+    cv-marked-up.tsx
+    cv-overall-score.tsx
+    cv-remaining-fixes.tsx
+    cv-results-screen.tsx [c]
+    cv-run-row.tsx
+    cv-runs-screen.tsx
+    cv-upload-screen.tsx [c]
+    jd-parsed-summary.tsx
+    jd-paste-panel.tsx [c]
+    use-cv-analysis.ts [c]
+    use-jd-input.ts [c]
+  home/
+    four-numbers.tsx
+    home-header.tsx
+    home-screen.tsx
+    quick-actions.tsx
+    recent-activity.tsx
+    revise-callout.tsx [c]
   interview/
-    interview-screen.tsx            [c] stage machine: setup → live → feedback
-    use-interview-session.ts        [c] stage, question index, probe, clock
-    use-transcript.ts               [c] elapsed-driven transcript + autoscroll
-    interview-setup.tsx             [c] setup composition
-    mode-picker.tsx                 [c] video / voice cards
-    interviewer-picker.tsx          [c] grid of 3
-    interviewer-card.tsx            [c] repeating orb card
-    interview-live.tsx              [c] live composition
-    interview-stage.tsx             [c] video canvas + PiP swap
-    question-card.tsx               [s] current question + source + probe
-    transcript-panel.tsx            [c] scrolling transcript
-    transcript-turn.tsx             [s] repeating turn
-    live-controls.tsx               [c] clock, mic toggle, next/finish
-    interview-feedback.tsx          [s] report composition
-    feedback-numbers.tsx            [s] the four numbers, post-session
-    delivery-metrics.tsx            [s] time-to-first-word etc.
-    visual-events.tsx               [s] timestamped video moments
-    not-measured.tsx                [s] the "we don't measure this" list
-    question-feedback-card.tsx      [s] repeating per-question card
-  revise/
-    revise-screen.tsx               [c] composition + progress
-    use-claims.ts                   [c] claim reducer (open/editing/rewritten/cut/stood)
-    claim-card.tsx                  [c] repeating claim, all 5 states
-    claim-editor.tsx                [c] textarea + suggest / save / cancel
-    claim-actions.tsx               [c] rewrite / cut / stand by
-    revise-progress.tsx             [s] "N of 3 resolved" bar
-    rescore-card.tsx                [c] gated re-score CTA
-    rescore-result.tsx              [s] the score deltas
+    delivery-metrics.tsx
+    feedback-numbers.tsx
+    interview-feedback.tsx
+    interview-live.tsx [c]
+    interview-screen.tsx [c]
+    interview-setup.tsx [c]
+    interview-stage.tsx [c]
+    interviewer-card.tsx [c]
+    interviewer-picker.tsx [c]
+    live-controls.tsx [c]
+    mode-picker.tsx [c]
+    not-measured.tsx
+    question-card.tsx
+    question-feedback-card.tsx
+    transcript-panel.tsx [c]
+    transcript-turn.tsx
+    use-interview-session.ts [c]
+    use-transcript.ts [c]
+    visual-events.tsx
   progress/
-    progress-screen.tsx             [s] composition
-    loop-rail.tsx                   [s] the 4-step vertical rail
-    rep-history.tsx                 [s] card wrapper
-    rep-history-row.tsx             [s] repeating row
-
+    focus-card.tsx
+    progress-curve.tsx
+    progress-headline-stats.tsx
+    progress-screen.tsx
+    rep-history.tsx
+  revise/
+    claim-actions.tsx [c]
+    claim-card.tsx [c]
+    claim-editor.tsx [c]
+    claims-provider.tsx [c]
+    rescore-card.tsx [c]
+    rescore-result.tsx
+    revise-progress.tsx
+    revise-screen.tsx [c]
+    use-claims.ts [c]
 lib/
   data/
-    cv-report.ts                    rubric, breakdown, coverage, fixes, marked-up CV
-    cv-runs.ts                      saved evaluation history
-    job-description.ts              sample JD + parsed requirements
-    interviewers.ts                 the 3 personas
-    interview-questions.ts          5 questions + probes
-    transcript.ts                   timed transcript script
-    interview-feedback.ts           numbers, delivery, visual events, per-question
-    claims.ts                       the 3 undefended claims
-    progress.ts                     loop rail + rep history
-constants/
-  navigation.ts                     sidebar items, flow steps
-  scoring.ts                        rubric labels, status→style maps
+    account.ts
+    claims.ts
+    cv-report.ts
+    cv-runs.ts
+    interview-feedback.ts
+    interview-questions.ts
+    interviewers.ts
+    job-description.ts
+    plans.ts
+    progress.ts
+    transcript.ts
 types/
-  cv.ts  interview.ts  revise.ts  progress.ts  common.ts
+  account.ts
+  billing.ts
+  common.ts
+  cv.ts
+  interview.ts
+  progress.ts
+  revise.ts
 utils/
-  cn.ts                             className joiner
-  format-clock.ts                   seconds → mm:ss
-docs/
-  architecture.md
+  cn.ts
+  format-clock.ts
+  text.ts
+  use-isomorphic-layout-effect.ts [c]
 ```
-
-`[s]` server component · `[c]` client component
 
 ## State
 
-| Concern | Owner | Why |
-| --- | --- | --- |
-| Auth + paywall gate | `features/auth/auth-provider.tsx` (context, mounted in `(app)/layout.tsx`) | Sidebar, gated report, wall, and sticky bar all read it; it is the only genuinely app-wide state. |
-| CV upload wizard | `use-jd-input` + `use-cv-analysis` in `features/cv/` | Scoped to `/cv/new`. Dies with the route. |
-| Interview session | `use-interview-session` in `features/interview/` | Owns the timer; must not leak across routes. |
-| Claim resolution | `use-claims` (`useReducer`) in `features/revise/` | Pure state transitions over a claim list — a reducer, not five setters. |
+Three providers, all mounted in `app/(app)/layout.tsx`. Each earns its place by
+being read from more than one route; everything else is local.
 
-No global store. Nothing that isn't shared across routes goes into context.
+| Concern | Owner | Why a provider |
+| --- | --- | --- |
+| Auth + report gate | `features/auth/auth-provider.tsx` | Sidebar, gated report, wall and sticky bar all read it. |
+| Entitlements + plans modal | `features/billing/billing-provider.tsx` | Sidebar plan card, account screen, and every spend action read it. Reads auth, because "at the limit" only means anything once signed in. |
+| Claim resolution | `features/revise/claims-provider.tsx` (`useReducer`) | Sidebar badge, home callout and the revise screen all read it. A reducer, not five setters — the statuses form a state machine. |
+
+Local by design:
+
+| Concern | Owner |
+| --- | --- |
+| CV upload wizard | `use-jd-input` + `use-cv-analysis` — scoped to `/cv/new`, dies with the route |
+| Interview session | `use-interview-session` — owns the clock, must not leak across routes |
+| Account settings toggles | `use-account-settings` — nothing outside the Settings tab reads them yet |
+
+No global store.
+
+## Paint timing
+
+Anything the user would otherwise see in a wrong state for one frame runs in a
+layout effect via `utils/use-isomorphic-layout-effect.ts`:
+
+- **Route scroll reset** — otherwise the new screen paints at the old scroll offset.
+- **Hiding the flow stepper for a live interview** — otherwise it flashes, then
+  shifts the whole screen as it disappears.
+- **Transcript autoscroll** — otherwise each caption appears at the stale position.
+- **The account gate redirect** — the shell withholds `children` entirely while a
+  redirect is in flight, so private content never paints at all.
+
+Motion is honest about the OS setting: `prefers-reduced-motion: reduce` collapses
+every animation and transition in `globals.css`. Three of this app's animations
+loop forever, so this is not optional.
 
 ## Design tokens
 

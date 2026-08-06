@@ -1,5 +1,5 @@
+import { IconListRow } from "@/components/ui/icon-list-row";
 import { getRecentActivity } from "@/lib/data/progress";
-import { ActivityRow } from "./activity-row";
 
 export function RecentActivity() {
   const rows = getRecentActivity();
@@ -12,7 +12,16 @@ export function RecentActivity() {
       </div>
       <div className="rounded-2xl border-hair border-ink bg-surface px-6 py-1.5 shadow-soft-sm">
         {rows.map((row, i) => (
-          <ActivityRow key={row.title} {...row} last={i === rows.length - 1} />
+          <IconListRow
+            key={row.title}
+            title={row.title}
+            sub={row.sub}
+            tone={row.accent ? "accent" : "sage"}
+            last={i === rows.length - 1}
+            trailing={
+              <div className="text-[13px] whitespace-nowrap text-faint">{row.when}</div>
+            }
+          />
         ))}
       </div>
     </section>

@@ -58,5 +58,3 @@ export type CvRun = {
   readonly cover: string;
   readonly kind: Verdict;
 };
-
-export type CvStage = "upload" | "analyzing" | "results";

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Newsreader, Hanken_Grotesk } from "next/font/google";
+import { Newsreader, Hanken_Grotesk, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
 // Newsreader carries every display heading and every numeral; Hanken Grotesk
-// carries the UI. The prototype uses nothing else.
+// carries the UI; IBM Plex Mono carries dates, amounts and card numbers.
 const newsreader = Newsreader({
   variable: "--font-newsreader",
   subsets: ["latin"],
@@ -15,6 +15,12 @@ const hanken = Hanken_Grotesk({
   variable: "--font-hanken",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+});
+
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
 });
 
 const description =
@@ -36,7 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${newsreader.variable} ${hanken.variable} h-full`}
+      className={`${newsreader.variable} ${hanken.variable} ${plexMono.variable} h-full`}
     >
       <body className="h-full">{children}</body>
     </html>

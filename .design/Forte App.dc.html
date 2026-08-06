@@ -10,7 +10,7 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   * { box-sizing:border-box; }
   html, body { margin:0; padding:0; }
@@ -79,11 +79,31 @@
           </div>
           <div style="font-size:10px;color:#3a352c;margin-top:4px;line-height:1.4">Lowest of your three scores, out of 100 — now {{ readinessDriver }}.</div>
         </div>
-        <div style="border-top:1px solid rgba(22,21,19,0.1);padding-top:12px">
-          <div style="display:flex;align-items:center;gap:10px;padding:6px">
-            <div style="width:36px;height:36px;border-radius:50%;background:#161513;color:#FDFBEA;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0">AC</div>
-            <div style="line-height:1.2;flex:1;min-width:0"><div style="font-weight:700;font-size:13.5px">Alex Chen</div><div style="font-size:12px;color:#a3a294">Rep {{ rep }} · 3 reps this month</div></div>
+        <button onClick="{{ openPay }}" style="width:100%;text-align:left;background:#FBF6EA;border:1.5px solid #cbcabf;border-radius:14px;padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:'Hanken Grotesk',sans-serif" style-hover="border-color:#161513">
+          <span style="min-width:0">
+            <span style="display:block;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#8a897e">{{ planName }}</span>
+            <span style="display:block;font-size:11px;color:#5A594F;line-height:1.35;margin-top:2px">{{ planNote }}</span>
+          </span>
+          <span style="margin-left:auto;font-size:10.5px;font-weight:700;color:#161513;white-space:nowrap;text-decoration:underline">{{ planCta }}</span>
+        </button>
+
+        <div style="border-top:1px solid rgba(22,21,19,0.1);padding-top:12px;position:relative">
+          <div style="{{ userMenuStyle }}">
+            <button onClick="{{ goProfile }}" style="display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:transparent;border:none;border-radius:12px;padding:11px 12px;font:600 13.5px 'Hanken Grotesk',sans-serif;color:#161513;cursor:pointer;transition:background .12s ease" style-hover="background:#F2EEDF">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              Profile
+            </button>
+            <span style="height:1px;background:rgba(22,21,19,0.1);margin:3px 8px"></span>
+            <button onClick="{{ logout }}" style="display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:transparent;border:none;border-radius:12px;padding:11px 12px;font:600 13.5px 'Hanken Grotesk',sans-serif;color:#8a3a2a;cursor:pointer;transition:background .12s ease" style-hover="background:#F6E9E4">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>
+              Log out
+            </button>
           </div>
+          <button onClick="{{ toggleUserMenu }}" style="{{ userTriggerStyle }}" style-hover="background:#F2EEDF">
+            <span style="width:36px;height:36px;border-radius:50%;background:#161513;color:#FDFBEA;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0">AC</span>
+            <span style="line-height:1.25;flex:1;min-width:0"><span style="display:block;font-weight:700;font-size:13.5px">Alex Chen</span><span style="display:block;font-size:12px;color:#a3a294">{{ tierLabel }}</span></span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#a3a294" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="{{ chevronStyle }}"><path d="M18 15l-6-6-6 6"></path></svg>
+          </button>
         </div>
         </sc-if>
         <sc-if value="{{ locked }}" hint-placeholder-val="{{ false }}">
@@ -905,6 +925,303 @@
     </div>
     </sc-if>
 
+    <!-- ===== ACCOUNT (profile + settings) ===== -->
+    <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Account" style="max-width:900px;margin:0 auto;padding:44px 56px 84px">
+
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:22px">
+        <div style="width:50px;height:50px;border-radius:50%;background:#161513;color:#FDFBEA;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17px">AC</div>
+        <div style="min-width:0;flex:1">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <span style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;line-height:1.1">Alex Chen</span>
+            <span style="font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;background:#C9D7F0;border:1.5px solid #161513;border-radius:999px;padding:3px 10px">{{ tierLabel }}</span>
+          </div>
+          <div style="font-size:13px;color:#5A594F;margin-top:4px">alex.chen@email.com · joined March 2026</div>
+        </div>
+        <button onClick="{{ logout }}" style="flex-shrink:0;background:transparent;border:1.5px solid #cbcabf;border-radius:999px;padding:10px 18px;font:600 13px 'Hanken Grotesk',sans-serif;cursor:pointer" style-hover="border-color:#161513;background:#161513;color:#FDFBEA">Log out</button>
+      </div>
+
+      <div style="display:flex;gap:22px;border-bottom:1.5px solid rgba(22,21,19,0.16);margin-bottom:36px">
+        <button onClick="{{ tabProfile }}" style="{{ tabProfileStyle }}">Profile</button>
+        <button onClick="{{ tabSettings }}" style="{{ tabSettingsStyle }}">Settings</button>
+      </div>
+
+      <!-- ---------- PROFILE TAB ---------- -->
+      <sc-if value="{{ acctProfile }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="border:1.5px solid #161513;border-radius:22px;background:var(--forte-accent, #DCCDFB);box-shadow:6px 6px 0 rgba(22,21,19,0.1);padding:22px 24px;margin-bottom:46px">
+          <div style="display:flex;align-items:flex-end;gap:32px;flex-wrap:wrap">
+            <div style="min-width:120px">
+              <div style="font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#3a352c;margin-bottom:6px">Applications left</div>
+              <div style="display:flex;align-items:baseline;gap:8px">
+                <span style="font-family:'Newsreader',serif;font-size:38px;font-weight:500;line-height:1">{{ appsLeft }}</span>
+                <span style="font-size:12.5px;color:#3a352c;font-weight:600">{{ appsOfLine }}</span>
+              </div>
+            </div>
+            <div style="min-width:120px">
+              <div style="font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#3a352c;margin-bottom:6px">Coaching sessions</div>
+              <div style="display:flex;align-items:baseline;gap:8px">
+                <span style="font-family:'Newsreader',serif;font-size:38px;font-weight:500;line-height:1">{{ sessionsLeft }}</span>
+                <span style="font-size:12.5px;color:#3a352c;font-weight:600">20 min each</span>
+              </div>
+            </div>
+            <button onClick="{{ goProgress }}" style="text-align:left;background:#FFFEF6;border:1.5px solid #161513;border-radius:14px;padding:10px 14px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;transition:transform .12s ease,box-shadow .12s ease" style-hover="transform:translate(1px,1px);box-shadow:2px 2px 0 rgba(22,21,19,0.25)">
+              <div style="font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#a3a294;margin-bottom:4px">Readiness</div>
+              <div style="display:flex;align-items:baseline;gap:7px">
+                <span style="font-family:'Newsreader',serif;font-size:26px;font-weight:500;line-height:1">{{ readiness }}</span>
+                <span style="font-size:11.5px;font-weight:700;color:#2f6b3a">{{ readinessDelta }}</span>
+                <span style="font-size:11.5px;font-weight:700;margin-left:3px;text-decoration:underline">See the curve</span>
+              </div>
+            </button>
+            <button onClick="{{ openPay }}" style="margin-left:auto;flex-shrink:0;background:#161513;color:#FDFBEA;border:1.5px solid #161513;border-radius:999px;padding:12px 22px;font:600 13.5px 'Hanken Grotesk',sans-serif;cursor:pointer;white-space:nowrap" style-hover="transform:translate(1px,1px)">Buy applications</button>
+          </div>
+          <div style="margin-top:18px">
+            <div style="height:7px;border-radius:999px;background:rgba(22,21,19,0.16);overflow:hidden"><span style="{{ appsBarStyle }}"></span></div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-top:8px">
+              <span style="font-size:12.5px;color:#3a352c;line-height:1.45">{{ appsNote }}</span>
+              <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px;font-weight:500;color:#3a352c;white-space:nowrap">{{ appsUsedLabel }}</span>
+            </div>
+          </div>
+        </div>
+
+      <div style="display:flex;align-items:baseline;gap:14px;margin:0 0 15px">
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:22px;margin:0;white-space:nowrap">Your CV</h3>
+        <span style="flex:1;height:1px;background:rgba(22,21,19,0.16)"></span>
+        <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#a3a294;white-space:nowrap">{{ cvUsedIn }}</span>
+      </div>
+        <div style="display:flex;align-items:center;gap:16px;border:1.5px solid #161513;border-radius:18px;padding:17px 20px;background:#FFFEF6;margin-bottom:9px">
+          <div style="width:36px;height:46px;border-radius:6px;border:1.5px solid #161513;background:#F2EEDF;flex-shrink:0"></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:14px;font-weight:700">{{ cvOnFile }}</div>
+            <div style="font-size:12.5px;color:#a3a294;margin-top:3px">Uploaded 2 Aug 2026 · every new application starts from this file</div>
+          </div>
+          <div style="display:flex;gap:9px;flex-shrink:0;flex-wrap:wrap">
+            <button style="background:transparent;border:1.5px solid #cbcabf;border-radius:999px;padding:10px 17px;font:600 13px 'Hanken Grotesk',sans-serif;cursor:pointer" style-hover="border-color:#161513">View</button>
+            <button onClick="{{ goCV }}" style="background:transparent;border:1.5px solid #161513;border-radius:999px;padding:10px 17px;font:600 13px 'Hanken Grotesk',sans-serif;cursor:pointer" style-hover="background:#161513;color:#FDFBEA">Replace</button>
+          </div>
+        </div>
+        <div style="font-size:12.5px;color:#a3a294;margin-bottom:46px">{{ cvVersionLine }}</div>
+
+      <div style="display:flex;align-items:baseline;gap:14px;margin:0 0 15px">
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:22px;margin:0;white-space:nowrap">Applications</h3>
+        <span style="flex:1;height:1px;background:rgba(22,21,19,0.16)"></span>
+        <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#a3a294;white-space:nowrap">Kept forever</span>
+      </div>
+        <div style="border:1.5px solid #161513;border-radius:18px;overflow:hidden;background:#FFFEF6;margin-bottom:46px">
+          <sc-for list="{{ usage }}" as="u" hint-placeholder-count="3">
+            <div onClick="{{ u.open }}" role="button" tabIndex="{{ 0 }}" style="display:grid;grid-template-columns:1.7fr 1.3fr auto;gap:18px;padding:16px 20px;border-bottom:1px solid rgba(22,21,19,0.1);align-items:center;cursor:pointer;transition:background .12s ease" style-hover="background:#FBF6EA">
+              <div style="min-width:0">
+                <div style="font-size:13.5px;font-weight:700;line-height:1.3">{{ u.role }}</div>
+                <div style="font-size:12px;color:#a3a294;margin-top:3px">{{ u.company }} · <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px">{{ u.date }}</span></div>
+              </div>
+              <div style="font-size:12.5px;color:#5A594F;line-height:1.4">{{ u.used }}</div>
+              <div style="display:flex;align-items:baseline;gap:9px;justify-content:flex-end;min-width:118px">
+                <span style="font-size:11.5px;color:#a3a294;font-weight:600;white-space:nowrap">{{ u.fromLine }}</span>
+                <span style="font-family:'Newsreader',serif;font-size:24px;line-height:1">{{ u.to }}</span>
+                <span style="font-size:14px;color:#a3a294">›</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+      <div style="display:flex;align-items:baseline;gap:14px;margin:0 0 15px">
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:22px;margin:0;white-space:nowrap">Coaching sessions</h3>
+        <span style="flex:1;height:1px;background:rgba(22,21,19,0.16)"></span>
+        <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#a3a294;white-space:nowrap">20 minutes each</span>
+      </div>
+        <sc-if value="{{ hasSessions }}" hint-placeholder-val="{{ true }}">
+        <div style="border:1.5px solid #cbcabf;border-radius:18px;overflow:hidden;background:#FFFEF6">
+          <sc-for list="{{ sessions }}" as="cs" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid rgba(22,21,19,0.08)">
+              <div style="flex:1;min-width:0">
+                <div style="font-size:13.5px;font-weight:600;line-height:1.35">{{ cs.claim }}</div>
+                <div style="font-size:12px;color:#a3a294;margin-top:3px">{{ cs.where }} · {{ cs.date }}</div>
+              </div>
+              <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;color:#5A594F;flex-shrink:0">{{ cs.spent }}</div>
+              <a href="#" style="font-size:12.5px;font-weight:700;text-decoration:underline;flex-shrink:0">Transcript</a>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+        <sc-if value="{{ noSessions }}" hint-placeholder-val="{{ false }}">
+        <div style="border:1.5px dashed #cbcabf;border-radius:18px;padding:20px;font-size:13.5px;color:#5A594F;line-height:1.5">No sessions yet. Coaching comes with a pack — three with the 3-pack, fifteen with the 12-pack.</div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <!-- ---------- SETTINGS TAB ---------- -->
+      <sc-if value="{{ acctSettings }}" hint-placeholder-val="{{ false }}">
+      <div>
+      <div style="display:flex;align-items:baseline;gap:14px;margin:0 0 15px">
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:22px;margin:0;white-space:nowrap">Sign-in</h3>
+        <span style="flex:1;height:1px;background:rgba(22,21,19,0.16)"></span>
+        <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#a3a294;white-space:nowrap">Google</span>
+      </div>
+        <div style="border:1.5px solid #cbcabf;border-radius:18px;background:#FFFEF6;overflow:hidden;margin-bottom:46px">
+          <div style="display:flex;align-items:center;gap:16px;padding:15px 20px;border-bottom:1px solid rgba(22,21,19,0.08)">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13.5px;font-weight:600">alex.chen@email.com</div>
+              <div style="font-size:12px;color:#a3a294;margin-top:2px">Where reports and receipts are sent</div>
+            </div>
+            <button style="flex-shrink:0;background:transparent;border:1.5px solid #161513;border-radius:999px;padding:9px 17px;font:600 13px 'Hanken Grotesk',sans-serif;cursor:pointer" style-hover="background:#161513;color:#FDFBEA">Change</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;padding:15px 20px">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13.5px;font-weight:600">Continue with Google</div>
+              <div style="font-size:12px;color:#a3a294;margin-top:2px">No password on this account</div>
+            </div>
+            <button style="flex-shrink:0;background:transparent;border:1.5px solid #cbcabf;border-radius:999px;padding:9px 17px;font:600 13px 'Hanken Grotesk',sans-serif;cursor:pointer" style-hover="border-color:#161513">Add a password</button>
+          </div>
+        </div>
+
+      <div style="display:flex;align-items:baseline;gap:14px;margin:0 0 15px">
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:22px;margin:0;white-space:nowrap">Notifications</h3>
+        <span style="flex:1;height:1px;background:rgba(22,21,19,0.16)"></span>
+        <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#a3a294;white-space:nowrap">Email only</span>
+      </div>
+        <div style="border:1.5px solid #cbcabf;border-radius:18px;background:#FFFEF6;overflow:hidden;margin-bottom:46px">
+        <div onClick="{{ nScoreToggle }}" style="display:flex;align-items:center;gap:16px;padding:15px 20px;cursor:pointer;border-bottom:1px solid rgba(22,21,19,0.08)" style-hover="background:#FBF6EA">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13.5px;font-weight:600">Scoring finished</div>
+            <div style="font-size:12px;color:#a3a294;margin-top:2px">When a CV is done being scored</div>
+          </div>
+          <span style="{{ nScoreTrackStyle }}"><span style="{{ nScoreKnobStyle }}"></span></span>
+        </div>
+        <div onClick="{{ nGradeToggle }}" style="display:flex;align-items:center;gap:16px;padding:15px 20px;cursor:pointer;border-bottom:1px solid rgba(22,21,19,0.08)" style-hover="background:#FBF6EA">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13.5px;font-weight:600">Interview graded</div>
+            <div style="font-size:12px;color:#a3a294;margin-top:2px">When a mock interview has its grading ready</div>
+          </div>
+          <span style="{{ nGradeTrackStyle }}"><span style="{{ nGradeKnobStyle }}"></span></span>
+        </div>
+        <div onClick="{{ nDigestToggle }}" style="display:flex;align-items:center;gap:16px;padding:15px 20px;cursor:pointer;" style-hover="background:#FBF6EA">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13.5px;font-weight:600">Weekly readiness note</div>
+            <div style="font-size:12px;color:#a3a294;margin-top:2px">One email a week with your curve</div>
+          </div>
+          <span style="{{ nDigestTrackStyle }}"><span style="{{ nDigestKnobStyle }}"></span></span>
+        </div>
+        </div>
+
+      <div style="display:flex;align-items:baseline;gap:14px;margin:0 0 15px">
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:22px;margin:0;white-space:nowrap">Interviews and recordings</h3>
+        <span style="flex:1;height:1px;background:rgba(22,21,19,0.16)"></span>
+        <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#a3a294;white-space:nowrap">Yours only</span>
+      </div>
+        <div style="border:1.5px solid #cbcabf;border-radius:18px;background:#FFFEF6;overflow:hidden;margin-bottom:12px">
+        <div onClick="{{ nCamToggle }}" style="display:flex;align-items:center;gap:16px;padding:15px 20px;cursor:pointer;border-bottom:1px solid rgba(22,21,19,0.08)" style-hover="background:#FBF6EA">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13.5px;font-weight:600">Camera delivery analysis</div>
+            <div style="font-size:12px;color:#a3a294;margin-top:2px">Reads pauses and posture. Never a gaze or emotion score.</div>
+          </div>
+          <span style="{{ nCamTrackStyle }}"><span style="{{ nCamKnobStyle }}"></span></span>
+        </div>
+        <div onClick="{{ retainToggle }}" style="display:flex;align-items:center;gap:16px;padding:15px 20px;cursor:pointer;border-bottom:1px solid rgba(22,21,19,0.08)" style-hover="background:#FBF6EA">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13.5px;font-weight:600">Auto-delete after 30 days</div>
+            <div style="font-size:12px;color:#a3a294;margin-top:2px">Recordings go. Scores and transcripts stay.</div>
+          </div>
+          <span style="{{ retainTrackStyle }}"><span style="{{ retainKnobStyle }}"></span></span>
+        </div>
+          <div style="display:flex;align-items:center;gap:16px;padding:15px 20px">
+            <div style="flex:1;min-width:0;font-size:13.5px;line-height:1.45">Delete every recording now</div>
+            <button style="flex-shrink:0;background:transparent;border:1.5px solid #161513;border-radius:999px;padding:9px 17px;font:600 13px 'Hanken Grotesk',sans-serif;cursor:pointer" style-hover="background:#161513;color:#FDFBEA">Delete recordings</button>
+          </div>
+        </div>
+        <div style="font-size:12.5px;color:#a3a294;margin-bottom:46px;line-height:1.5">Nothing here trains anything, and nothing is shown to an employer.</div>
+
+      <div style="display:flex;align-items:baseline;gap:14px;margin:0 0 15px">
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:22px;margin:0;white-space:nowrap">Payment</h3>
+        <span style="flex:1;height:1px;background:rgba(22,21,19,0.16)"></span>
+        <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#a3a294;white-space:nowrap">Nothing renews</span>
+      </div>
+        <sc-if value="{{ hasReceipts }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:minmax(268px,318px) 1fr;gap:26px;align-items:start;margin-bottom:46px">
+          <div>
+          <div style="position:relative;aspect-ratio:1.586;border-radius:20px;border:1.5px solid #161513;background:#161513;color:#FDFBEA;padding:20px 22px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:6px 6px 0 rgba(22,21,19,0.16);overflow:hidden">            <div style="position:absolute;inset:0;background:radial-gradient(115% 85% at 102% -8%, rgba(23,178,106,0.30), transparent 62%);pointer-events:none"></div>
+              <div style="position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px">
+                <div style="display:flex;align-items:center;gap:9px">
+                  <span style="width:26px;height:26px;border-radius:7px;background:#17B26A;flex-shrink:0;display:flex;align-items:center;justify-content:center"><span style="width:10px;height:2.5px;border-radius:2px;background:#FFFEF6;transform:rotate(-45deg)"></span></span>
+                  <span style="font-size:13px;font-weight:700;letter-spacing:-0.01em">Link</span>
+                </div>
+                <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#b8b6aa">Saved</span>
+              </div>
+              <div style="position:relative">
+                <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:16px;letter-spacing:.08em;margin-bottom:14px">•••• •••• •••• 4419</div>
+                <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+                  <div>
+                    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#8f8d80;margin-bottom:3px">Cardholder</div>
+                    <div style="font-size:12.5px;font-weight:600;letter-spacing:.02em">Alex Chen</div>
+                  </div>
+                  <div style="text-align:right">
+                    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#8f8d80;margin-bottom:3px">Expires</div>
+                    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12.5px">12 / 28</div>
+                  </div>
+                  <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;font-weight:600;letter-spacing:.16em;color:#e8e6d8">VISA</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;margin-top:13px">
+              <div style="flex:1;min-width:0;font-size:12px;color:#a3a294;line-height:1.45">One tap at checkout. Never charged automatically.</div>
+              <button style="flex-shrink:0;background:transparent;border:1.5px solid #161513;border-radius:999px;padding:8px 15px;font:600 12.5px 'Hanken Grotesk',sans-serif;cursor:pointer" style-hover="background:#161513;color:#FDFBEA">Manage</button>
+            </div>
+          </div>
+
+          <div style="border:1.5px solid #161513;border-radius:18px;overflow:hidden;background:#FFFEF6">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:13px 18px;background:#F2EEDF;border-bottom:1.5px solid #161513">
+              <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;font-weight:500;letter-spacing:.09em;text-transform:uppercase;color:#5A594F">Receipts</span>
+              <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px;font-weight:500;color:#5A594F">Paid {{ receiptTotal }}</span>
+            </div>
+            <sc-for list="{{ receipts }}" as="r" hint-placeholder-count="2">
+              <div style="display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid rgba(22,21,19,0.08)">
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:13.5px;font-weight:600;line-height:1.35">{{ r.what }}</div>
+                  <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px;color:#a3a294;margin-top:3px">{{ r.date }}</div>
+                </div>
+                <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:13.5px;font-weight:500;flex-shrink:0">{{ r.amount }}</div>
+                <a href="#" style="font-size:12.5px;font-weight:700;text-decoration:underline;flex-shrink:0">Receipt</a>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+        <sc-if value="{{ noReceipts }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:minmax(268px,318px) 1fr;gap:26px;align-items:start;margin-bottom:46px">
+          <div style="position:relative;aspect-ratio:1.586;border-radius:20px;border:1.5px dashed #cbcabf;background:transparent;color:#8a897e;padding:20px 22px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden">            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+              <span style="font-size:13px;font-weight:700;color:#8a897e">No card saved</span>
+              <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#b3b2a6">Empty</span>
+            </div>
+            <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:15px;letter-spacing:.08em;color:#c4c3b7">•••• •••• •••• ••••</div>
+          </div>
+          <div style="border:1.5px solid #cbcabf;border-radius:18px;background:#FFFEF6;padding:20px">
+            <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;font-weight:500;letter-spacing:.09em;text-transform:uppercase;color:#a3a294;margin-bottom:10px">Receipts</div>
+            <div style="font-size:13.5px;color:#5A594F;line-height:1.55;margin-bottom:16px">Nothing charged yet, and your free application never will be. Link, Apple Pay or a card at checkout, whenever you buy.</div>
+            <button onClick="{{ openPay }}" style="background:transparent;border:1.5px solid #161513;border-radius:999px;padding:9px 17px;font:600 13px 'Hanken Grotesk',sans-serif;cursor:pointer" style-hover="background:#161513;color:#FDFBEA">See packs</button>
+          </div>
+        </div>
+        </sc-if>
+
+      <div style="display:flex;align-items:baseline;gap:14px;margin:0 0 15px">
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:22px;margin:0;white-space:nowrap">Your data</h3>
+        <span style="flex:1;height:1px;background:rgba(22,21,19,0.16)"></span>
+        <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#a3a294;white-space:nowrap">Export or erase</span>
+      </div>
+        <div style="display:flex;align-items:center;gap:16px;border:1.5px solid #cbcabf;border-radius:18px;padding:15px 20px;background:#FFFEF6;margin-bottom:11px">
+          <div style="flex:1;min-width:0;font-size:13.5px;line-height:1.45">Download everything — CVs, scores, transcripts, rewrites, as one file.</div>
+          <button style="flex-shrink:0;background:transparent;border:1.5px solid #161513;border-radius:999px;padding:9px 17px;font:600 13px 'Hanken Grotesk',sans-serif;cursor:pointer" style-hover="background:#161513;color:#FDFBEA">Download</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;border:1.5px dashed #d3a89e;border-radius:18px;padding:16px 20px">
+          <div style="flex:1;min-width:0;font-size:13.5px;line-height:1.45;color:#5A594F">{{ dangerLine }}</div>
+          <sc-if value="{{ confirmDelete }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ cancelDelete }}" style="flex-shrink:0;background:transparent;border:1.5px solid #cbcabf;border-radius:999px;padding:9px 16px;font:600 13px 'Hanken Grotesk',sans-serif;cursor:pointer" style-hover="border-color:#161513">Keep it</button>
+          </sc-if>
+          <button onClick="{{ dangerAction }}" style="{{ dangerStyle }}">{{ dangerCta }}</button>
+        </div>
+      </div>
+      </sc-if>
+    </div>
+    </sc-if>
+
     <!-- ===== STICKY UNLOCK BAR ===== -->
     <sc-if value="{{ showStickyBar }}" hint-placeholder-val="{{ false }}">
     <div style="position:sticky;bottom:0;left:0;right:0;z-index:40;background:#161513;border-top:1.5px solid #161513;padding:16px 40px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;box-shadow:0 -6px 24px rgba(22,21,19,0.18)">
@@ -925,15 +1242,101 @@
       <div style="font-family:'Newsreader',serif;font-weight:500;font-size:31px;line-height:1.15;margin-bottom:12px;text-wrap:pretty">Unlock the rest of your report</div>
       <div style="font-size:14.5px;color:#5A594F;line-height:1.55;margin-bottom:26px">Your CV and score are already saved. You'll land back exactly where you are, with the blur gone.</div>
       <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:20px">
-        <button onClick="{{ unlock }}" style="display:flex;align-items:center;justify-content:center;gap:11px;background:#FFFEF6;border:1.5px solid #161513;border-radius:999px;padding:15px 22px;font:600 15px 'Hanken Grotesk';cursor:pointer;box-shadow:4px 4px 0 rgba(22,21,19,0.9)" style-hover="transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(22,21,19,0.9)"><span style="width:20px;height:20px;border-radius:50%;border:2.5px solid #161513;flex-shrink:0"></span>Continue with Google</button>
-        <button onClick="{{ unlock }}" style="display:flex;align-items:center;justify-content:center;gap:11px;background:#FFFEF6;border:1.5px solid #161513;border-radius:999px;padding:15px 22px;font:600 15px 'Hanken Grotesk';cursor:pointer;box-shadow:4px 4px 0 rgba(22,21,19,0.9)" style-hover="transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(22,21,19,0.9)"><span style="width:20px;height:20px;border-radius:5px;background:#161513;flex-shrink:0"></span>Continue with LinkedIn</button>
+        <button onClick="{{ unlock }}" style="display:flex;align-items:center;justify-content:center;gap:11px;background:#FFFEF6;border:1.5px solid #161513;border-radius:999px;padding:15px 22px;font:600 15px 'Hanken Grotesk',sans-serif;cursor:pointer;box-shadow:4px 4px 0 rgba(22,21,19,0.9);transition:transform .12s ease,box-shadow .12s ease" style-hover="transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(22,21,19,0.9)">
+          <span style="width:20px;height:20px;border-radius:50%;border:2.5px solid #161513;flex-shrink:0"></span>
+          <span>Continue with Google</span>
+        </button>
+        <button onClick="{{ unlock }}" style="display:flex;align-items:center;justify-content:center;gap:11px;background:#FFFEF6;border:1.5px solid #161513;border-radius:999px;padding:15px 22px;font:600 15px 'Hanken Grotesk',sans-serif;cursor:pointer;box-shadow:4px 4px 0 rgba(22,21,19,0.9);transition:transform .12s ease,box-shadow .12s ease" style-hover="transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(22,21,19,0.9)">
+          <span style="width:20px;height:20px;border-radius:5px;background:#161513;flex-shrink:0"></span>
+          <span>Continue with LinkedIn</span>
+        </button>
       </div>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px"><span style="flex:1;height:1px;background:rgba(22,21,19,0.14)"></span><span style="font-size:12px;color:#a3a294;font-weight:600">or</span><span style="flex:1;height:1px;background:rgba(22,21,19,0.14)"></span></div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <input value="{{ email }}" onChange="{{ onEmail }}" placeholder="you@email.com" style="flex:1;min-width:180px;background:#fff;border:1.5px solid #161513;border-radius:999px;padding:14px 18px;font:500 14.5px 'Hanken Grotesk';color:#161513;outline:none" />
-        <button onClick="{{ unlock }}" style="background:#161513;color:#FDFBEA;border:1.5px solid #161513;border-radius:999px;padding:14px 24px;font:600 14.5px 'Hanken Grotesk';cursor:pointer;white-space:nowrap">Send link</button>
+      <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #161513;border-radius:999px;padding:5px 5px 5px 20px">
+        <input value="{{ email }}" onChange="{{ onEmail }}" placeholder="you@email.com" style="flex:1;min-width:0;background:transparent;border:none;padding:9px 0;font:500 14.5px 'Hanken Grotesk',sans-serif;color:#161513;outline:none" />
+        <button onClick="{{ unlock }}" style="flex-shrink:0;background:#161513;color:#FDFBEA;border:none;border-radius:999px;padding:12px 22px;font:600 14px 'Hanken Grotesk',sans-serif;cursor:pointer;white-space:nowrap;transition:opacity .12s ease" style-hover="opacity:.86">Send link</button>
       </div>
-      <div style="font-size:12.5px;color:#a3a294;margin-top:18px;line-height:1.5">Free forever for one posting. We never send your CV anywhere.</div>
+      <div style="font-size:12.5px;color:#a3a294;margin-top:16px;line-height:1.5">Free forever for one posting. We never send your CV anywhere.</div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ===== PLANS / PAY MODAL ===== -->
+  <sc-if value="{{ payOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;padding:28px;overflow:auto">
+    <div onClick="{{ dismissPay }}" style="position:absolute;inset:0;background:rgba(22,21,19,0.55);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;z-index:1;max-width:600px;width:100%;background:#FDFBEA;border:1.5px solid #161513;border-radius:28px;padding:34px;box-shadow:10px 10px 0 rgba(22,21,19,0.9);animation:ap_rise .35s ease both;margin:auto">
+      <button onClick="{{ dismissPay }}" style="position:absolute;top:18px;right:18px;width:32px;height:32px;border-radius:50%;background:transparent;border:1.5px solid #cbcabf;color:#5A594F;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Hanken Grotesk',sans-serif" style-hover="border-color:#161513;color:#161513">✕</button>
+      <div style="font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#a3a294;margin-bottom:12px">{{ payKicker }}</div>
+      <div style="font-family:'Newsreader',serif;font-weight:500;font-size:29px;line-height:1.15;margin-bottom:10px;text-wrap:pretty;padding-right:36px">{{ payTitle }}</div>
+      <div style="font-size:14.5px;color:#5A594F;line-height:1.55;margin-bottom:8px;max-width:44ch">One application is one CV against one posting, start to finish.</div>
+      <div style="font-size:13px;color:#161513;font-weight:600;margin-bottom:22px">Applications never expire. Nothing renews.</div>
+
+      <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:20px">
+        <div onClick="{{ buyFull }}" role="button" tabIndex="{{ 0 }}" style="background:#FFFEF6;border:1.5px solid #161513;border-radius:18px;padding:17px 19px;box-shadow:5px 5px 0 var(--forte-accent, #DCCDFB);cursor:pointer;transition:transform .12s ease,box-shadow .12s ease" style-hover="transform:translate(1px,1px);box-shadow:4px 4px 0 var(--forte-accent, #DCCDFB)">
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:13px">
+            <div style="min-width:0;flex:1">
+              <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+                <span style="font:700 16px 'Hanken Grotesk',sans-serif">12 applications</span>
+                <span style="font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;background:var(--forte-accent, #DCCDFB);border:1.5px solid #161513;border-radius:999px;padding:2px 8px">Best value</span>
+              </div>
+              <div style="font-size:12px;color:#a3a294;font-weight:600;margin-top:3px">$1.58 an application</div>
+            </div>
+            <div style="font-family:'Newsreader',serif;font-size:27px;font-weight:500;line-height:1;flex-shrink:0">$19</div>
+            <span style="flex-shrink:0;width:32px;height:32px;border-radius:50%;background:#161513;color:#FDFBEA;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1">→</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.4;color:#2a2822"><span style="width:5px;height:5px;border-radius:50%;background:#161513;flex-shrink:0;margin-top:6px"></span>12 applications, never expire</div>
+            <div style="display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.4;color:#2a2822"><span style="width:5px;height:5px;border-radius:50%;background:#161513;flex-shrink:0;margin-top:6px"></span>15 coaching sessions, 20 minutes each</div>
+            <div style="display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.4;color:#2a2822"><span style="width:5px;height:5px;border-radius:50%;background:#161513;flex-shrink:0;margin-top:6px"></span>Camera delivery analysis on every interview</div>
+            <div style="display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.4;color:#2a2822"><span style="width:5px;height:5px;border-radius:50%;background:#161513;flex-shrink:0;margin-top:6px"></span>Full history and your readiness curve</div>
+          </div>
+        </div>
+
+        <div onClick="{{ buyStarter }}" role="button" tabIndex="{{ 0 }}" style="background:#FFFEF6;border:1.5px solid #cbcabf;border-radius:18px;padding:17px 19px;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease" style-hover="border-color:#161513;transform:translate(1px,1px);box-shadow:2px 2px 0 rgba(22,21,19,0.35)">
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:13px">
+            <div style="min-width:0;flex:1">
+              <div style="font:700 16px 'Hanken Grotesk',sans-serif">3 applications</div>
+              <div style="font-size:12px;color:#a3a294;font-weight:600;margin-top:3px">$3 an application</div>
+            </div>
+            <div style="font-family:'Newsreader',serif;font-size:27px;font-weight:500;line-height:1;flex-shrink:0">$9</div>
+            <span style="flex-shrink:0;width:32px;height:32px;border-radius:50%;border:1.5px solid #161513;color:#161513;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1">→</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.4;color:#2a2822"><span style="width:5px;height:5px;border-radius:50%;background:#161513;flex-shrink:0;margin-top:6px"></span>3 applications, never expire</div>
+            <div style="display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.4;color:#2a2822"><span style="width:5px;height:5px;border-radius:50%;background:#161513;flex-shrink:0;margin-top:6px"></span>3 coaching sessions, 20 minutes each</div>
+            <div style="display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.4;color:#2a2822"><span style="width:5px;height:5px;border-radius:50%;background:#161513;flex-shrink:0;margin-top:6px"></span>Camera delivery analysis on every interview</div>
+            <div style="display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.4;color:#2a2822"><span style="width:5px;height:5px;border-radius:50%;background:#161513;flex-shrink:0;margin-top:6px"></span>Full history and your readiness curve</div>
+          </div>
+        </div>
+
+        <div style="border:1.5px dashed #cbcabf;border-radius:18px;padding:17px 19px;background:transparent;transition:border-color .12s ease" style-hover="border-color:#a3a294">
+          <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:13px">
+            <div style="min-width:0;flex:1">
+              <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+                <span style="font:700 16px 'Hanken Grotesk',sans-serif;color:#5A594F">1 application</span>
+                <span style="font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border:1.5px solid #cbcabf;color:#8a897e;border-radius:999px;padding:2px 8px">{{ freeBadge }}</span>
+              </div>
+              <div style="font-size:12px;color:#a3a294;font-weight:600;margin-top:3px">No account charge, ever</div>
+            </div>
+            <div style="font-family:'Newsreader',serif;font-size:27px;font-weight:500;line-height:1;flex-shrink:0;color:#5A594F">Free</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.4;color:#5A594F"><span style="width:5px;height:5px;border-radius:50%;background:#a3a294;flex-shrink:0;margin-top:6px"></span>One application, start to finish</div>
+            <div style="display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.4;color:#5A594F"><span style="width:5px;height:5px;border-radius:50%;background:#a3a294;flex-shrink:0;margin-top:6px"></span>Scorecard, all three fixes, marked-up CV</div>
+            <div style="display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.4;color:#5A594F"><span style="width:5px;height:5px;border-radius:50%;background:#a3a294;flex-shrink:0;margin-top:6px"></span>One mock interview with grading</div>
+            <div style="display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.4;color:#5A594F"><span style="width:5px;height:5px;border-radius:50%;background:#a3a294;flex-shrink:0;margin-top:6px"></span>Unlimited re-scores on that application</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid rgba(22,21,19,0.14);padding-top:15px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px;font-size:12.5px;color:#5A594F;line-height:1.55">Everything you've already scored stays readable forever, whether or not you ever buy.</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+          <span style="width:26px;height:18px;border-radius:5px;background:#17B26A;border:1.5px solid #161513;display:flex;align-items:center;justify-content:center"><span style="width:9px;height:2.5px;border-radius:2px;background:#FFFEF6;transform:rotate(-45deg)"></span></span>
+          <span style="font-size:12px;color:#5A594F;font-weight:600">Link, Apple Pay or card</span>
+        </div>
+      </div>
     </div>
   </div>
   </sc-if>
@@ -941,7 +1344,7 @@
 </div>
 
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;startSignedIn&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Demo state&quot;},&quot;interviewMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;video&quot;,&quot;voice&quot;],&quot;default&quot;:&quot;video&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Demo state&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:[&quot;#DCCDFB&quot;,&quot;#DFE3D3&quot;,&quot;#F6A64B&quot;,&quot;#C9D7F0&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Style&quot;},&quot;playful&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Style&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;startSignedIn&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Demo state&quot;},&quot;startPlan&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;free&quot;,&quot;starter&quot;,&quot;full&quot;],&quot;default&quot;:&quot;free&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Demo state&quot;},&quot;interviewMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;video&quot;,&quot;voice&quot;],&quot;default&quot;:&quot;video&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Demo state&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:[&quot;#DCCDFB&quot;,&quot;#DFE3D3&quot;,&quot;#F6A64B&quot;,&quot;#C9D7F0&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Style&quot;},&quot;playful&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Style&quot;}}">
 class Component extends DCLogic {
   constructor(props){
     super(props);
@@ -953,6 +1356,7 @@ class Component extends DCLogic {
   state = {
     screen:'cv', cvStage:'upload', ivStage:'setup', ivQuestion:0, ivProbe:false,
     authed:false, wallOpen:false, wallEverOpened:false,
+    plan:'free', appsLeft:0, appsTotal:1, sessionsLeft:0, payOpen:false, userMenu:false,
     email:'', elapsed:0,
     cvAttached:false, cvFileName:'',
     jdText:'', jdParsed:false, jdFallbackRole:false,
@@ -981,6 +1385,8 @@ class Component extends DCLogic {
     const h = (window.location.hash || '').replace('#','').toLowerCase();
     if(h === 'cv') this.setState({ screen:'cv', cvStage:'upload' });
     if(this.props.startSignedIn === true) this.setState({ authed:true, screen:'home', cvStage:'list' });
+    if(this.props.startPlan === 'starter') this.setState({ plan:'starter', appsLeft:3, appsTotal:4, sessionsLeft:3 });
+    if(this.props.startPlan === 'full') this.setState({ plan:'full', appsLeft:9, appsTotal:13, sessionsLeft:12 });
     this.apply();
   }
   componentDidUpdate(prev){
@@ -1020,6 +1426,19 @@ class Component extends DCLogic {
   dismissWall(){ this.setState({ wallOpen:false }); }
   // no scroll reset: the blur dissolves exactly where they are
   unlock(){ this.setState({ authed:true, wallOpen:false }); }
+  // ---------- plans ----------
+  openPay(){ this.setState({ payOpen:true }); }
+  dismissPay(){ this.setState({ payOpen:false }); }
+  buy(pack){
+    const apps = pack === 'full' ? 12 : 3;
+    const sessions = pack === 'full' ? 15 : 3;
+    this.setState(s => ({
+      plan:pack, payOpen:false,
+      appsLeft:s.appsLeft + apps, appsTotal:s.appsTotal + apps,
+      sessionsLeft:s.sessionsLeft + sessions
+    }));
+  }
+  atFreeLimit(){ return this.state.authed && this.state.appsLeft <= 0; }
   gateNav(screen){
     if(!this.state.authed){ this.openWall(); return; }
     this.go(screen);
@@ -1028,7 +1447,7 @@ class Component extends DCLogic {
   // ---------- nav ----------
   go(screen){ this.setState({ screen }); const m=this.mainRef.current; if(m) m.scrollTop=0; }
   goCVList(){ if(!this.state.authed){ this.setState({ screen:'cv' }); return; } this.setState({ screen:'cv', cvStage:'list' }); const m=this.mainRef.current; if(m) m.scrollTop=0; }
-  startNewCv(){ this.setState({ screen:'cv', cvStage:'upload', cvAttached:false, cvFileName:'', jdText:'', jdParsed:false, jdFallbackRole:false }); const m=this.mainRef.current; if(m) m.scrollTop=0; }
+  startNewCv(){ if(this.atFreeLimit()){ this.openPay(); return; } this.setState({ screen:'cv', cvStage:'upload', cvAttached:false, cvFileName:'', jdText:'', jdParsed:false, jdFallbackRole:false }); const m=this.mainRef.current; if(m) m.scrollTop=0; }
 
   // ---------- inputs ----------
   attachCv(name){ this.setState({ cvAttached:true, cvFileName:name }); }
@@ -1095,7 +1514,7 @@ class Component extends DCLogic {
   standClaim(i){ this.setState(s=>({ claims:s.claims.map((c,idx)=> idx===i ? { ...c, status:'stood' } : c) })); }
   reopenClaim(i){ this.setState(s=>({ claims:s.claims.map((c,idx)=> idx===i ? { ...c, status:'open' } : c) })); }
   rescore(){ this.setState({ rescored:true }); }
-  rerun(){ this.setState({ screen:'interview', ivStage:'setup', ivQuestion:0, ivProbe:false, rescored:false }); const m=this.mainRef.current; if(m) m.scrollTop=0; }
+  rerun(){ if(this.atFreeLimit()){ this.openPay(); return; } this.setState({ screen:'interview', ivStage:'setup', ivQuestion:0, ivProbe:false, rescored:false }); const m=this.mainRef.current; if(m) m.scrollTop=0; }
 
   // ---------- data ----------
   questions(){
@@ -1131,6 +1550,12 @@ class Component extends DCLogic {
   }
 
   track(on){ return { display:'inline-flex', alignItems:'center', width:'42px', height:'24px', flexShrink:0, borderRadius:'999px', border:'1.5px solid #161513', background: on ? '#161513' : '#FFFEF6', padding:'0 3px', justifyContent: on ? 'flex-end' : 'flex-start', transition:'background .16s ease' }; }
+  tabStyle(on){
+    return { background:'transparent', border:'none', cursor:'pointer', padding:'0 2px 12px',
+      marginBottom:'-1.5px', fontFamily:"'Hanken Grotesk',sans-serif", fontSize:'15px',
+      fontWeight: on ? 700 : 600, color: on ? '#161513' : '#8a897e',
+      borderBottom: '2.5px solid ' + (on ? '#161513' : 'transparent'), transition:'color .14s ease' };
+  }
   knob(on){ return { display:'block', width:'14px', height:'14px', borderRadius:'999px', background: on ? '#FDFBEA' : '#161513' }; }
   renderVals(){
     const s = this.state;
@@ -1371,6 +1796,24 @@ class Component extends DCLogic {
     const allResolved = resolvedCount === s.claims.length;
     const openCount = s.claims.length - resolvedCount;
 
+    const allUsage = [
+      { role:'Senior Product Designer', company:'Meridian', date:'2 Aug 2026', used:'Scorecard, 3 fixes, 1 interview, 3 rewrites', to:'89', fromLine:'from 82' },
+      { role:'Product Designer', company:'Halden Health', date:'24 Jul 2026', used:'Scorecard, 3 fixes, 2 interviews', to:'80', fromLine:'from 71' },
+      { role:'Design Lead', company:'Ostara', date:'11 Jul 2026', used:'Scorecard only — no posting attached', to:'68', fromLine:'first score' }
+    ];
+    const allSessions = [
+      { claim:'The 34% activation number', where:'Meridian · bullet 4', date:'2 Aug 2026', spent:'20 min' },
+      { claim:'Owning the analytics dashboard', where:'Meridian · bullet 3', date:'2 Aug 2026', spent:'14 min' },
+      { claim:'Design-system governance', where:'Halden Health · summary', date:'25 Jul 2026', spent:'20 min' }
+    ];
+    const allReceipts = [
+      { what:'12 applications + 15 coaching sessions', date:'24 Jul 2026', amount:'$19.00' },
+      { what:'3 applications + 3 coaching sessions', date:'11 Jul 2026', amount:'$9.00' }
+    ];
+    const usageRows = s.plan === 'free' ? allUsage.slice(0,1) : allUsage;
+    const sessionRows = s.plan === 'free' ? [] : (s.plan === 'starter' ? allSessions.slice(0,2) : allSessions);
+    const receiptRows = s.plan === 'free' ? [] : (s.plan === 'starter' ? allReceipts.slice(1) : allReceipts);
+
     return {
       rootRef:this.rootRef, mainRef:this.mainRef, setSentinel:this.setSentinel,
       authed, locked, role, company,
@@ -1390,6 +1833,91 @@ class Component extends DCLogic {
       reviseBadgeStyle:{ marginLeft:'auto', fontSize:'11px', fontWeight:800, minWidth:'20px', height:'20px', borderRadius:'999px',
         display: (authed && openCount>0) ? 'flex' : 'none', alignItems:'center', justifyContent:'center',
         background:'#F6A64B', color:'#161513', border:'1.5px solid #161513', padding:'0 5px' },
+
+      // plans
+      payOpen:s.payOpen, openPay:()=>this.openPay(), dismissPay:()=>this.dismissPay(),
+      buyFull:()=>this.buy('full'), buyStarter:()=>this.buy('starter'),
+      appsLeft:s.appsLeft, appsTotal:s.appsTotal, sessionsLeft:s.sessionsLeft,
+      goProfile:()=>{ this.setState({ userMenu:false }); this.go('profile'); }, isProfile:s.screen==='profile',
+      userMenu:s.userMenu, toggleUserMenu:()=>this.setState(p=>({ userMenu:!p.userMenu })),
+      userMenuStyle:{
+        position:'absolute', bottom:'calc(100% + 8px)', left:0, right:0, zIndex:30,
+        background:'#FFFEF6', border:'1.5px solid #161513', borderRadius:'18px', padding:'6px',
+        boxShadow:'0 10px 26px rgba(22,21,19,0.16), 0 2px 0 rgba(22,21,19,0.9)',
+        display:'flex', flexDirection:'column',
+        transformOrigin:'bottom center',
+        opacity: s.userMenu ? 1 : 0,
+        transform: s.userMenu ? 'translateY(0) scale(1)' : 'translateY(6px) scale(0.97)',
+        pointerEvents: s.userMenu ? 'auto' : 'none',
+        visibility: s.userMenu ? 'visible' : 'hidden',
+        transition: s.userMenu
+          ? 'opacity .16s ease, transform .22s cubic-bezier(.2,1.3,.4,1), visibility 0s'
+          : 'opacity .13s ease, transform .13s ease, visibility 0s linear .13s'
+      },
+      userTriggerStyle:{
+        width:'100%', display:'flex', alignItems:'center', gap:'10px', padding:'6px',
+        background: s.userMenu ? '#F2EEDF' : 'transparent', border:'none', cursor:'pointer',
+        fontFamily:"'Hanken Grotesk',sans-serif", borderRadius:'12px', textAlign:'left',
+        transition:'background .14s ease'
+      },
+      chevronStyle:{
+        flexShrink:0, transition:'transform .22s cubic-bezier(.2,1.1,.4,1)',
+        transform: s.userMenu ? 'rotate(0deg)' : 'rotate(180deg)'
+      },
+      tierLabel: s.plan === 'full' ? '12-application pack' : s.plan === 'starter' ? '3-application pack' : 'Free plan',
+      logout:()=>this.setState({ userMenu:false, authed:false, screen:'cv', cvStage:'upload', payOpen:false, wallOpen:false, wallEverOpened:false }),
+      planName: s.appsLeft > 0 ? 'Applications' : 'Free plan',
+      planNote: s.appsLeft > 0
+        ? s.appsLeft + ' left · ' + s.sessionsLeft + ' coaching sessions'
+        : 'Free application used',
+      planCta: s.appsLeft > 0 ? 'Account' : 'Buy more',
+      payKicker: s.appsLeft > 0 ? 'Top up' : 'You\u2019ve used your free application',
+      payTitle: s.appsLeft > 0 ? 'Add more applications' : 'Get more applications',
+      freeBadge: s.appsTotal > 1 ? 'Included' : 'Used',
+      appsNote: s.appsLeft > 0 ? 'No expiry date. Use them whenever a posting is worth it.' : 'Your free one is spent. Everything you scored stays readable.',
+      buyMoreLine: s.appsLeft > 0
+        ? 'Running low? Applications stack — buying more never resets anything you already have.'
+        : 'You have no applications left. Buying more unlocks new postings and new interviews; your saved reports stay either way.',
+      appsBarStyle:{ display:'block', height:'100%', borderRadius:'999px', background:'#161513',
+        width: (s.appsTotal > 0 ? Math.round(((s.appsTotal - s.appsLeft) / s.appsTotal) * 100) : 0) + '%',
+        transition:'width .4s ease' },
+      appsUsedLabel: (s.appsTotal - s.appsLeft) + ' / ' + s.appsTotal + ' used',
+      receiptTotal: '$' + receiptRows.reduce((t,r)=>t + parseFloat(r.amount.replace('$','')), 0).toFixed(2),
+      acctProfile: s.acctTab !== 'settings', acctSettings: s.acctTab === 'settings',
+      tabProfile:()=>this.setState({ acctTab:'profile' }), tabSettings:()=>this.setState({ acctTab:'settings' }),
+      tabProfileStyle: this.tabStyle(s.acctTab !== 'settings'), tabSettingsStyle: this.tabStyle(s.acctTab === 'settings'),
+      nScoreTrackStyle: this.track(s.nScore !== false), nScoreKnobStyle: this.knob(s.nScore !== false),
+      nScoreToggle:()=>this.setState(p=>({ nScore: p.nScore === false })),
+      nGradeTrackStyle: this.track(s.nGrade !== false), nGradeKnobStyle: this.knob(s.nGrade !== false),
+      nGradeToggle:()=>this.setState(p=>({ nGrade: p.nGrade === false })),
+      nDigestTrackStyle: this.track(s.nDigest === true), nDigestKnobStyle: this.knob(s.nDigest === true),
+      nDigestToggle:()=>this.setState(p=>({ nDigest: !(p.nDigest === true) })),
+      nCamTrackStyle: this.track(s.nCam !== false), nCamKnobStyle: this.knob(s.nCam !== false),
+      nCamToggle:()=>this.setState(p=>({ nCam: p.nCam === false })),
+      retainTrackStyle: this.track(s.retain !== false), retainKnobStyle: this.knob(s.retain !== false),
+      retainToggle:()=>this.setState(p=>({ retain: p.retain === false })),
+      appsOfLine: s.appsTotal > 1 ? 'of ' + s.appsTotal + ' bought' : 'free application',
+      cvOnFile: s.cvFileName || 'resume_v3.pdf',
+      cvUsedIn: usageRows.length === 1 ? 'Used in 1 application' : 'Used in ' + usageRows.length + ' applications',
+      cvVersionLine: s.plan === 'free' ? 'This is your first upload.' : 'Two earlier versions kept.',
+      usage: usageRows.map(u => Object.assign({}, u, { open:()=>{ this.setState({ cvStage:'results' }); this.go('cv'); } })),
+      sessions: sessionRows,
+      hasSessions: sessionRows.length > 0, noSessions: sessionRows.length === 0,
+      receipts: receiptRows, hasReceipts: receiptRows.length > 0, noReceipts: receiptRows.length === 0,
+      confirmDelete: s.confirmDelete === true,
+      dangerLine: s.confirmDelete === true
+        ? 'This erases your CVs, scores, transcripts and rewrites. Unused applications are refunded. It cannot be undone.'
+        : 'Close the account and erase all of it. Unused applications are refunded.',
+      dangerCta: s.confirmDelete === true ? 'Yes, erase everything' : 'Delete account',
+      dangerStyle:{ flexShrink:0, background: s.confirmDelete === true ? '#8a3a2a' : 'transparent',
+        color: s.confirmDelete === true ? '#FDFBEA' : '#8a3a2a', border:'1.5px solid #8a3a2a', borderRadius:'999px',
+        padding:'9px 17px', font:"600 13px 'Hanken Grotesk',sans-serif", cursor:'pointer', whiteSpace:'nowrap' },
+      dangerAction: s.confirmDelete === true
+        ? ()=>this.setState({ confirmDelete:false, userMenu:false, authed:false, plan:'free', appsLeft:0, appsTotal:1,
+            sessionsLeft:0, payOpen:false, wallOpen:false, wallEverOpened:false, cvAttached:false, cvFileName:'',
+            screen:'cv', cvStage:'upload' })
+        : ()=>this.setState({ confirmDelete:true }),
+      cancelDelete:()=>this.setState({ confirmDelete:false }),
 
       // wall
       wallOpen:s.wallOpen, openWall:()=>this.openWall(), dismissWall:()=>this.dismissWall(), unlock:()=>this.unlock(),

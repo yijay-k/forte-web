@@ -16,6 +16,8 @@ export type AuthState = {
   openWall: () => void;
   dismissWall: () => void;
   unlock: () => void;
+  /** Drops back to the signed-out state, including the wall's "seen" flag. */
+  signOut: () => void;
   /** Called by the sentinel. No-ops once the user is in or has seen the wall. */
   triggerWall: () => void;
 };
@@ -46,6 +48,12 @@ export function AuthProvider({
     setWallOpen(false);
   }, []);
 
+  const signOut = useCallback(() => {
+    setAuthed(false);
+    setWallOpen(false);
+    setWallSeen(false);
+  }, []);
+
   const triggerWall = useCallback(() => {
     setAuthed((isAuthed) => {
       if (!isAuthed) {
@@ -59,8 +67,17 @@ export function AuthProvider({
   }, []);
 
   const value = useMemo<AuthState>(
-    () => ({ authed, wallOpen, wallSeen, openWall, dismissWall, unlock, triggerWall }),
-    [authed, wallOpen, wallSeen, openWall, dismissWall, unlock, triggerWall],
+    () => ({
+      authed,
+      wallOpen,
+      wallSeen,
+      openWall,
+      dismissWall,
+      unlock,
+      signOut,
+      triggerWall,
+    }),
+    [authed, wallOpen, wallSeen, openWall, dismissWall, unlock, signOut, triggerWall],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -30,6 +30,12 @@ export function SidebarNav() {
       openWall();
       return;
     }
+    // The saved-applications list is private; signed out, "CV Evaluator"
+    // means the free upload wizard.
+    if (item.href === "/cv" && !authed) {
+      router.push("/cv/new");
+      return;
+    }
     router.push(item.href);
   }
 
@@ -39,8 +45,10 @@ export function SidebarNav() {
         const active = item.matchPrefix
           ? pathname === item.href || pathname.startsWith(`${item.href}/`)
           : pathname === item.href;
-        const locked = item.gated && !authed;
         const badge = item.href === "/revise" && authed && openCount > 0;
+        // Revise carries the open-claim badge instead of a pip — the prototype
+        // never draws a lock on that row.
+        const locked = item.gated && !authed && item.href !== "/revise";
 
         return (
           <button

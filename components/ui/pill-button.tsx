@@ -58,7 +58,9 @@ export function PillButton({
       disabled={disabled}
       className={cn(
         "inline-flex items-center justify-center gap-2 rounded-pill font-semibold whitespace-nowrap",
-        "transition-colors duration-150",
+        // No `transition-colors` here: `press` already animates colour, and a
+        // second transition declaration would replace its transform/shadow.
+        shadow === "none" && "transition-colors duration-150",
         variant === "underline" ? "" : SIZE[size],
         disabled ? DISABLED : cn(VARIANT[variant], SHADOW[shadow]),
         className,

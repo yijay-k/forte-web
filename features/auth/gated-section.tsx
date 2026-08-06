@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/utils/cn";
 import { useAuth } from "./use-auth";
 import { useWallSentinel } from "./use-wall-sentinel";
-import { useScrollContainer } from "@/components/layout/app-shell";
+import { useScrollContainer } from "@/components/layout/scroll-container";
 import { PillButton } from "@/components/ui/pill-button";
 
 type Props = {

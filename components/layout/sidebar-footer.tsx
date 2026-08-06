@@ -1,9 +1,11 @@
 "use client";
 
 import { useAuth } from "@/features/auth/use-auth";
-import { CURRENT_REP, READINESS, USER } from "@/lib/data/progress";
+import { READINESS } from "@/lib/data/progress";
+import { SidebarPlanCard } from "./sidebar-plan-card";
+import { SidebarUserMenu } from "./sidebar-user-menu";
 
-/** Readiness + account when signed in; the unlock CTA when not. */
+/** Readiness, entitlements and the account menu — or the unlock CTA when signed out. */
 export function SidebarFooter() {
   const { authed, openWall } = useAuth();
 
@@ -38,17 +40,8 @@ export function SidebarFooter() {
         </div>
       </div>
 
-      <div className="border-t border-ink/10 pt-3">
-        <div className="flex items-center gap-2.5 p-1.5">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-pill bg-ink text-[13px] font-bold text-on-ink">
-            {USER.initials}
-          </div>
-          <div className="min-w-0 flex-1 leading-tight">
-            <div className="text-[13.5px] font-bold">{USER.name}</div>
-            <div className="text-xs text-faint">Rep {CURRENT_REP} · 3 reps this month</div>
-          </div>
-        </div>
-      </div>
+      <SidebarPlanCard />
+      <SidebarUserMenu />
     </div>
   );
 }

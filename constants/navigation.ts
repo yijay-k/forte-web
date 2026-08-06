@@ -9,6 +9,21 @@ export type NavItem = {
   readonly matchPrefix?: boolean;
 };
 
+/**
+ * Routes that require an account. A superset of the gated NAV_ITEMS —
+ * `/account` is reachable from the user menu rather than the sidebar, and the
+ * saved-applications list at `/cv` is private too (the prototype only ever
+ * shows a signed-out visitor the upload wizard).
+ */
+export const GATED_EXACT_ROUTES: readonly string[] = ["/", "/cv"];
+
+export const GATED_ROUTE_PREFIXES: readonly string[] = [
+  "/interview",
+  "/revise",
+  "/progress",
+  "/account",
+];
+
 export const NAV_ITEMS: readonly NavItem[] = [
   { href: "/cv", label: "CV Evaluator", mark: "square", gated: false, matchPrefix: true },
   { href: "/", label: "Home", mark: "circle", gated: true },

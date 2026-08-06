@@ -19,8 +19,8 @@ export type Claim = {
   readonly suggestion: string;
 };
 
-export const TERMINAL_CLAIM_STATUSES = ["rewritten", "cut", "stood"] as const;
+const TERMINAL: readonly ClaimStatus[] = ["rewritten", "cut", "stood"];
 
 export function isResolved(status: ClaimStatus): boolean {
-  return (TERMINAL_CLAIM_STATUSES as readonly string[]).includes(status);
+  return TERMINAL.includes(status);
 }

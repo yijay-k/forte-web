@@ -1,31 +1,10 @@
-import { READINESS } from "@/lib/data/progress";
-
-const STATS = [
-  {
-    label: "Readiness",
-    value: READINESS.score,
-    delta: READINESS.delta,
-    note: "Lowest of the three scored numbers",
-  },
-  {
-    label: "Interview overall",
-    value: "67",
-    delta: "+5",
-    note: "Mean of substance, clarity, specificity",
-  },
-  {
-    label: "Claims defended",
-    value: "5 / 8",
-    delta: null,
-    note: "3 still flagged for revision",
-  },
-];
+import { PROGRESS_STATS } from "@/lib/data/progress";
 
 /** Three headline numbers across the top of the progress screen. */
 export function ProgressHeadlineStats() {
   return (
     <div className="mb-5 grid grid-cols-3 gap-4 max-[900px]:grid-cols-1">
-      {STATS.map((stat) => (
+      {PROGRESS_STATS.map((stat) => (
         <div
           key={stat.label}
           className="rounded-[20px] border-hair border-ink bg-surface px-6 py-5.5 shadow-hard"

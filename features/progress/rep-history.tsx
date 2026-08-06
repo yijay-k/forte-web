@@ -1,5 +1,5 @@
+import { IconListRow } from "@/components/ui/icon-list-row";
 import { getRepHistory } from "@/lib/data/progress";
-import { RepHistoryRow } from "./rep-history-row";
 
 export function RepHistory() {
   const entries = getRepHistory();
@@ -10,10 +10,15 @@ export function RepHistory() {
         Rep history
       </div>
       {entries.map((entry, i) => (
-        <RepHistoryRow
+        <IconListRow
           key={entry.id}
-          entry={entry}
+          title={entry.title}
+          sub={entry.sub}
+          tone={entry.accent ? "accent" : "sage"}
           last={i === entries.length - 1}
+          trailing={
+            <div className="font-serif text-[19px] font-medium">{entry.score}</div>
+          }
         />
       ))}
     </div>

@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { getTranscriptScript, PAUSE_LABEL } from "@/lib/data/transcript";
 import { getInterviewer } from "@/lib/data/interviewers";
+import { useIsomorphicLayoutEffect } from "@/utils/use-isomorphic-layout-effect";
 import type { InterviewerId } from "@/types/interview";
 
 export type Turn = {
@@ -37,7 +38,9 @@ export function useTranscript(elapsed: number, interviewerId: InterviewerId) {
     });
   }, [elapsed, interviewer.name]);
 
-  useEffect(() => {
+  // Before paint: a passive effect would show each new caption at the previous
+  // scroll position for one frame, then jump.
+  useIsomorphicLayoutEffect(() => {
     const el = scrollRef.current;
     if (el && el.scrollHeight > el.clientHeight) el.scrollTop = el.scrollHeight;
   }, [turns.length]);

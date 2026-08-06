@@ -106,6 +106,17 @@ export function getInterviewReport(): InterviewReport {
   return REPORT;
 }
 
+/**
+ * The gap between what the CV claims and what was defended out loud. This gap
+ * is the product, so the numbers live here rather than inline in the card.
+ */
+export const DEFENDED_SCORE = {
+  cv: 82,
+  defended: 67,
+  arithmetic: "(Substance 72 + Clarity 78 + Specificity 51) ÷ 3 = 67",
+  loggedNote: "Confidence 74 logged, not weighted.",
+} as const;
+
 /** What each mode logs, shown on the setup cards. */
 export const VOICE_MODE_LOGS: readonly string[] = [
   "Pauses, self-corrections and time-to-first-word",

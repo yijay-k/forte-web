@@ -1,8 +1,11 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { cn } from "@/utils/cn";
+import { EntitledLink } from "@/features/billing/entitled-link";
 
-/** Two side-by-side entry points: score something new, or re-run the interview. */
+/**
+ * Two side-by-side entry points. Both spend an application, so both route
+ * through the entitlement gate rather than straight to the screen.
+ */
 export function QuickActions() {
   return (
     <div className="mb-9 grid grid-cols-2 gap-4 max-[900px]:grid-cols-1">
@@ -46,7 +49,7 @@ function ActionCard({
   glyph: ReactNode;
 }) {
   return (
-    <Link
+    <EntitledLink
       href={href}
       className={cn(
         "press flex items-center gap-4.5 rounded-2xl border-hair border-ink px-6.5 py-6 text-left shadow-hard hover:shadow-hard-sm",
@@ -54,23 +57,23 @@ function ActionCard({
       )}
     >
       {glyph}
-      <div className="flex-1">
-        <div className="font-serif text-[19px] font-medium">{title}</div>
-        <div
+      <span className="flex-1">
+        <span className="block font-serif text-[19px] font-medium">{title}</span>
+        <span
           className={cn(
-            "mt-0.5 text-[13px]",
+            "mt-0.5 block text-[13px]",
             tone === "accent" ? "text-ink-soft" : "text-muted",
           )}
         >
           {body}
-        </div>
-      </div>
+        </span>
+      </span>
       <span
         className={cn("text-[19px]", tone === "accent" ? "text-ink" : "text-faint")}
         aria-hidden="true"
       >
         →
       </span>
-    </Link>
+    </EntitledLink>
   );
 }

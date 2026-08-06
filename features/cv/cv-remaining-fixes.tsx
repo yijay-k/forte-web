@@ -21,7 +21,9 @@ export function CvRemainingFixes() {
             className="rounded-xl border-hair border-ink bg-surface-sunk px-5.5 py-5"
           >
             <div className="mb-2.25 flex flex-wrap items-center gap-2.5">
-              <Chip tone={fix.tone}>{fix.points}</Chip>
+              <Chip tone={fix.tone === "accent" ? "accent" : "sage"}>
+                {fix.points}
+              </Chip>
               <span className="font-serif text-base font-semibold">{fix.title}</span>
             </div>
             <p className="text-sm leading-[1.55] text-muted">{fix.body}</p>

@@ -12,19 +12,12 @@ import {
 import { usePathname } from "next/navigation";
 import { Sidebar } from "./sidebar";
 import { FlowStepper } from "./flow-stepper";
+import { ScrollContainerContext } from "./scroll-container";
 import { UnlockWall } from "@/features/auth/unlock-wall";
 import { UnlockStickyBar } from "@/features/auth/unlock-sticky-bar";
 import { useGateGuard } from "@/features/auth/use-gate-guard";
-
-/**
- * The scrolling <main>. The gate sentinel observes against this element rather
- * than the viewport, and route changes reset it to the top.
- */
-const ScrollContainer = createContext<HTMLElement | null>(null);
-
-export function useScrollContainer() {
-  return useContext(ScrollContainer);
-}
+import { PayModal } from "@/features/billing/pay-modal";
+import { useIsomorphicLayoutEffect } from "@/utils/use-isomorphic-layout-effect";
 
 const ChromeContext = createContext<{ setStepperHidden: (hidden: boolean) => void }>({
   setStepperHidden: () => {},
@@ -37,7 +30,10 @@ const ChromeContext = createContext<{ setStepperHidden: (hidden: boolean) => voi
  */
 export function useHideStepper(hidden: boolean) {
   const { setStepperHidden } = useContext(ChromeContext);
-  useEffect(() => {
+  // Layout effect, not a passive one: a passive effect runs after paint, so
+  // the stepper would flash over the live interview for a frame and then shift
+  // the whole screen up as it disappeared.
+  useIsomorphicLayoutEffect(() => {
     if (!hidden) return;
     setStepperHidden(true);
     return () => setStepperHidden(false);
@@ -50,7 +46,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [stepperHidden, setStepperHidden] = useState(false);
   const pathname = usePathname();
 
-  useGateGuard();
+  // True while bouncing a signed-out visitor off a gated route. Children are
+  // withheld rather than rendered-then-replaced, so private content never
+  // paints even for a frame.
+  const redirecting = useGateGuard();
 
   const chrome = useMemo(() => ({ setStepperHidden }), []);
 
@@ -58,24 +57,30 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => setScrollEl(mainRef.current), []);
 
   // The prototype resets scroll on every screen change; client-side route
-  // transitions don't do this for a nested scroll container.
-  useEffect(() => {
+  // transitions don't do this for a nested scroll container. Before paint, so
+  // the new screen is never shown at the old screen's scroll offset.
+  useIsomorphicLayoutEffect(() => {
     mainRef.current?.scrollTo({ top: 0 });
   }, [pathname]);
 
   return (
-    <ScrollContainer.Provider value={scrollEl}>
+    <ScrollContainerContext.Provider value={scrollEl}>
       <ChromeContext.Provider value={chrome}>
         <div className="flex h-full w-full overflow-hidden bg-paper text-ink">
           <Sidebar />
-          <main ref={mainRef} className="relative h-full min-w-0 flex-1 overflow-y-auto">
-            {!stepperHidden && <FlowStepper />}
-            {children}
+          <main
+            ref={mainRef}
+            data-scroll-container
+            className="relative h-full min-w-0 flex-1 overflow-y-auto"
+          >
+            {!stepperHidden && !redirecting && <FlowStepper />}
+            {redirecting ? null : children}
             <UnlockStickyBar />
           </main>
         </div>
         <UnlockWall />
+        <PayModal />
       </ChromeContext.Provider>
-    </ScrollContainer.Provider>
+    </ScrollContainerContext.Provider>
   );
 }

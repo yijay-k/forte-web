@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Chip } from "@/components/ui/chip";
+import { VERDICT_CHIP } from "@/constants/scoring";
 import type { CvRun } from "@/types/cv";
 
 export function CvRunRow({ run, last }: { run: CvRun; last?: boolean }) {
@@ -19,7 +20,7 @@ export function CvRunRow({ run, last }: { run: CvRun; last?: boolean }) {
           {run.file} · {run.when}
         </span>
       </span>
-      <Chip tone={run.kind}>{run.cover}</Chip>
+      <Chip tone={VERDICT_CHIP[run.kind]}>{run.cover}</Chip>
       <span className="w-11.5 text-right font-serif text-[25px] font-medium">
         {run.score}
       </span>

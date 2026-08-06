@@ -16,7 +16,7 @@ export function CvHeadlineFix() {
         <span className="text-[13px] font-extrabold tracking-[0.04em] text-faint uppercase">
           {TARGET_ROLE} · {TARGET_COMPANY}
         </span>
-        <Chip tone="ok">free · no signup</Chip>
+        <Chip tone="good">free · no signup</Chip>
       </div>
 
       <div className="relative rounded-4xl border-hair border-ink bg-ink p-8.5 text-on-ink shadow-accent">
@@ -24,13 +24,14 @@ export function CvHeadlineFix() {
           your #{headlineFix.rank} fix · {headlineFix.points}
         </Sticker>
 
-        <h2 className="mb-5.5 max-w-[660px] text-pretty font-serif text-[32px] leading-[1.18] font-medium">
+        {/* The report's h1: the diagnosis is the headline of this page. */}
+        <h1 className="mt-0 mb-5.5 max-w-[660px] text-pretty font-serif text-[32px] leading-[1.18] font-medium">
           {diagnosis.lead}{" "}
           <em className="text-accent italic">{diagnosis.emphasis1}</em>
           {diagnosis.middle}{" "}
           <em className="text-accent italic">{diagnosis.emphasis2}</em>
           {diagnosis.tail}
-        </h2>
+        </h1>
 
         <div className="rounded-lg border border-paper/16 bg-paper/6 px-5 py-4.5">
           <div className="text-sm leading-[1.55] text-on-ink-strong">

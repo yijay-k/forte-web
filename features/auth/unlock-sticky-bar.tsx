@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { PillButton } from "@/components/ui/pill-button";
 import { isCvReportPath } from "@/constants/navigation";
+import { getCvReport } from "@/lib/data/cv-report";
 import { useAuth } from "./use-auth";
 
 /**
@@ -21,7 +22,7 @@ export function UnlockStickyBar() {
   return (
     <div className="sticky right-0 bottom-0 left-0 z-40 flex flex-wrap items-center justify-between gap-5 border-t-hair border-ink bg-ink px-10 py-4 shadow-bar">
       <div className="text-[14.5px] leading-snug text-on-ink">
-        <strong>Your score is 82.</strong>{" "}
+        <strong>Your score is {getCvReport().overall}.</strong>{" "}
         <span className="text-on-ink-muted">Two more fixes take it to ~90.</span>
       </div>
       <PillButton variant="accent" size="lg" onClick={openWall}>

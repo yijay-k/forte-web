@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Sticker } from "@/components/ui/sticker";
+import { PROGRESS_FOCUS } from "@/lib/data/progress";
 
 /** The one number that isn't moving, and the way to move it. */
 export function FocusCard() {
@@ -8,17 +9,16 @@ export function FocusCard() {
       <Sticker position="absolute -top-3.25 left-6">your focus</Sticker>
 
       <div className="mt-2 mb-2 font-serif text-xl font-medium">
-        Specificity · 51, barely moving
+        {PROGRESS_FOCUS.title}
       </div>
       <p className="mb-4 text-[13.5px] leading-[1.55] text-muted">
-        It&rsquo;s the only number that isn&rsquo;t climbing, and it&rsquo;s the one
-        that collapses under a follow-up. Three flagged claims are waiting.
+        {PROGRESS_FOCUS.body}
       </p>
       <Link
         href="/revise"
         className="inline-block rounded-pill border-hair border-ink bg-ink px-5.25 py-3 text-[13.5px] font-semibold text-on-ink"
       >
-        Revise them →
+        {PROGRESS_FOCUS.cta}
       </Link>
     </div>
   );

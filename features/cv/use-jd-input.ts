@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { countWords } from "@/utils/format-clock";
+import { countWords } from "@/utils/text";
 import {
   PARSED_REQUIREMENTS,
   ROLE_FALLBACK_NOTE,

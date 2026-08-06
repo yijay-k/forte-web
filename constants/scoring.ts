@@ -1,12 +1,13 @@
+import type { ChipTone } from "@/components/ui/chip";
 import type { ClaimStatus } from "@/types/revise";
 import type { Verdict } from "@/types/common";
 
-/** Chip styling per verdict. Used by coverage rows, CV runs, and annotations. */
-export const VERDICT_CHIP: Record<Verdict, string> = {
-  ok: "bg-sage text-good",
-  weak: "bg-amber/30 text-warn",
-  miss: "bg-track text-[#8a897e]",
-  neutral: "bg-surface text-ink",
+/** How a scoring verdict maps onto the design system's chip tones. */
+export const VERDICT_CHIP: Record<Verdict, ChipTone> = {
+  ok: "good",
+  weak: "warning",
+  miss: "quiet",
+  neutral: "neutral",
 };
 
 /** Border + fill for a coverage row, which is tinted by its verdict. */

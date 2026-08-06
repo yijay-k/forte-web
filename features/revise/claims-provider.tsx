@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useMemo, useReducer, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useMemo,
+  useReducer,
+  useState,
+  type ReactNode,
+} from "react";
 import { getClaims } from "@/lib/data/claims";
 import { isResolved, type Claim } from "@/types/revise";
 
@@ -55,13 +62,20 @@ export type ClaimsState = {
   /** Set once the user re-scores; reveals the score deltas. */
   rescored: boolean;
   rescore: () => void;
+  /** Called when a fresh interview starts, retiring the last rep's result. */
+  clearRescore: () => void;
 };
 
 export const ClaimsContext = createContext<ClaimsState | null>(null);
 
 export function ClaimsProvider({ children }: { children: ReactNode }) {
   const [claims, dispatch] = useReducer(reducer, null, () => getClaims());
-  const [rescored, markRescored] = useReducer(() => true, false);
+  // Cleared when the user re-runs the interview — the "rep closed" panel
+  // describes the rep that just ended, not the one they are starting.
+  const [rescored, setRescored] = useState(false);
+
+  const rescore = useCallback(() => setRescored(true), []);
+  const clearRescore = useCallback(() => setRescored(false), []);
 
   const value = useMemo<ClaimsState>(() => {
     const resolvedCount = claims.filter((c) => isResolved(c.status)).length;
@@ -72,9 +86,10 @@ export function ClaimsProvider({ children }: { children: ReactNode }) {
       allResolved: resolvedCount === claims.length,
       dispatch,
       rescored,
-      rescore: markRescored,
+      rescore,
+      clearRescore,
     };
-  }, [claims, rescored]);
+  }, [claims, rescored, rescore, clearRescore]);
 
   return <ClaimsContext.Provider value={value}>{children}</ClaimsContext.Provider>;
 }
