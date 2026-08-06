@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing:border-box; }
+  html, body { margin:0; padding:0; }
+  a { color:#161513; text-decoration:none; }
+  a:hover { color:#5A594F; }
+  ::-webkit-scrollbar { width:10px; height:10px; }
+  ::-webkit-scrollbar-thumb { background:rgba(22,21,19,0.16); border-radius:999px; border:3px solid #FDFBEA; }
+  @keyframes ap_pulse { 0%,100% { opacity:1; } 50% { opacity:.28; } }
+  @keyframes ap_floaty { 0%,100% { transform:translateY(0) rotate(-4deg); } 50% { transform:translateY(-5px) rotate(-4deg); } }
+  @keyframes ap_bob { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-4px); } }
+  @keyframes ap_rise { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="display:flex;height:100vh;width:100%;background:#FDFBEA;color:#161513;font-family:'Hanken Grotesk',system-ui,sans-serif;overflow:hidden">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside style="width:280px;flex-shrink:0;height:100%;display:flex;flex-direction:column;padding:20px 16px;overflow:hidden">
+    <div style="display:flex;flex-direction:column;flex:1;min-height:0;border:1.5px solid #161513;border-radius:26px;background:#FFFEF6;padding:22px 16px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+      <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:11px;padding:2px 8px 22px;background:none;border:none;cursor:pointer">
+        <div style="display:flex;align-items:flex-end;gap:3px;height:23px">
+          <span style="width:4px;height:11px;background:#161513;border-radius:2px"></span>
+          <span style="width:4px;height:22px;background:#161513;border-radius:2px"></span>
+          <span style="width:4px;height:15px;background:#161513;border-radius:2px"></span>
+        </div>
+        <span style="font-family:'Newsreader',serif;font-weight:500;font-size:25px;letter-spacing:-0.01em">Forte</span>
+      </button>
+
+      <div style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column">
+      <nav style="display:flex;flex-direction:column;gap:6px">
+        <button onClick="{{ navGoCV }}" style="{{ navCV }}"><span style="width:8px;height:8px;border-radius:2px;background:currentColor"></span>CV Evaluator</button>
+        <button onClick="{{ navGoHome }}" style="{{ navHome }}"><span style="width:8px;height:8px;border-radius:50%;background:currentColor"></span>Home<span style="{{ lockPipStyle }}">{{ lockPip }}</span></button>
+        <button onClick="{{ navGoInterview }}" style="{{ navIV }}"><span style="width:8px;height:8px;border-radius:50%;border:2px solid currentColor"></span>Mock Interview<span style="{{ lockPipStyle }}">{{ lockPip }}</span></button>
+        <button onClick="{{ navGoRevise }}" style="{{ navRevise }}"><span style="width:8px;height:8px;background:currentColor;border-radius:1px;transform:rotate(45deg)"></span>Revise<span style="{{ reviseBadgeStyle }}">{{ reviseBadge }}</span></button>
+        <button onClick="{{ navGoProgress }}" style="{{ navProgress }}"><span style="width:9px;height:2px;background:currentColor"></span>Progress<span style="{{ lockPipStyle }}">{{ lockPip }}</span></button>
+      </nav>
+
+      <sc-if value="{{ authed }}" hint-placeholder-val="{{ true }}">
+      <div style="margin-top:26px;padding:0 8px 12px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#a3a294">The loop · rep {{ rep }}</div>
+      <div style="padding:0 10px;position:relative">
+        <div style="position:absolute;left:15px;top:14px;bottom:14px;width:2px;background:repeating-linear-gradient(180deg,#cbcabf 0 5px,transparent 5px 10px)"></div>
+        <sc-for list="{{ loopRail }}" as="lr" hint-placeholder-count="4">
+          <div style="display:flex;gap:13px;align-items:flex-start;padding:5px 0;position:relative;z-index:1">
+            <span style="{{ lr.dotStyle }}">{{ lr.num }}</span>
+            <div style="{{ lr.labelStyle }}">{{ lr.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ locked }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:24px;border:1.5px dashed #cbcabf;border-radius:18px;padding:16px;background:#FBF6EA">
+        <div style="font-size:12.5px;font-weight:700;margin-bottom:6px">You're browsing without an account</div>
+        <div style="font-size:12px;color:#5A594F;line-height:1.5">Your first fix is free and needs no signup. The rest of the report unlocks when you're ready.</div>
+      </div>
+      </sc-if>
+      </div>
+
+      <div style="flex-shrink:0;margin-top:16px;display:flex;flex-direction:column;gap:12px">
+        <sc-if value="{{ authed }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:10px 12px;border-radius:14px;background:var(--forte-accent, #DCCDFB);border:1.5px solid #161513">
+          <div style="display:flex;align-items:baseline;gap:7px">
+            <div style="font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#3a352c">Readiness</div>
+            <span style="font-family:'Newsreader',serif;font-size:20px;font-weight:500;line-height:1;margin-left:auto">{{ readiness }}</span>
+            <span style="font-size:10.5px;font-weight:700;color:#2f6b3a">{{ readinessDelta }}</span>
+          </div>
+          <div style="font-size:10px;color:#3a352c;margin-top:4px;line-height:1.4">Lowest of your three scores, out of 100 — now {{ readinessDriver }}.</div>
+        </div>
+        <div style="border-top:1px solid rgba(22,21,19,0.1);padding-top:12px">
+          <div style="display:flex;align-items:center;gap:10px;padding:6px">
+            <div style="width:36px;height:36px;border-radius:50%;background:#161513;color:#FDFBEA;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0">AC</div>
+            <div style="line-height:1.2;flex:1;min-width:0"><div style="font-weight:700;font-size:13.5px">Alex Chen</div><div style="font-size:12px;color:#a3a294">Rep {{ rep }} · 3 reps this month</div></div>
+          </div>
+        </div>
+        </sc-if>
+        <sc-if value="{{ locked }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openWall }}" style="background:#161513;color:#FDFBEA;border:1.5px solid #161513;border-radius:999px;padding:13px 18px;font:600 14px 'Hanken Grotesk';cursor:pointer;box-shadow:4px 4px 0 var(--forte-accent, #DCCDFB)" style-hover="transform:translate(2px,2px);box-shadow:2px 2px 0 var(--forte-accent, #DCCDFB)">Unlock the rest — free</button>
+        </sc-if>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main ref="{{ mainRef }}" style="flex:1;min-width:0;height:100%;overflow-y:auto;position:relative">
+
+    <!-- ===== STEPPER ===== -->
+    <sc-if value="{{ showStepper }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:940px;margin:0 auto;padding:32px 56px 0">
+      <div style="display:flex;align-items:flex-start">
+        <sc-for list="{{ stepItems }}" as="st" hint-placeholder-count="4">
+          <div style="{{ st.wrapStyle }}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;width:76px">
+              <div style="{{ st.dotStyle }}">{{ st.num }}</div>
+              <div style="{{ st.labelStyle }}">{{ st.label }}</div>
+            </div>
+            <sc-if value="{{ st.hasLine }}" hint-placeholder-val="{{ true }}"><div style="{{ st.lineStyle }}"></div></sc-if>
+          </div>
+        </sc-for>
+      </div>
+      <div style="text-align:center;font-size:12px;color:#a3a294;font-weight:600;margin-top:12px">The loop ends in a rewrite, not a report.</div>
+    </div>
+    </sc-if>
+
+    <!-- ===== HOME ===== -->
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Home" style="min-height:100%;padding:44px 56px 72px;background:radial-gradient(circle at 1px 1px, rgba(22,21,19,0.05) 1px, transparent 0) 0 0/24px 24px, #FDFBEA">
+      <div style="max-width:1000px;margin:0 auto">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap">
+          <span style="display:inline-block;background:#DFE3D3;border:1.5px solid #161513;border-radius:999px;padding:7px 16px;font-size:12.5px;font-weight:700">Good morning, Alex</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;background:#FFFEF6;border:1.5px solid #161513;border-radius:999px;padding:7px 14px;font-size:12.5px;font-weight:700;white-space:nowrap;box-shadow:0 3px 0 rgba(22,21,19,0.9)">Rep {{ rep }} · {{ role }} at {{ company }}</span>
+        </div>
+        <h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:54px;letter-spacing:-0.025em;line-height:1.02;margin:0 0 14px;max-width:780px;text-wrap:pretty">Three claims on your CV didn't <em style="font-style:italic;background:var(--forte-accent, #DCCDFB);padding:0 9px;border-radius:7px;box-decoration-break:clone">survive</em> the interview.</h1>
+        <p style="font-size:17px;color:#5A594F;margin:0 0 34px;max-width:560px;line-height:1.55">That's the useful part. Fix the lines you couldn't defend, and the next recruiter never gets to ask.</p>
+
+        <div style="position:relative;margin-bottom:34px">
+          <span data-sticker style="position:absolute;top:-15px;left:26px;background:#F6A64B;color:#161513;border:1.5px solid #161513;border-radius:999px;padding:4px 13px;font-size:11px;font-weight:700;transform:rotate(-4deg);box-shadow:0 3px 0 rgba(22,21,19,0.9);z-index:2;animation:ap_floaty 3.6s ease-in-out infinite">this closes the loop</span>
+          <button onClick="{{ goRevise }}" style="width:100%;text-align:left;background:#161513;color:#FDFBEA;border:1.5px solid #161513;border-radius:26px;padding:32px 34px;display:flex;align-items:center;gap:28px;cursor:pointer;box-shadow:7px 7px 0 var(--forte-accent, #DCCDFB)" style-hover="transform:translate(2px,2px);box-shadow:5px 5px 0 var(--forte-accent, #DCCDFB)">
+            <div style="width:58px;height:58px;border-radius:17px;background:var(--forte-accent, #DCCDFB);display:flex;align-items:center;justify-content:center;flex-shrink:0"><div style="width:20px;height:20px;border:3px solid #161513;border-radius:2px;transform:rotate(45deg)"></div></div>
+            <div style="flex:1">
+              <div style="font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--forte-accent, #DCCDFB);margin-bottom:7px">Step 4 · Revise</div>
+              <div style="font-family:'Newsreader',serif;font-size:27px;font-weight:500;line-height:1.15">{{ openClaimLabel }}</div>
+              <div style="font-size:13.5px;color:#b8b6aa;margin-top:4px">Rewrite, cut, or stand by each one — then re-score</div>
+            </div>
+            <span style="background:var(--forte-accent, #DCCDFB);color:#161513;border-radius:999px;padding:15px 30px;font-weight:600;font-size:16px;white-space:nowrap;display:flex;align-items:center;gap:9px">Open <span>→</span></span>
+          </button>
+        </div>
+
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px">
+          <div style="font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#a3a294">Your four numbers</div>
+          <button onClick="{{ goProgress }}" style="background:none;border:none;font:600 13px 'Hanken Grotesk';color:#161513;cursor:pointer;padding:0" style-hover="color:#5A594F">Full progress →</button>
+        </div>
+        <div style="font-size:13px;color:#5A594F;margin-bottom:14px">All out of 100 — same rubric on your CV and in your interviews. Confidence is logged, never weighted.</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:36px">
+          <sc-for list="{{ rubricCards }}" as="m" hint-placeholder-count="4">
+            <div style="{{ m.cardStyle }}">
+              <div style="{{ m.labelStyle }}">{{ m.label }}</div>
+              <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:8px"><span style="{{ m.valStyle }}">{{ m.value }}</span><span style="{{ m.tagStyle }}">{{ m.tag }}</span></div>
+              <div style="{{ m.spark }}"></div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:36px">
+          <button onClick="{{ startNewCv }}" style="text-align:left;background:#FFFEF6;border:1.5px solid #161513;border-radius:22px;padding:24px 26px;display:flex;align-items:center;gap:18px;cursor:pointer;box-shadow:5px 5px 0 rgba(22,21,19,0.9)" style-hover="transform:translate(2px,2px);box-shadow:3px 3px 0 rgba(22,21,19,0.9)">
+            <div style="width:46px;height:46px;border-radius:14px;background:#DFE3D3;border:1.5px solid #161513;display:flex;align-items:center;justify-content:center;flex-shrink:0"><div style="width:15px;height:19px;border-radius:3px;border:2.5px solid #161513"></div></div>
+            <div style="flex:1"><div style="font-family:'Newsreader',serif;font-size:19px;font-weight:500">Score against a new posting</div><div style="font-size:13px;color:#5A594F;margin-top:2px">Paste a JD, see what you don't cover</div></div>
+            <span style="font-size:19px;color:#a3a294">→</span>
+          </button>
+          <button onClick="{{ goInterview }}" style="text-align:left;background:var(--forte-accent, #DCCDFB);border:1.5px solid #161513;border-radius:22px;padding:24px 26px;display:flex;align-items:center;gap:18px;cursor:pointer;box-shadow:5px 5px 0 rgba(22,21,19,0.9)" style-hover="transform:translate(2px,2px);box-shadow:3px 3px 0 rgba(22,21,19,0.9)">
+            <div style="width:46px;height:46px;border-radius:14px;background:#FFFEF6;border:1.5px solid #161513;display:flex;align-items:center;justify-content:center;flex-shrink:0"><div style="width:17px;height:17px;border-radius:50%;border:3px solid #161513"></div></div>
+            <div style="flex:1"><div style="font-family:'Newsreader',serif;font-size:19px;font-weight:500">Re-run the same interview</div><div style="font-size:13px;color:#3a352c;margin-top:2px">Same questions, see the delta</div></div>
+            <span style="font-size:19px">→</span>
+          </button>
+        </div>
+
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px">
+          <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:22px;margin:0">Recent activity</h3>
+          <span style="font-size:13px;color:#a3a294;font-weight:600">Last 7 days</span>
+        </div>
+        <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:22px;padding:6px 24px;box-shadow:5px 5px 0 rgba(22,21,19,0.1)">
+          <div style="display:flex;align-items:center;gap:14px;padding:17px 0;border-bottom:1px solid rgba(22,21,19,0.08)"><div style="width:34px;height:34px;border-radius:9px;background:var(--forte-accent, #DCCDFB);border:1.5px solid #161513;flex-shrink:0"></div><div style="flex:1"><div style="font-weight:600;font-size:14.5px">Mock interview · 5 questions, 2 follow-up probes</div><div style="font-size:13px;color:#a3a294">Overall 67 · 3 CV claims flagged as undefended</div></div><div style="font-size:13px;color:#a3a294">2h ago</div></div>
+          <div style="display:flex;align-items:center;gap:14px;padding:17px 0;border-bottom:1px solid rgba(22,21,19,0.08)"><div style="width:34px;height:34px;border-radius:9px;background:#DFE3D3;border:1.5px solid #161513;flex-shrink:0"></div><div style="flex:1"><div style="font-weight:600;font-size:14.5px">CV scored against the {{ company }} posting</div><div style="font-size:13px;color:#a3a294">82 · covers 2 of 5 requirements</div></div><div style="font-size:13px;color:#a3a294">Yesterday</div></div>
+          <div style="display:flex;align-items:center;gap:14px;padding:17px 0"><div style="width:34px;height:34px;border-radius:9px;background:#DFE3D3;border:1.5px solid #161513;flex-shrink:0"></div><div style="flex:1"><div style="font-weight:600;font-size:14.5px">Uploaded resume_v3.pdf</div><div style="font-size:13px;color:#a3a294">First evaluation</div></div><div style="font-size:13px;color:#a3a294">3d ago</div></div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ===== CV EVALUATOR ===== -->
+    <sc-if value="{{ isCV }}" hint-placeholder-val="{{ true }}">
+    <div data-screen-label="CV Evaluator" style="max-width:940px;margin:0 auto;padding:44px 56px 84px">
+      <span style="display:inline-block;background:#DFE3D3;border:1.5px solid #161513;border-radius:999px;padding:7px 16px;font-size:12.5px;font-weight:700;margin-bottom:18px">CV Evaluator</span>
+
+      <!-- list -->
+      <sc-if value="{{ cvList }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:26px">
+        <div>
+          <h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:46px;letter-spacing:-0.02em;margin:0 0 8px;line-height:1.03">One CV, scored per <em style="font-style:italic">posting</em>.</h1>
+          <p style="font-size:15.5px;color:#5A594F;margin:0;max-width:500px;line-height:1.5">A CV isn't good or bad in the abstract — it's good for one job. Every posting you paste gets its own score and its own coverage.</p>
+        </div>
+        <button onClick="{{ startNewCv }}" style="background:var(--forte-accent, #DCCDFB);color:#161513;border:1.5px solid #161513;border-radius:999px;padding:15px 28px;font:600 15px 'Hanken Grotesk';cursor:pointer;display:inline-flex;align-items:center;gap:9px;box-shadow:4px 4px 0 #161513" style-hover="transform:translate(2px,2px);box-shadow:2px 2px 0 #161513">+ New posting</button>
+      </div>
+      <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:8px 26px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+        <div style="padding:20px 0 14px;border-bottom:1px solid rgba(22,21,19,0.1);font-weight:500;font-family:'Newsreader',serif;font-size:20px">Applications</div>
+        <sc-for list="{{ cvHistoryRows }}" as="c" hint-placeholder-count="3">
+          <button onClick="{{ c.onView }}" style="width:100%;text-align:left;background:transparent;border:none;border-bottom:1px solid rgba(22,21,19,0.07);cursor:pointer;display:flex;align-items:center;gap:16px;padding:16px 4px">
+            <div style="width:40px;height:40px;border-radius:11px;background:#DFE3D3;border:1.5px solid #161513;flex-shrink:0;display:flex;align-items:center;justify-content:center"><div style="width:12px;height:15px;border-radius:2px;border:2px solid #161513"></div></div>
+            <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:14.5px">{{ c.title }}</div><div style="font-size:12.5px;color:#a3a294">{{ c.file }} · {{ c.when }}</div></div>
+            <span style="{{ c.coverStyle }}">{{ c.cover }}</span>
+            <div style="font-family:'Newsreader',serif;font-weight:500;font-size:25px;width:46px;text-align:right">{{ c.score }}</div>
+            <span style="font-size:16px;color:#a3a294">→</span>
+          </button>
+        </sc-for>
+      </div>
+      </sc-if>
+
+      <!-- upload + JD -->
+      <sc-if value="{{ cvUpload }}" hint-placeholder-val="{{ true }}">
+      <sc-if value="{{ authed }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ goCV }}" style="background:#FFFEF6;border:1.5px solid #161513;border-radius:999px;padding:9px 17px;font:600 13px 'Hanken Grotesk';color:#161513;cursor:pointer;margin-bottom:22px;display:inline-flex;align-items:center;gap:7px;box-shadow:3px 3px 0 rgba(22,21,19,0.9)" style-hover="transform:translate(1px,1px);box-shadow:2px 2px 0 rgba(22,21,19,0.9)">← All applications</button>
+      </sc-if>
+      <h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:46px;letter-spacing:-0.02em;margin:0 0 10px;line-height:1.03">Score your CV against the <em style="font-style:italic">actual posting</em>.</h1>
+      <p style="font-size:16px;color:#5A594F;margin:0 0 30px;max-width:580px;line-height:1.5">Not a job title — the real text. It's the only way to tell you which requirements you cover, and to interrogate the claims you've made.</p>
+      <div style="display:grid;gap:18px">
+
+        <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:28px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+          <div style="font-weight:500;font-family:'Newsreader',serif;font-size:20px;margin-bottom:16px">1 · Your CV</div>
+          <sc-if value="{{ cvNotAttached }}" hint-placeholder-val="{{ true }}">
+          <div style="border:2px dashed #C4AEF5;border-radius:18px;padding:40px 24px;text-align:center;background:#FBF6EA">
+            <div style="width:52px;height:52px;border-radius:16px;background:var(--forte-accent, #DCCDFB);border:1.5px solid #161513;margin:0 auto 14px;display:flex;align-items:center;justify-content:center"><div style="width:16px;height:20px;border-radius:3px;border:2.5px solid #161513"></div></div>
+            <div style="font-weight:600;font-size:15.5px;margin-bottom:4px">Drop your CV here, or browse</div>
+            <div style="font-size:13px;color:#a3a294">PDF or DOCX · up to 5MB · no account needed</div>
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
+              <button onClick="{{ attachSample }}" style="background:transparent;border:1.5px solid #161513;border-radius:999px;padding:10px 19px;font:600 13.5px 'Hanken Grotesk';cursor:pointer" style-hover="background:#DFE3D3">Use sample · resume_v3.pdf</button>
+              <button onClick="{{ attachPasted }}" style="background:transparent;border:1.5px solid #cbcabf;border-radius:999px;padding:10px 19px;font:600 13.5px 'Hanken Grotesk';color:#5A594F;cursor:pointer" style-hover="border-color:#161513;color:#161513">Can't read your file? Paste it as text</button>
+            </div>
+          </div>
+          </sc-if>
+          <sc-if value="{{ cvAttached }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:14px;border:1.5px solid #161513;border-radius:18px;padding:18px 20px;background:#FBF6EA">
+            <div style="width:44px;height:44px;border-radius:12px;background:var(--forte-accent, #DCCDFB);border:1.5px solid #161513;display:flex;align-items:center;justify-content:center;flex-shrink:0"><div style="width:15px;height:19px;border-radius:3px;border:2.5px solid #161513"></div></div>
+            <div style="flex:1"><div style="font-weight:600;font-size:14.5px">{{ cvFileName }}</div><div style="font-size:12.5px;color:#2f6b3a;font-weight:600">✓ Read · 8 bullets across 2 roles</div></div>
+            <button onClick="{{ removeCv }}" style="background:transparent;border:1.5px solid #161513;border-radius:999px;padding:9px 16px;font:600 12.5px 'Hanken Grotesk';cursor:pointer" style-hover="background:#DFE3D3">Remove</button>
+          </div>
+          </sc-if>
+        </div>
+
+        <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:28px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:6px">
+            <div style="font-weight:500;font-family:'Newsreader',serif;font-size:20px">2 · The job posting</div>
+            <span style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#b5701f;background:rgba(246,166,75,0.24);border:1px solid #e8b06a;border-radius:999px;padding:4px 11px">where the score comes from</span>
+          </div>
+          <div style="font-size:13.5px;color:#5A594F;margin-bottom:18px;line-height:1.5">Paste the whole thing — responsibilities, requirements, the waffle. We keep only what your CV can be checked against.</div>
+
+          <sc-if value="{{ jdEmpty }}" hint-placeholder-val="{{ true }}">
+          <textarea value="{{ jdText }}" onChange="{{ onJdInput }}" placeholder="Paste the job description here…" style="width:100%;min-height:150px;resize:vertical;background:#fff;border:1.5px solid #161513;border-radius:16px;padding:16px 18px;font:400 14px 'Hanken Grotesk';line-height:1.6;color:#161513;outline:none"></textarea>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px">
+            <button onClick="{{ parseJd }}" style="{{ parseJdStyle }}">Read the posting <span>→</span></button>
+            <button onClick="{{ useSampleJd }}" style="background:transparent;border:1.5px solid #161513;border-radius:999px;padding:11px 19px;font:600 13.5px 'Hanken Grotesk';cursor:pointer" style-hover="background:#DFE3D3">Use a sample posting</button>
+          </div>
+          <button onClick="{{ useRoleFallback }}" style="margin-top:16px;background:none;border:none;padding:0;font:600 13px 'Hanken Grotesk';color:#5A594F;cursor:pointer;border-bottom:1.5px solid rgba(22,21,19,0.25)" style-hover="color:#161513">No posting yet? Score against a role instead</button>
+          </sc-if>
+
+          <sc-if value="{{ jdReady }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1.5px solid #161513;border-radius:18px;padding:20px 22px;background:#FBF6EA">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px">
+              <div>
+                <div style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#a3a294;margin-bottom:5px">{{ jdSourceLabel }}</div>
+                <div style="font-family:'Newsreader',serif;font-size:22px;font-weight:500;line-height:1.2">{{ role }}</div>
+                <div style="font-size:13px;color:#5A594F;margin-top:3px">{{ jdMeta }}</div>
+              </div>
+              <button onClick="{{ clearJd }}" style="background:transparent;border:1.5px solid #161513;border-radius:999px;padding:9px 16px;font:600 12.5px 'Hanken Grotesk';cursor:pointer;flex-shrink:0" style-hover="background:#DFE3D3">Replace</button>
+            </div>
+            <div style="font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#a3a294;margin-bottom:10px">Requirements we'll check you against</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ reqPreview }}" as="q" hint-placeholder-count="5">
+                <div style="display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.5"><span style="width:18px;height:18px;border-radius:5px;background:#FFFEF6;border:1.5px solid #161513;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-top:1px">{{ q.n }}</span><span>{{ q.text }}</span></div>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+        </div>
+
+        <button onClick="{{ evaluate }}" style="{{ evaluateStyle }}">{{ evaluateLabel }} <span>→</span></button>
+        <sc-if value="{{ locked }}" hint-placeholder-val="{{ true }}">
+        <div style="font-size:13px;color:#a3a294;font-weight:600;margin-top:-4px">Your first fix is free — no signup, no card.</div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <!-- analyzing: real progress, not a spinner -->
+      <sc-if value="{{ cvAnalyzing }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#161513;color:#FDFBEA;border:1.5px solid #161513;border-radius:26px;padding:52px 40px;box-shadow:7px 7px 0 var(--forte-accent, #DCCDFB)">
+        <div style="font-family:'Newsreader',serif;font-weight:500;font-size:32px;margin-bottom:8px;line-height:1.15">{{ analyzeHeadline }}</div>
+        <div style="font-size:14.5px;color:#b8b6aa;margin-bottom:28px">{{ analyzeSub }}</div>
+        <div style="height:10px;border-radius:999px;background:rgba(253,251,234,0.14);overflow:hidden;margin-bottom:24px">
+          <div style="{{ analyzeBarStyle }}"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ analyzeSteps }}" as="a" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:12px"><span style="{{ a.dotStyle }}">{{ a.mark }}</span><span style="{{ a.textStyle }}">{{ a.text }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ===== RESULTS ===== -->
+      <sc-if value="{{ cvResults }}" hint-placeholder-val="{{ false }}">
+      <sc-if value="{{ authed }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ goCV }}" style="background:#FFFEF6;border:1.5px solid #161513;border-radius:999px;padding:9px 17px;font:600 13px 'Hanken Grotesk';color:#161513;cursor:pointer;margin-bottom:22px;display:inline-flex;align-items:center;gap:7px;box-shadow:3px 3px 0 rgba(22,21,19,0.9)" style-hover="transform:translate(1px,1px);box-shadow:2px 2px 0 rgba(22,21,19,0.9)">← All applications</button>
+      </sc-if>
+
+      <div style="display:grid;gap:20px">
+
+        <!-- FREE: diagnosis + fix #1, always fully readable -->
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+            <span style="font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#a3a294">{{ role }} · {{ company }}</span>
+            <span style="font-size:11px;font-weight:700;color:#2f6b3a;background:#DFE3D3;border:1.5px solid #161513;border-radius:999px;padding:3px 11px">free · no signup</span>
+          </div>
+          <div style="position:relative;background:#161513;color:#FDFBEA;border:1.5px solid #161513;border-radius:26px;padding:34px;box-shadow:7px 7px 0 var(--forte-accent, #DCCDFB)">
+            <span data-sticker style="position:absolute;top:-14px;left:28px;background:#F6A64B;color:#161513;border:1.5px solid #161513;border-radius:999px;padding:4px 13px;font-size:11px;font-weight:700;transform:rotate(-3deg);box-shadow:0 3px 0 rgba(22,21,19,0.9)">your #1 fix · +9 pts</span>
+            <div style="font-family:'Newsreader',serif;font-weight:500;font-size:32px;line-height:1.18;margin-bottom:22px;max-width:660px;text-wrap:pretty">You'd clear their first-round screen — but you describe what you <em style="font-style:italic;color:var(--forte-accent, #DCCDFB)">did</em>, not what <em style="font-style:italic;color:var(--forte-accent, #DCCDFB)">changed</em>.</div>
+            <div style="background:rgba(253,251,234,0.06);border:1px solid rgba(253,251,234,0.16);border-radius:16px;padding:18px 20px">
+              <div style="font-size:14px;line-height:1.55;color:#e8e6d8"><span style="color:#F6A64B;font-weight:700">Before</span> · Redesigned the onboarding flow.</div>
+              <div style="height:1px;background:rgba(253,251,234,0.14);margin:12px 0"></div>
+              <div style="font-size:14px;line-height:1.55;color:#e8e6d8"><span style="color:var(--forte-accent, #DCCDFB);font-weight:700">After</span> · Redesigned onboarding, cutting drop-off 34% and adding ~1.8k activated users a month.</div>
+            </div>
+            <div style="font-size:13px;color:#9a998f;margin-top:16px;line-height:1.55">Six of your eight bullets describe activity, not outcome. This is the one that costs you the most.</div>
+          </div>
+        </div>
+
+        <!-- FREE: overall score, with the arithmetic shown -->
+        <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:30px;display:flex;align-items:center;gap:32px;flex-wrap:wrap;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+          <div style="position:relative;width:132px;height:132px;flex-shrink:0">
+            <svg width="132" height="132" viewBox="0 0 132 132">
+              <circle cx="66" cy="66" r="56" fill="none" stroke="#eeecdd" stroke-width="12"></circle>
+              <circle cx="66" cy="66" r="56" fill="none" stroke="var(--forte-accent, #DCCDFB)" stroke-width="12" stroke-linecap="round" stroke-dasharray="352" stroke-dashoffset="63" transform="rotate(-90 66 66)"></circle>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="font-family:'Newsreader',serif;font-weight:500;font-size:44px;line-height:1">82</div><div style="font-size:11px;color:#a3a294">/ 100</div></div>
+          </div>
+          <div style="flex:1;min-width:260px">
+            <div style="font-size:12.5px;font-weight:800;color:#a3a294;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">Overall score</div>
+            <div style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;line-height:1.2;margin-bottom:12px">A strong base, one soft spot.</div>
+            <div style="font-size:13.5px;color:#5A594F;line-height:1.6;background:#FBF6EA;border:1px solid rgba(22,21,19,0.14);border-radius:12px;padding:12px 14px">
+              <strong>How this is calculated:</strong> (Substance 85 + Clarity 95 + Specificity 66) ÷ 3 = <strong>82</strong>. Confidence isn't in the maths — it's logged, never weighted.
+            </div>
+          </div>
+        </div>
+
+        <!-- sentinel: fires the wall on scroll -->
+        <div ref="{{ setSentinel }}" style="height:1px"></div>
+
+        <!-- GATED ZONE -->
+        <div style="position:relative">
+          <div style="{{ gateStyle }}">
+            <div style="display:grid;gap:20px">
+
+              <!-- four numbers -->
+              <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:28px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+                <div style="font-weight:500;font-family:'Newsreader',serif;font-size:20px;margin-bottom:6px">The four numbers</div>
+                <div style="font-size:13px;color:#5A594F;margin-bottom:20px">Out of 100. The same rubric scores your mock interview, so you can watch each one move.</div>
+                <div style="display:grid;gap:16px">
+                  <sc-for list="{{ cvBreakdown }}" as="b" hint-placeholder-count="4">
+                    <div>
+                      <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin-bottom:7px"><span>{{ b.label }}</span><span style="{{ b.scoreStyle }}">{{ b.score }}</span></div>
+                      <div style="height:9px;border-radius:999px;background:#eeecdd"><div style="{{ b.barStyle }}"></div></div>
+                      <div style="font-size:12.5px;color:#a3a294;margin-top:6px">{{ b.note }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <!-- coverage matrix -->
+              <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:28px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+                  <div style="font-weight:500;font-family:'Newsreader',serif;font-size:20px">Against their requirements</div>
+                  <span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#F6A64B;border:1.5px solid #161513;transform:rotate(-2deg)">2 of 5 covered</span>
+                </div>
+                <div style="font-size:13.5px;color:#5A594F;margin-bottom:20px">Pulled from the posting you pasted. Every "covered" points at the line that earns it.</div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <sc-for list="{{ coverage }}" as="r" hint-placeholder-count="5">
+                    <div style="{{ r.rowStyle }}">
+                      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap">
+                        <div style="font-size:14px;font-weight:600;line-height:1.45;flex:1;min-width:200px">{{ r.req }}</div>
+                        <span style="{{ r.chipStyle }}">{{ r.status }}</span>
+                      </div>
+                      <div style="{{ r.evidenceStyle }}">{{ r.evidence }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <!-- fixes 2-3 -->
+              <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:28px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+                <div style="font-weight:500;font-family:'Newsreader',serif;font-size:20px;margin-bottom:6px">Two more fixes</div>
+                <div style="font-size:13.5px;color:#5A594F;margin-bottom:20px">You've got the big one up top. These two take you to about 90.</div>
+                <div style="display:grid;gap:12px">
+                  <div style="border:1.5px solid #161513;border-radius:18px;padding:20px 22px;background:#FBF6EA">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap"><span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--forte-accent, #DCCDFB);border:1.5px solid #161513">+5 pts</span><span style="font-weight:600;font-size:16px;font-family:'Newsreader',serif">Lead with a positioning statement</span></div>
+                    <div style="font-size:14px;color:#5A594F;line-height:1.55">Your top third is a skills list. Replace it with two lines naming your specialty and the size of problems you've handled.</div>
+                  </div>
+                  <div style="border:1.5px solid #161513;border-radius:18px;padding:20px 22px;background:#FBF6EA">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap"><span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#DFE3D3;border:1.5px solid #161513">+3 pts</span><span style="font-weight:600;font-size:16px;font-family:'Newsreader',serif">Evidence a requirement you only claim</span></div>
+                    <div style="font-size:14px;color:#5A594F;line-height:1.55">They ask for design-system ownership. You list "design systems" in a skills line but never show yourself owning one. A recruiter reads a skills list as a claim, not proof — so show the system, the contributors, and what governed it.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- marked-up CV -->
+              <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:28px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">
+                  <div style="font-weight:500;font-family:'Newsreader',serif;font-size:20px">Your CV, marked up</div>
+                  <span data-sticker style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#F6A64B;border:1.5px solid #161513;transform:rotate(-2deg)">6 issues</span>
+                </div>
+                <div style="font-size:13.5px;color:#5A594F;margin-bottom:16px">Highlighted where a recruiter's eyes glaze over. Each maps to a fix.</div>
+                <div style="display:flex;flex-wrap:wrap;gap:16px;margin-bottom:20px;font-size:12.5px;font-weight:600">
+                  <span style="display:inline-flex;align-items:center;gap:8px"><span style="width:16px;height:12px;border-radius:3px;background:rgba(246,166,75,0.4);border-bottom:2px solid #F6A64B"></span>Activity, no measurable outcome</span>
+                  <span style="display:inline-flex;align-items:center;gap:8px"><span style="width:16px;height:12px;border-radius:3px;background:rgba(196,174,245,0.5);border-bottom:2px solid #8b6fd6"></span>Skills list where a summary should be</span>
+                </div>
+                <div style="background:#fff;border:1.5px solid rgba(22,21,19,0.16);border-radius:14px;padding:32px 36px;box-shadow:0 2px 10px rgba(22,21,19,0.06);font-size:13.5px;line-height:1.65;color:#2a2822">
+                  <div style="border-bottom:1.5px solid rgba(22,21,19,0.14);padding-bottom:14px;margin-bottom:16px">
+                    <div style="font-family:'Newsreader',serif;font-size:26px;font-weight:600;letter-spacing:-0.01em">Alex Chen</div>
+                    <div style="font-size:12.5px;color:#5A594F;margin-top:3px">Currently Senior Product Designer · alex.chen@email.com · portfolio.alexchen.design</div>
+                  </div>
+                  <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a3a294;margin-bottom:6px">Summary</div>
+                  <p style="margin:0 0 20px"><span style="background:rgba(196,174,245,0.5);border-bottom:2px solid #8b6fd6;border-radius:3px;padding:1px 3px">Skilled in Figma, Sketch, prototyping, user research, design systems and cross-functional collaboration.</span> <span style="display:inline-block;font-size:10px;font-weight:700;color:#5b46a3;background:rgba(196,174,245,0.4);border:1px solid #b7a2ea;border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:middle">→ fix #2</span></p>
+                  <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a3a294;margin-bottom:8px">Experience</div>
+                  <div style="font-weight:700;font-size:14px">Senior Product Designer · Northwind <span style="font-weight:500;color:#a3a294;font-size:12.5px">· 2022–present</span></div>
+                  <ul style="margin:8px 0 16px;padding-left:20px;display:flex;flex-direction:column;gap:7px">
+                    <li><span style="background:rgba(246,166,75,0.4);border-bottom:2px solid #F6A64B;border-radius:3px;padding:1px 3px">Redesigned the onboarding flow.</span> <span style="font-size:10px;font-weight:700;color:#b5701f;background:rgba(246,166,75,0.28);border:1px solid #e8b06a;border-radius:999px;padding:1px 7px">no outcome</span></li>
+                    <li>Led weekly design critiques and mentored two junior designers.</li>
+                    <li><span style="background:rgba(246,166,75,0.4);border-bottom:2px solid #F6A64B;border-radius:3px;padding:1px 3px">Worked with engineers to ship a new analytics dashboard.</span> <span style="font-size:10px;font-weight:700;color:#b5701f;background:rgba(246,166,75,0.28);border:1px solid #e8b06a;border-radius:999px;padding:1px 7px">no metric</span></li>
+                    <li>Grew activation 34% after the onboarding revamp.</li>
+                  </ul>
+                  <div style="font-weight:700;font-size:14px">Product Designer · Loop Co <span style="font-weight:500;color:#a3a294;font-size:12.5px">· 2019–2022</span></div>
+                  <ul style="margin:8px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:7px">
+                    <li><span style="background:rgba(246,166,75,0.4);border-bottom:2px solid #F6A64B;border-radius:3px;padding:1px 3px">Created wireframes and prototypes for the mobile app.</span> <span style="font-size:10px;font-weight:700;color:#b5701f;background:rgba(246,166,75,0.28);border:1px solid #e8b06a;border-radius:999px;padding:1px 7px">activity, not impact</span></li>
+                    <li>Ran user interviews that informed the 2021 roadmap.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- interview CTA -->
+              <div style="position:relative;background:var(--forte-accent, #DCCDFB);border:1.5px solid #161513;border-radius:24px;padding:30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;box-shadow:6px 6px 0 rgba(22,21,19,0.9)">
+                <div><div style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;margin-bottom:4px">Now defend it out loud</div><div style="font-size:14px;color:#3a352c;line-height:1.5;max-width:460px">Five questions built from this CV and this posting — starting with the claims you'd least like to be asked about.</div></div>
+                <button onClick="{{ goInterview }}" style="background:#161513;color:#FDFBEA;border:1.5px solid #161513;border-radius:999px;padding:14px 28px;font:600 14.5px 'Hanken Grotesk';cursor:pointer;white-space:nowrap">Start mock interview →</button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- unlock overlay -->
+          <sc-if value="{{ locked }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:56px;left:0;right:0;display:flex;justify-content:center;pointer-events:none;padding:0 24px">
+            <div style="pointer-events:auto;max-width:540px;width:100%;background:#FFFEF6;border:1.5px solid #161513;border-radius:26px;padding:32px;box-shadow:9px 9px 0 rgba(22,21,19,0.9);text-align:center;animation:ap_rise .45s ease both">
+              <div style="font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#a3a294;margin-bottom:12px">You've seen it works</div>
+              <div style="font-family:'Newsreader',serif;font-weight:500;font-size:29px;line-height:1.18;margin-bottom:12px;text-wrap:pretty">Your score is 82. Two more fixes take it to ~90.</div>
+              <div style="font-size:14.5px;color:#5A594F;line-height:1.55;margin-bottom:24px">Behind this: your four numbers, the 5-requirement coverage check, both remaining fixes, your marked-up CV, and the mock interview.</div>
+              <button onClick="{{ openWall }}" style="width:100%;background:#161513;color:#FDFBEA;border:1.5px solid #161513;border-radius:999px;padding:17px 28px;font:600 16.5px 'Hanken Grotesk';cursor:pointer;box-shadow:5px 5px 0 var(--forte-accent, #DCCDFB)" style-hover="transform:translate(2px,2px);box-shadow:3px 3px 0 var(--forte-accent, #DCCDFB)">Unlock the rest of your report</button>
+              <div style="font-size:12.5px;color:#a3a294;margin-top:14px;font-weight:600">Free · no card · your CV stays where it is</div>
+            </div>
+          </div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ authed }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ finishAndList }}" style="justify-self:start;background:transparent;border:1.5px solid #161513;border-radius:999px;padding:12px 22px;font:600 14px 'Hanken Grotesk';cursor:pointer" style-hover="background:#DFE3D3">Save &amp; add another posting →</button>
+        </sc-if>
+      </div>
+      </sc-if>
+    </div>
+    </sc-if>
+
+    <!-- ===== MOCK INTERVIEW ===== -->
+    <sc-if value="{{ isInterview }}" hint-placeholder-val="{{ false }}">
+
+    <sc-if value="{{ ivSetup }}" hint-placeholder-val="{{ true }}">
+    <div data-screen-label="Interview setup" style="max-width:940px;margin:0 auto;padding:44px 56px 84px">
+      <span style="display:inline-block;background:#DFE3D3;border:1.5px solid #161513;border-radius:999px;padding:7px 16px;font-size:12.5px;font-weight:700;margin-bottom:18px">Mock Interview</span>
+      <h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:46px;letter-spacing:-0.02em;margin:0 0 10px;line-height:1.03">They'll ask about the <em style="font-style:italic">34%</em>.</h1>
+      <p style="font-size:16px;color:#5A594F;margin:0 0 30px;max-width:600px;line-height:1.55">Five questions built from your CV and the {{ company }} posting — each one aimed at a claim you've made. If an answer goes vague, expect a follow-up.</p>
+      <div style="display:grid;gap:18px">
+        <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:28px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+          <div style="font-weight:500;font-family:'Newsreader',serif;font-size:20px;margin-bottom:6px">Mode</div>
+          <div style="font-size:13.5px;color:#5A594F;margin-bottom:18px;line-height:1.5">Nothing is scored while you talk. You get one timer and nothing else — because a real interview has no dashboard. Both modes interrupt you like a person would.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div onClick="{{ pickVoice }}" style="{{ voiceModeCardStyle }}">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:9px">
+                <div>
+                  <div style="font-weight:600;font-size:17px;font-family:'Newsreader',serif">Voice only</div>
+                  <div style="font-size:12px;color:#5A594F;font-weight:600;margin-top:1px">the screening call</div>
+                </div>
+                <span style="{{ voiceRadioStyle }}"><span style="{{ voiceDotStyle }}"></span></span>
+              </div>
+              <div style="font-size:13.5px;color:#5A594F;line-height:1.5;margin-bottom:12px">No camera, no browser permission. It hears you hedge, trail off, or correct yourself mid-sentence, and pushes there.</div>
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <sc-for list="{{ voiceModeLogs }}" as="l" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:flex-start;gap:7px;font-size:12.5px;color:#3a352c;line-height:1.4"><span style="width:5px;height:5px;border-radius:50%;background:#161513;flex-shrink:0;margin-top:6px"></span>{{ l }}</div>
+                </sc-for>
+              </div>
+            </div>
+            <div onClick="{{ pickVideo }}" style="{{ videoModeCardStyle }}">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:9px">
+                <div>
+                  <div style="font-weight:600;font-size:17px;font-family:'Newsreader',serif">Voice + video</div>
+                  <div style="font-size:12px;color:#5A594F;font-weight:600;margin-top:1px">the panel round</div>
+                </div>
+                <span style="{{ videoRadioStyle }}"><span style="{{ videoDotStyle }}"></span></span>
+              </div>
+              <div style="font-size:13.5px;color:#5A594F;line-height:1.5;margin-bottom:12px">Adds one thing: it can cut in because of something it <em style="font-style:italic">saw</em> — you reaching for notes, you going still on a hard question.</div>
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <sc-for list="{{ videoModeLogs }}" as="l" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:flex-start;gap:7px;font-size:12.5px;color:#3a352c;line-height:1.4"><span style="width:5px;height:5px;border-radius:50%;background:#161513;flex-shrink:0;margin-top:6px"></span>{{ l }}</div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+          <div onClick="{{ toggleVoice }}" style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(22,21,19,0.1);display:flex;align-items:center;justify-content:space-between;gap:14px;cursor:pointer">
+            <div><div style="font-weight:600;font-size:14.5px">Speak my answers</div><div style="font-size:12.5px;color:#a3a294">Turn off to type instead — you lose the interruption behaviour.</div></div>
+            <span style="{{ voiceTrackStyle }}"><span style="{{ voiceKnobStyle }}"></span></span>
+          </div>
+        </div>
+
+        <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:28px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+          <div style="font-weight:500;font-family:'Newsreader',serif;font-size:20px;margin-bottom:6px">Who's interviewing you</div>
+          <div style="font-size:13.5px;color:#5A594F;margin-bottom:20px;line-height:1.5">Not a voice preference — this changes how hard the rep is. Same five questions, different tolerance for a vague answer.</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+            <sc-for list="{{ interviewers }}" as="p" hint-placeholder-count="3">
+              <div onClick="{{ p.onPick }}" style="{{ p.cardStyle }}">
+                <div style="{{ p.orbStyle }}"><span style="{{ p.orbInnerStyle }}"></span></div>
+                <div style="font-family:'Newsreader',serif;font-size:17px;font-weight:500;margin-bottom:2px">{{ p.name }}</div>
+                <div style="font-size:12px;font-weight:700;color:#5A594F;margin-bottom:7px">{{ p.role }}</div>
+                <div style="font-size:12.5px;color:#5A594F;line-height:1.45">{{ p.posture }}</div>
+                <div style="{{ p.tagStyle }}">{{ p.tag }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:24px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+          <div><div style="font-weight:500;font-size:19px;font-family:'Newsreader',serif">{{ role }} · {{ company }}</div><div style="font-size:13.5px;color:#5A594F">From resume_v3.pdf and the posting · 5 questions · ~12 min</div></div>
+          <button onClick="{{ goCV }}" style="background:transparent;border:1.5px solid #161513;border-radius:999px;padding:10px 19px;font:600 13px 'Hanken Grotesk';cursor:pointer" style-hover="background:#DFE3D3">Change posting</button>
+        </div>
+        <button onClick="{{ beginInterview }}" style="justify-self:start;background:var(--forte-accent, #DCCDFB);color:#161513;border:1.5px solid #161513;border-radius:999px;padding:16px 36px;font:600 16px 'Hanken Grotesk';cursor:pointer;display:inline-flex;align-items:center;gap:9px;box-shadow:4px 4px 0 #161513" style-hover="transform:translate(2px,2px);box-shadow:2px 2px 0 #161513">Start interview <span>→</span></button>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- live: no HUD -->
+    <sc-if value="{{ ivLive }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Interview live" style="position:relative;min-height:100%;display:flex;flex-direction:column;background:#1a1917">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid rgba(253,251,234,0.1);flex-wrap:wrap;gap:12px">
+        <div style="display:flex;align-items:center;gap:14px;color:#FDFBEA">
+          <span style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600"><span style="width:9px;height:9px;border-radius:50%;background:#e06666;animation:ap_pulse 1.4s infinite"></span>Recording</span>
+          <span style="font-size:13px;color:#9a998f">{{ role }} · {{ company }}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px">
+          <span style="font-family:'Newsreader',serif;font-size:22px;font-weight:500;color:#FDFBEA;font-variant-numeric:tabular-nums">{{ clock }}</span>
+          <span style="color:#FDFBEA;font-size:13px;font-weight:600">{{ qLabel }}</span>
+          <button onClick="{{ finishInterview }}" style="background:transparent;color:#FDFBEA;border:1.5px solid rgba(253,251,234,0.35);border-radius:999px;padding:8px 18px;font:600 13px 'Hanken Grotesk';cursor:pointer">End</button>
+        </div>
+      </div>
+      <div style="flex:1;min-height:0;display:flex;padding:22px 24px 0">
+        <sc-if value="{{ isVideoMode }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1;position:relative;min-height:340px;display:flex;flex-direction:column;border-radius:26px;overflow:hidden;border:1px solid rgba(253,251,234,0.16);background:repeating-linear-gradient(135deg,#242320 0 11px,#1e1d1a 11px 22px)">
+          <div style="flex:1;min-height:150px;padding:116px 24px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px">
+            <sc-if value="{{ bigIsAi }}" hint-placeholder-val="{{ true }}">
+            <div style="width:112px;height:112px;border-radius:50%;background:var(--forte-accent, #DCCDFB);display:flex;align-items:center;justify-content:center;animation:ap_bob 3.4s ease-in-out infinite"><span style="width:34px;height:34px;border-radius:50%;border:5px solid #161513"></span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+              <div style="font-size:15px;font-weight:600;color:#FDFBEA">{{ interviewerName }}</div>
+              <div style="font:500 10.5px ui-monospace,monospace;letter-spacing:.12em;color:#67665f;text-transform:uppercase">{{ interviewerState }}</div>
+            </div>
+            </sc-if>
+            <sc-if value="{{ bigIsSelf }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
+              <div style="font:500 12px ui-monospace,monospace;letter-spacing:.12em;color:#67665f;text-transform:uppercase">your camera</div>
+              <div style="font-size:12px;color:#4a4944">Frames are read and dropped. Never stored.</div>
+            </div>
+            </sc-if>
+          </div>
+          <div onClick="{{ swapView }}" style="{{ pipStyle }}" style-hover="border-color:rgba(220,205,251,0.75)">
+            <sc-if value="{{ bigIsAi }}" hint-placeholder-val="{{ true }}">
+            <div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,#2b2a26 0 9px,#232220 9px 18px);display:flex;align-items:center;justify-content:center;font:500 9.5px ui-monospace,monospace;letter-spacing:.1em;color:#67665f;text-transform:uppercase">self-view</div>
+            </sc-if>
+            <sc-if value="{{ bigIsSelf }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background:#232220;display:flex;align-items:center;justify-content:center"><span style="width:34px;height:34px;border-radius:50%;background:var(--forte-accent, #DCCDFB);display:flex;align-items:center;justify-content:center"><span style="width:12px;height:12px;border-radius:50%;border:2.5px solid #161513"></span></span></div>
+            </sc-if>
+            <div style="position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:6px 9px;background:linear-gradient(to top,rgba(16,15,14,0.92),rgba(16,15,14,0))">
+              <span style="font-size:10px;font-weight:700;color:#FDFBEA">{{ pipLabel }}</span>
+              <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9a998f">swap</span>
+            </div>
+          </div>
+          <div style="position:absolute;top:18px;right:18px;display:flex;align-items:center;gap:7px;background:rgba(22,21,19,0.82);border:1px solid rgba(253,251,234,0.14);border-radius:999px;padding:7px 14px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#DCCDFB"><span style="width:7px;height:7px;border-radius:50%;background:#DCCDFB;animation:ap_pulse 1.4s infinite"></span>watching</div>
+          <div style="flex-shrink:0;padding:30px 44px 32px;background:linear-gradient(to top,rgba(16,15,14,0.97) 0%,rgba(16,15,14,0.9) 60%,rgba(16,15,14,0.55) 100%);display:flex;flex-direction:column;gap:13px">
+            <sc-if value="{{ showProbeChip }}" hint-placeholder-val="{{ false }}">
+            <div style="align-self:flex-start;background:rgba(246,166,75,0.16);border:1px solid rgba(246,166,75,0.5);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;color:#F6A64B">Follow-up · that answer was vague</div>
+            </sc-if>
+            <div style="color:#FDFBEA;font-size:38px;line-height:1.22;font-family:'Newsreader',serif;font-weight:400;letter-spacing:-0.015em;max-width:900px;text-wrap:pretty">{{ currentQuestion }}</div>
+            <sc-if value="{{ hasSource }}" hint-placeholder-val="{{ true }}">
+            <div style="font-size:12.5px;color:#8d8c84;border-left:2px solid #46443e;padding-left:12px;line-height:1.5">{{ questionSource }}</div>
+            </sc-if>
+            <sc-if value="{{ hasTranscript }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top:5px;max-width:880px;display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:center;gap:7px;font:700 10px ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:#67665f"><span style="width:6px;height:6px;border-radius:50%;background:#DCCDFB;animation:ap_pulse 1.4s infinite"></span>live captions</div>
+              <div ref="{{ txRef }}" style="max-height:132px;overflow-y:auto;display:flex;flex-direction:column;gap:11px;padding-right:8px">
+                <sc-for list="{{ txTurns }}" as="t" hint-placeholder-count="2">
+                  <div style="display:flex;align-items:flex-start;gap:11px">
+                    <span style="{{ t.whoStyle }}">{{ t.who }}</span>
+                    <span style="{{ t.textStyle }}">{{ t.text }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            </sc-if>
+            <sc-if value="{{ showVisualCue }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:4px;align-self:flex-start;max-width:720px;background:rgba(220,205,251,0.12);border:1px solid rgba(220,205,251,0.42);border-radius:16px;padding:15px 18px">
+              <div style="display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#DCCDFB;margin-bottom:7px"><span style="width:7px;height:7px;border-radius:50%;background:#DCCDFB;animation:ap_pulse 1.4s infinite"></span>cut in — saw something</div>
+              <div style="color:#FDFBEA;font-size:18px;line-height:1.4;font-family:'Newsreader',serif">{{ visualCue }}</div>
+            </div>
+            </sc-if>
+          </div>
+        </div>
+        </sc-if>
+        <sc-if value="{{ isVoiceMode }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:16px">
+          <div style="width:100%;max-width:840px;display:flex;flex-direction:column;gap:20px">
+            <sc-if value="{{ showProbeChip }}" hint-placeholder-val="{{ false }}">
+            <div style="align-self:flex-start;background:rgba(246,166,75,0.16);border:1px solid rgba(246,166,75,0.5);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;color:#F6A64B">Follow-up · that answer was vague</div>
+            </sc-if>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="width:34px;height:34px;border-radius:50%;background:var(--forte-accent, #DCCDFB);display:flex;align-items:center;justify-content:center;animation:ap_bob 3s ease-in-out infinite"><span style="width:12px;height:12px;border-radius:50%;border:2.5px solid #161513"></span></span>
+              <span style="font-size:13.5px;font-weight:600;color:#FDFBEA">{{ interviewerName }}</span>
+              <span style="font-size:12.5px;color:#6b6a62">{{ interviewerState }}</span>
+            </div>
+            <div style="color:#FDFBEA;font-size:40px;line-height:1.2;font-family:'Newsreader',serif;font-weight:400;letter-spacing:-0.015em;text-wrap:pretty">{{ currentQuestion }}</div>
+            <sc-if value="{{ hasSource }}" hint-placeholder-val="{{ true }}">
+            <div style="font-size:12.5px;color:#6b6a62;border-left:2px solid #3a3833;padding-left:12px;line-height:1.5">{{ questionSource }}</div>
+            </sc-if>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+      <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:11px;padding:20px 24px 24px">
+        <div style="width:100%;max-width:860px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:220px;display:flex;align-items:center;gap:12px;background:rgba(253,251,234,0.05);border:1px solid rgba(253,251,234,0.14);border-radius:999px;padding:15px 22px">
+            <div style="display:flex;align-items:flex-end;gap:3px;height:20px">
+              <span style="width:3px;height:8px;background:var(--forte-accent, #DCCDFB);border-radius:2px"></span><span style="width:3px;height:16px;background:var(--forte-accent, #DCCDFB);border-radius:2px"></span><span style="width:3px;height:11px;background:var(--forte-accent, #DCCDFB);border-radius:2px"></span><span style="width:3px;height:20px;background:var(--forte-accent, #DCCDFB);border-radius:2px"></span><span style="width:3px;height:9px;background:var(--forte-accent, #DCCDFB);border-radius:2px"></span>
+            </div>
+            <span style="color:#9a998f;font-size:14px">{{ listeningLabel }}</span>
+          </div>
+          <button onClick="{{ nextQuestion }}" style="background:var(--forte-accent, #DCCDFB);color:#161513;border:1.5px solid var(--forte-accent, #DCCDFB);border-radius:999px;padding:15px 32px;font:600 15px 'Hanken Grotesk';cursor:pointer;white-space:nowrap">{{ nextLabel }}</button>
+        </div>
+        <div style="font-size:12.5px;color:#5e5d56;text-align:center">{{ liveFooter }}</div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- feedback -->
+    <sc-if value="{{ ivFeedback }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Interview feedback" style="max-width:940px;margin:0 auto;padding:44px 56px 84px">
+      <span style="display:inline-block;background:#DFE3D3;border:1.5px solid #161513;border-radius:999px;padding:7px 16px;font-size:12.5px;font-weight:700;margin-bottom:18px">Interview feedback</span>
+      <h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:46px;letter-spacing:-0.02em;margin:0 0 24px;line-height:1.03">Three claims didn't <em style="font-style:italic">hold</em>.</h1>
+      <div style="display:grid;gap:20px">
+        <div style="background:#161513;color:#FDFBEA;border:1.5px solid #161513;border-radius:26px;padding:32px;display:flex;gap:30px;flex-wrap:wrap;align-items:center;box-shadow:7px 7px 0 var(--forte-accent, #DCCDFB)">
+          <div style="position:relative;width:130px;height:130px;flex-shrink:0">
+            <svg width="130" height="130" viewBox="0 0 130 130"><circle cx="65" cy="65" r="55" fill="none" stroke="rgba(253,251,234,0.16)" stroke-width="12"></circle><circle cx="65" cy="65" r="55" fill="none" stroke="var(--forte-accent, #DCCDFB)" stroke-width="12" stroke-linecap="round" stroke-dasharray="345" stroke-dashoffset="114" transform="rotate(-90 65 65)"></circle></svg>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="font-family:'Newsreader',serif;font-weight:500;font-size:42px;line-height:1">67</div><div style="font-size:11px;opacity:.6">/ 100</div></div>
+          </div>
+          <div style="flex:1;min-width:240px">
+            <div style="font-family:'Newsreader',serif;font-weight:500;font-size:25px;line-height:1.25;margin-bottom:10px">Your CV scored 82. You defended it at 67.</div>
+            <div style="font-size:14.5px;color:#b8b6aa;line-height:1.55;margin-bottom:12px">That gap is the whole point of this product. The claims that fell apart under a follow-up are the ones to fix on the page.</div>
+            <div style="font-size:13px;color:#9a998f;line-height:1.6;background:rgba(253,251,234,0.06);border:1px solid rgba(253,251,234,0.16);border-radius:12px;padding:11px 13px">(Substance 72 + Clarity 78 + Specificity 51) ÷ 3 = <strong style="color:#FDFBEA">67</strong>. Confidence 74 logged, not weighted.</div>
+          </div>
+        </div>
+
+        <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:28px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+          <div style="font-weight:500;font-family:'Newsreader',serif;font-size:20px;margin-bottom:6px">Your four numbers · this rep</div>
+          <div style="font-size:13px;color:#5A594F;margin-bottom:20px">Out of 100, versus your last rep.</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+            <sc-for list="{{ ivNumbers }}" as="n" hint-placeholder-count="4">
+              <div style="{{ n.cardStyle }}">
+                <div style="{{ n.labelStyle }}">{{ n.label }}</div>
+                <div style="display:flex;align-items:baseline;gap:6px"><span style="{{ n.valStyle }}">{{ n.value }}</span><span style="{{ n.deltaStyle }}">{{ n.delta }}</span></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:28px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+            <div style="font-weight:500;font-family:'Newsreader',serif;font-size:20px">How you held the floor</div>
+            <span style="font-size:11px;font-weight:700;color:#5A594F;background:#DFE3D3;border:1.5px solid #161513;border-radius:999px;padding:3px 10px">logged, not scored</span>
+          </div>
+          <div style="font-size:13.5px;color:#5A594F;margin-bottom:18px;line-height:1.5">Counted from the conversation itself — turn-taking, pauses, self-corrections. These are timings, not judgements about you.</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:12px">
+            <sc-for list="{{ delivery }}" as="d" hint-placeholder-count="6">
+              <div style="border:1.5px solid #161513;border-radius:16px;padding:16px 18px;background:#FBF6EA">
+                <div style="font-size:12.5px;font-weight:600;color:#5A594F;margin-bottom:6px">{{ d.label }}</div>
+                <div style="font-family:'Newsreader',serif;font-size:23px;font-weight:500">{{ d.value }}</div>
+                <div style="font-size:12px;color:#a3a294;margin-top:4px;line-height:1.45">{{ d.note }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ isVideoMode }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:28px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+            <div style="font-weight:500;font-family:'Newsreader',serif;font-size:20px">What the camera added</div>
+            <span style="font-size:11px;font-weight:700;color:#161513;background:var(--forte-accent, #DCCDFB);border:1.5px solid #161513;border-radius:999px;padding:3px 10px">video mode</span>
+          </div>
+          <div style="font-size:13.5px;color:#5A594F;margin-bottom:18px;line-height:1.5">Three moments where something visible changed the question you got. Timestamps, not ratings — jump to any of them in the replay.</div>
+          <div style="display:grid;gap:11px">
+            <sc-for list="{{ visualEvents }}" as="v" hint-placeholder-count="3">
+              <div style="display:flex;align-items:flex-start;gap:14px;border:1.5px solid #161513;border-radius:16px;padding:15px 18px;background:#FBF6EA">
+                <span style="font:600 13px ui-monospace,monospace;background:#161513;color:#FDFBEA;border-radius:7px;padding:4px 8px;flex-shrink:0;margin-top:1px">{{ v.at }}</span>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:14.5px;font-weight:600;line-height:1.4;margin-bottom:3px">{{ v.what }}</div>
+                  <div style="font-size:13px;color:#5A594F;line-height:1.5">{{ v.consequence }}</div>
+                </div>
+                <button onClick="{{ v.onPlay }}" style="background:transparent;border:1.5px solid #161513;border-radius:999px;padding:7px 14px;font:600 12px 'Hanken Grotesk';cursor:pointer;flex-shrink:0;white-space:nowrap" style-hover="background:var(--forte-accent, #DCCDFB)">Replay</button>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin-top:14px;font-size:12.5px;color:#a3a294;line-height:1.5">Counts of a repeated action can be off by one. We show the timestamps so you can check us rather than take our word.</div>
+        </div>
+        </sc-if>
+
+        <div style="border:1.5px dashed rgba(22,21,19,0.35);border-radius:24px;padding:26px 28px;background:transparent">
+          <div style="font-weight:500;font-family:'Newsreader',serif;font-size:20px;margin-bottom:6px">What we deliberately don't measure</div>
+          <div style="font-size:13.5px;color:#5A594F;margin-bottom:16px;line-height:1.5">Some of this is technically impossible for us. The rest we could fake, and won't — a number you know is invented would poison the four that aren't.</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ notMeasured }}" as="x" hint-placeholder-count="5">
+              <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:#5A594F;background:#F3F0E2;border:1px solid rgba(22,21,19,0.18);border-radius:999px;padding:7px 14px"><span style="width:9px;height:1.5px;background:#a3a294"></span>{{ x }}</span>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:28px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+          <div style="font-weight:500;font-family:'Newsreader',serif;font-size:20px;margin-bottom:18px">Question by question</div>
+          <div style="display:grid;gap:14px">
+            <sc-for list="{{ qFeedback }}" as="q" hint-placeholder-count="3">
+              <div style="{{ q.cardStyle }}">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap"><span style="{{ q.chipStyle }}">{{ q.chip }}</span><span style="font-weight:600;font-size:16px;font-family:'Newsreader',serif">{{ q.title }}</span></div>
+                <div style="font-size:14px;color:#5A594F;line-height:1.55">{{ q.body }}</div>
+                <sc-if value="{{ q.hasQuote }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:13.5px;background:#FFFEF6;border:1px solid rgba(22,21,19,0.14);border-radius:12px;padding:12px 14px;line-height:1.55;margin-top:11px"><span style="color:#2f6b3a;font-weight:600">Stronger:</span> {{ q.quote }}</div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="position:relative;background:var(--forte-accent, #DCCDFB);border:1.5px solid #161513;border-radius:24px;padding:30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;box-shadow:6px 6px 0 rgba(22,21,19,0.9)">
+          <span data-sticker style="position:absolute;top:-14px;left:28px;background:#F6A64B;color:#161513;border:1.5px solid #161513;border-radius:999px;padding:4px 13px;font-size:11px;font-weight:700;transform:rotate(-3deg);box-shadow:0 3px 0 rgba(22,21,19,0.9)">step 4 of 4</span>
+          <div><div style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;margin-bottom:4px">Close the loop</div><div style="font-size:14px;color:#3a352c;line-height:1.5;max-width:460px">Three bullets on your CV made claims you couldn't back up. Fix them on the page and the next recruiter never gets to ask.</div></div>
+          <button onClick="{{ goRevise }}" style="background:#161513;color:#FDFBEA;border:1.5px solid #161513;border-radius:999px;padding:14px 28px;font:600 14.5px 'Hanken Grotesk';cursor:pointer;white-space:nowrap">Revise 3 claims →</button>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    </sc-if>
+
+    <!-- ===== REVISE ===== -->
+    <sc-if value="{{ isRevise }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Revise" style="max-width:940px;margin:0 auto;padding:44px 56px 84px">
+      <span style="display:inline-block;background:#F6A64B;border:1.5px solid #161513;border-radius:999px;padding:7px 16px;font-size:12.5px;font-weight:700;margin-bottom:18px;box-shadow:0 3px 0 rgba(22,21,19,0.9)">Step 4 · Revise</span>
+      <h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:46px;letter-spacing:-0.02em;margin:0 0 10px;line-height:1.03">The claims you couldn't <em style="font-style:italic">defend</em>.</h1>
+      <p style="font-size:16px;color:#5A594F;margin:0 0 30px;max-width:620px;line-height:1.55">Each of these is on your CV and fell apart when we probed it. A line you can't defend out loud is worse than no line at all — it invites the question. Rewrite it, cut it, or stand by it.</p>
+
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:24px">
+        <div style="flex:1;min-width:220px;height:10px;border-radius:999px;background:#eeecdd;overflow:hidden"><div style="{{ reviseBarStyle }}"></div></div>
+        <div style="font-size:13.5px;font-weight:700">{{ reviseProgressLabel }}</div>
+      </div>
+
+      <div style="display:grid;gap:16px">
+        <sc-for list="{{ claims }}" as="c" hint-placeholder-count="3">
+          <div style="{{ c.cardStyle }}">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <span style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#a3a294">Claim {{ c.n }} · {{ c.where }}</span>
+                <span style="{{ c.statusStyle }}">{{ c.statusLabel }}</span>
+              </div>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a3a294;margin-bottom:7px">On your CV</div>
+            <div style="{{ c.originalStyle }}">{{ c.original }}</div>
+
+            <div style="margin-top:16px;border-left:2px solid #F6A64B;padding-left:14px">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#b5701f;margin-bottom:6px">We asked</div>
+              <div style="font-size:14.5px;font-family:'Newsreader',serif;line-height:1.4;margin-bottom:8px">{{ c.probe }}</div>
+              <div style="font-size:13.5px;color:#5A594F;line-height:1.55">{{ c.whyFailed }}</div>
+            </div>
+
+            <sc-if value="{{ c.isEditing }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:18px">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a3a294;margin-bottom:7px">Your rewrite</div>
+              <textarea value="{{ c.draft }}" onChange="{{ c.onDraft }}" style="width:100%;min-height:96px;resize:vertical;background:#fff;border:1.5px solid #161513;border-radius:14px;padding:14px 16px;font:400 14px 'Hanken Grotesk';line-height:1.6;color:#161513;outline:none"></textarea>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px">
+                <button onClick="{{ c.onSave }}" style="background:#161513;color:#FDFBEA;border:1.5px solid #161513;border-radius:999px;padding:11px 22px;font:600 13.5px 'Hanken Grotesk';cursor:pointer">Save rewrite</button>
+                <button onClick="{{ c.onSuggest }}" style="background:var(--forte-accent, #DCCDFB);border:1.5px solid #161513;border-radius:999px;padding:11px 20px;font:600 13.5px 'Hanken Grotesk';cursor:pointer">Use our suggestion</button>
+                <button onClick="{{ c.onCancel }}" style="background:transparent;border:1.5px solid #cbcabf;border-radius:999px;padding:11px 20px;font:600 13.5px 'Hanken Grotesk';color:#5A594F;cursor:pointer">Cancel</button>
+              </div>
+            </div>
+            </sc-if>
+
+            <sc-if value="{{ c.isRewritten }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:18px;background:#FFFEF6;border:1.5px solid #2f6b3a;border-radius:14px;padding:14px 16px">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#2f6b3a;margin-bottom:6px">Now reads</div>
+              <div style="font-size:14px;line-height:1.6">{{ c.draft }}</div>
+            </div>
+            </sc-if>
+
+            <sc-if value="{{ c.showActions }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px">
+              <button onClick="{{ c.onEdit }}" style="background:#161513;color:#FDFBEA;border:1.5px solid #161513;border-radius:999px;padding:11px 22px;font:600 13.5px 'Hanken Grotesk';cursor:pointer">{{ c.editLabel }}</button>
+              <button onClick="{{ c.onCut }}" style="background:transparent;border:1.5px solid #161513;border-radius:999px;padding:11px 20px;font:600 13.5px 'Hanken Grotesk';cursor:pointer" style-hover="background:#DFE3D3">Cut the line</button>
+              <button onClick="{{ c.onStand }}" style="background:transparent;border:1.5px solid #cbcabf;border-radius:999px;padding:11px 20px;font:600 13.5px 'Hanken Grotesk';color:#5A594F;cursor:pointer" style-hover="border-color:#161513;color:#161513">Stand by it</button>
+            </div>
+            </sc-if>
+
+            <sc-if value="{{ c.isResolved }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ c.onReopen }}" style="margin-top:16px;background:none;border:none;padding:0;font:600 13px 'Hanken Grotesk';color:#5A594F;cursor:pointer;border-bottom:1.5px solid rgba(22,21,19,0.25)" style-hover="color:#161513">Undo</button>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="{{ rescoreCardStyle }}">
+        <div>
+          <div style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;margin-bottom:4px">{{ rescoreTitle }}</div>
+          <div style="font-size:14px;color:#3a352c;line-height:1.5;max-width:460px">{{ rescoreBody }}</div>
+        </div>
+        <button onClick="{{ rescore }}" style="{{ rescoreBtnStyle }}">{{ rescoreLabel }}</button>
+      </div>
+
+      <sc-if value="{{ rescored }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:20px;background:#161513;color:#FDFBEA;border:1.5px solid #161513;border-radius:26px;padding:32px;box-shadow:7px 7px 0 var(--forte-accent, #DCCDFB)">
+        <div style="font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--forte-accent, #DCCDFB);margin-bottom:12px">Rep {{ rep }} closed · rep {{ nextRep }} open</div>
+        <div style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;line-height:1.18;margin-bottom:20px">Specificity 66 → 84. Overall 82 → 91.</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px">
+          <sc-for list="{{ rescoreDeltas }}" as="d" hint-placeholder-count="3">
+            <div style="background:rgba(253,251,234,0.06);border:1px solid rgba(253,251,234,0.16);border-radius:14px;padding:14px 16px">
+              <div style="font-size:12px;color:#9a998f;font-weight:600;margin-bottom:6px">{{ d.label }}</div>
+              <div style="display:flex;align-items:baseline;gap:7px"><span style="font-family:'Newsreader',serif;font-size:24px;font-weight:500">{{ d.value }}</span><span style="font-size:12px;font-weight:700;color:#9fd6a8">{{ d.delta }}</span></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="font-size:14px;color:#b8b6aa;line-height:1.6;margin-bottom:22px;max-width:560px">The rewrite is on your CV now. Run the same five questions again — the only honest test of whether the fix stuck.</div>
+        <button onClick="{{ rerun }}" style="background:var(--forte-accent, #DCCDFB);color:#161513;border:1.5px solid var(--forte-accent, #DCCDFB);border-radius:999px;padding:15px 30px;font:600 15px 'Hanken Grotesk';cursor:pointer">Re-run the same interview →</button>
+      </div>
+      </sc-if>
+    </div>
+    </sc-if>
+
+    <!-- ===== PROGRESS ===== -->
+    <sc-if value="{{ isProgress }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Progress" style="max-width:1000px;margin:0 auto;padding:44px 56px 84px">
+      <span style="display:inline-block;background:#DFE3D3;border:1.5px solid #161513;border-radius:999px;padding:7px 16px;font-size:12.5px;font-weight:700;margin-bottom:18px">Progress</span>
+      <h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:46px;letter-spacing:-0.02em;margin:0 0 10px;line-height:1.03">Three reps in.</h1>
+      <p style="font-size:16px;color:#5A594F;margin:0 0 30px;max-width:560px;line-height:1.5">Reps, not streaks — nobody gets hired for logging in daily.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px">
+        <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:20px;padding:22px 24px;box-shadow:5px 5px 0 rgba(22,21,19,0.9)"><div style="font-size:13px;color:#a3a294;font-weight:700;margin-bottom:8px">Readiness</div><div style="font-family:'Newsreader',serif;font-weight:500;font-size:40px;line-height:1">{{ readiness }} <span style="font-size:14px;color:#2f6b3a;font-weight:600;font-family:'Hanken Grotesk'">{{ readinessDelta }}</span></div><div style="font-size:12px;color:#a3a294;margin-top:6px;line-height:1.45">Lowest of the three scored numbers</div></div>
+        <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:20px;padding:22px 24px;box-shadow:5px 5px 0 rgba(22,21,19,0.9)"><div style="font-size:13px;color:#a3a294;font-weight:700;margin-bottom:8px">Interview overall</div><div style="font-family:'Newsreader',serif;font-weight:500;font-size:40px;line-height:1">67 <span style="font-size:14px;color:#2f6b3a;font-weight:600;font-family:'Hanken Grotesk'">+5</span></div><div style="font-size:12px;color:#a3a294;margin-top:6px;line-height:1.45">Mean of substance, clarity, specificity</div></div>
+        <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:20px;padding:22px 24px;box-shadow:5px 5px 0 rgba(22,21,19,0.9)"><div style="font-size:13px;color:#a3a294;font-weight:700;margin-bottom:8px">Claims defended</div><div style="font-family:'Newsreader',serif;font-weight:500;font-size:40px;line-height:1">5 / 8</div><div style="font-size:12px;color:#a3a294;margin-top:6px;line-height:1.45">3 still flagged for revision</div></div>
+      </div>
+
+      <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:26px 28px;margin-bottom:20px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:12px">
+          <div style="font-family:'Newsreader',serif;font-size:20px;font-weight:500">The curve · out of 100</div>
+          <div style="display:flex;gap:16px;font-size:12px;font-weight:600;flex-wrap:wrap">
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:#161513;border-radius:2px"></span>Substance</span>
+            <span style="display:flex;align-items:center;gap:6px;color:#5A594F"><span style="width:16px;height:3px;background:#8b6fd6;border-radius:2px"></span>Clarity</span>
+            <span style="display:flex;align-items:center;gap:6px;color:#b5701f"><span style="width:16px;height:3px;background:#F6A64B;border-radius:2px"></span>Specificity</span>
+          </div>
+        </div>
+        <div style="font-size:13px;color:#5A594F;margin-bottom:20px">Specificity is the flat line. It's why Revise exists.</div>
+        <svg width="100%" height="210" viewBox="0 0 640 210" preserveAspectRatio="none">
+          <line x1="0" y1="40" x2="640" y2="40" stroke="rgba(22,21,19,0.08)" stroke-width="1"></line>
+          <line x1="0" y1="100" x2="640" y2="100" stroke="rgba(22,21,19,0.08)" stroke-width="1"></line>
+          <line x1="0" y1="160" x2="640" y2="160" stroke="rgba(22,21,19,0.08)" stroke-width="1"></line>
+          <polyline points="30,170 230,118 430,88 610,62" fill="none" stroke="#161513" stroke-width="3"></polyline>
+          <polyline points="30,148 230,116 430,80 610,52" fill="none" stroke="#8b6fd6" stroke-width="3"></polyline>
+          <polyline points="30,172 230,174 430,166 610,158" fill="none" stroke="#F6A64B" stroke-width="3"></polyline>
+          <circle cx="610" cy="62" r="5" fill="#161513"></circle>
+          <circle cx="610" cy="52" r="5" fill="#8b6fd6"></circle>
+          <circle cx="610" cy="158" r="5" fill="#F6A64B"></circle>
+        </svg>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#a3a294;margin-top:8px;padding:0 20px"><span>Rep 1</span><span>Rep 2</span><span>Rep 3</span><span>Now</span></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:20px">
+        <div style="background:#FFFEF6;border:1.5px solid #161513;border-radius:24px;padding:8px 26px;box-shadow:6px 6px 0 rgba(22,21,19,0.1)">
+          <div style="padding:20px 0 14px;border-bottom:1px solid rgba(22,21,19,0.1);font-weight:500;font-family:'Newsreader',serif;font-size:20px">Rep history</div>
+          <sc-for list="{{ repHistory }}" as="h" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid rgba(22,21,19,0.07)">
+              <div style="{{ h.iconStyle }}"></div>
+              <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:14px">{{ h.title }}</div><div style="font-size:12.5px;color:#a3a294">{{ h.sub }}</div></div>
+              <div style="font-family:'Newsreader',serif;font-weight:500;font-size:19px">{{ h.score }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="position:relative;background:#FBF6EA;border:1.5px solid #161513;border-radius:24px;padding:24px 26px;box-shadow:6px 6px 0 #F6A64B">
+          <span data-sticker style="position:absolute;top:-13px;left:24px;background:#F6A64B;color:#161513;border:1.5px solid #161513;border-radius:999px;padding:4px 12px;font-size:11px;font-weight:700;transform:rotate(-3deg);box-shadow:0 3px 0 rgba(22,21,19,0.9)">your focus</span>
+          <div style="font-family:'Newsreader',serif;font-size:20px;font-weight:500;margin:8px 0 8px">Specificity · 51, barely moving</div>
+          <div style="font-size:13.5px;color:#5A594F;line-height:1.55;margin-bottom:16px">It's the only number that isn't climbing, and it's the one that collapses under a follow-up. Three flagged claims are waiting.</div>
+          <button onClick="{{ goRevise }}" style="background:#161513;color:#FDFBEA;border:1.5px solid #161513;border-radius:999px;padding:12px 21px;font:600 13.5px 'Hanken Grotesk';cursor:pointer">Revise them →</button>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ===== STICKY UNLOCK BAR ===== -->
+    <sc-if value="{{ showStickyBar }}" hint-placeholder-val="{{ false }}">
+    <div style="position:sticky;bottom:0;left:0;right:0;z-index:40;background:#161513;border-top:1.5px solid #161513;padding:16px 40px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;box-shadow:0 -6px 24px rgba(22,21,19,0.18)">
+      <div style="color:#FDFBEA;font-size:14.5px;line-height:1.45"><strong>Your score is 82.</strong> <span style="color:#b8b6aa">Two more fixes take it to ~90.</span></div>
+      <button onClick="{{ openWall }}" style="background:var(--forte-accent, #DCCDFB);color:#161513;border:1.5px solid var(--forte-accent, #DCCDFB);border-radius:999px;padding:13px 26px;font:600 14.5px 'Hanken Grotesk';cursor:pointer;white-space:nowrap">Unlock the rest — free</button>
+    </div>
+    </sc-if>
+
+  </main>
+
+  <!-- ===== AUTH MODAL ===== -->
+  <sc-if value="{{ wallOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:28px">
+    <div onClick="{{ dismissWall }}" style="position:absolute;inset:0;background:rgba(22,21,19,0.55);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;z-index:1;max-width:470px;width:100%;background:#FDFBEA;border:1.5px solid #161513;border-radius:28px;padding:36px;box-shadow:10px 10px 0 rgba(22,21,19,0.9);animation:ap_rise .35s ease both">
+      <button onClick="{{ dismissWall }}" style="position:absolute;top:18px;right:18px;width:32px;height:32px;border-radius:50%;background:transparent;border:1.5px solid #cbcabf;color:#5A594F;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="border-color:#161513;color:#161513">✕</button>
+      <div style="font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#a3a294;margin-bottom:12px">Nothing to re-upload</div>
+      <div style="font-family:'Newsreader',serif;font-weight:500;font-size:31px;line-height:1.15;margin-bottom:12px;text-wrap:pretty">Unlock the rest of your report</div>
+      <div style="font-size:14.5px;color:#5A594F;line-height:1.55;margin-bottom:26px">Your CV and score are already saved. You'll land back exactly where you are, with the blur gone.</div>
+      <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:20px">
+        <button onClick="{{ unlock }}" style="display:flex;align-items:center;justify-content:center;gap:11px;background:#FFFEF6;border:1.5px solid #161513;border-radius:999px;padding:15px 22px;font:600 15px 'Hanken Grotesk';cursor:pointer;box-shadow:4px 4px 0 rgba(22,21,19,0.9)" style-hover="transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(22,21,19,0.9)"><span style="width:20px;height:20px;border-radius:50%;border:2.5px solid #161513;flex-shrink:0"></span>Continue with Google</button>
+        <button onClick="{{ unlock }}" style="display:flex;align-items:center;justify-content:center;gap:11px;background:#FFFEF6;border:1.5px solid #161513;border-radius:999px;padding:15px 22px;font:600 15px 'Hanken Grotesk';cursor:pointer;box-shadow:4px 4px 0 rgba(22,21,19,0.9)" style-hover="transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(22,21,19,0.9)"><span style="width:20px;height:20px;border-radius:5px;background:#161513;flex-shrink:0"></span>Continue with LinkedIn</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px"><span style="flex:1;height:1px;background:rgba(22,21,19,0.14)"></span><span style="font-size:12px;color:#a3a294;font-weight:600">or</span><span style="flex:1;height:1px;background:rgba(22,21,19,0.14)"></span></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <input value="{{ email }}" onChange="{{ onEmail }}" placeholder="you@email.com" style="flex:1;min-width:180px;background:#fff;border:1.5px solid #161513;border-radius:999px;padding:14px 18px;font:500 14.5px 'Hanken Grotesk';color:#161513;outline:none" />
+        <button onClick="{{ unlock }}" style="background:#161513;color:#FDFBEA;border:1.5px solid #161513;border-radius:999px;padding:14px 24px;font:600 14.5px 'Hanken Grotesk';cursor:pointer;white-space:nowrap">Send link</button>
+      </div>
+      <div style="font-size:12.5px;color:#a3a294;margin-top:18px;line-height:1.5">Free forever for one posting. We never send your CV anywhere.</div>
+    </div>
+  </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;startSignedIn&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Demo state&quot;},&quot;interviewMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;video&quot;,&quot;voice&quot;],&quot;default&quot;:&quot;video&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Demo state&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:[&quot;#DCCDFB&quot;,&quot;#DFE3D3&quot;,&quot;#F6A64B&quot;,&quot;#C9D7F0&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Style&quot;},&quot;playful&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Style&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.mainRef = React.createRef();
+    this.rootRef = React.createRef();
+    this.setSentinel = this.setSentinel.bind(this);
+  }
+
+  state = {
+    screen:'cv', cvStage:'upload', ivStage:'setup', ivQuestion:0, ivProbe:false,
+    authed:false, wallOpen:false, wallEverOpened:false,
+    email:'', elapsed:0,
+    cvAttached:false, cvFileName:'',
+    jdText:'', jdParsed:false, jdFallbackRole:false,
+    analyzeStep:0, rescored:false,
+    claims:[
+      { n:1, where:'Northwind · bullet 4', status:'open', draft:'',
+        original:'Grew activation 34% after the onboarding revamp.',
+        probe:'Your CV says you grew activation 34%. How was that measured?',
+        whyFailed:'You gave a range, then changed it, and never named a baseline, a timeframe, or the tool. A number with no method reads as invented — and this was the strongest line on your CV.',
+        suggestion:'Grew activation 34% over two quarters (18% → 24% of signups completing setup), measured in Amplitude against a pre-launch baseline.' },
+      { n:2, where:'Northwind · bullet 3', status:'open', draft:'',
+        original:'Worked with engineers to ship a new analytics dashboard.',
+        probe:'What was your specific contribution to that dashboard?',
+        whyFailed:'You described what the team did for 50 seconds and never said what you decided, drew, or owned. "Worked with" is the tell — the interviewer heard a passenger.',
+        suggestion:'Owned the analytics dashboard IA and empty states end to end; cut time-to-first-insight from 4 clicks to 1 with two engineers over 6 weeks.' },
+      { n:3, where:'Summary line', status:'open', draft:'',
+        original:'Skilled in Figma, Sketch, prototyping, user research, design systems and cross-functional collaboration.',
+        probe:'Which design system did you own, and what governed contributions to it?',
+        whyFailed:'No answer. This is the requirement the posting weights most heavily, and the only place you address it is a skills list — which a recruiter reads as a claim, not proof.',
+        suggestion:'Product designer specialising in design systems — built and governed Northwind\u2019s 60-component library, with a contribution review used by 4 squads.' }
+    ]
+  };
+
+  // ---------- lifecycle ----------
+  componentDidMount(){
+    const h = (window.location.hash || '').replace('#','').toLowerCase();
+    if(h === 'cv') this.setState({ screen:'cv', cvStage:'upload' });
+    if(this.props.startSignedIn === true) this.setState({ authed:true, screen:'home', cvStage:'list' });
+    this.apply();
+  }
+  componentDidUpdate(prev){
+    const tx = this._txRef && this._txRef.current;
+    if(tx && tx.scrollHeight > tx.clientHeight) tx.scrollTop = tx.scrollHeight;
+    if(this.props.startSignedIn !== prev.startSignedIn && this.props.startSignedIn === true){
+      this.setState({ authed:true });
+    }
+    this.apply();
+  }
+  componentWillUnmount(){
+    clearTimeout(this._t); clearInterval(this._clock); clearInterval(this._an);
+    if(this._io) this._io.disconnect();
+  }
+  apply(){
+    const el = this.rootRef.current; if(!el) return;
+    const a = (typeof this.props.accent === 'string' && this.props.accent) ? this.props.accent : '#DCCDFB';
+    el.style.setProperty('--forte-accent', a);
+    const show = this.props.playful !== false;
+    el.querySelectorAll('[data-sticker]').forEach(n=>{ n.style.display = show ? '' : 'none'; });
+  }
+
+  // ---------- the wall ----------
+  setSentinel(node){
+    if(this._io){ this._io.disconnect(); this._io = null; }
+    if(!node) return;
+    this._io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting) this.wallSeen(); });
+    }, { root: this.mainRef.current || null, threshold: 0.1 });
+    this._io.observe(node);
+  }
+  wallSeen(){
+    if(this.state.authed || this.state.wallEverOpened) return;
+    this.setState({ wallOpen:true, wallEverOpened:true });
+  }
+  openWall(){ this.setState({ wallOpen:true, wallEverOpened:true }); }
+  dismissWall(){ this.setState({ wallOpen:false }); }
+  // no scroll reset: the blur dissolves exactly where they are
+  unlock(){ this.setState({ authed:true, wallOpen:false }); }
+  gateNav(screen){
+    if(!this.state.authed){ this.openWall(); return; }
+    this.go(screen);
+  }
+
+  // ---------- nav ----------
+  go(screen){ this.setState({ screen }); const m=this.mainRef.current; if(m) m.scrollTop=0; }
+  goCVList(){ if(!this.state.authed){ this.setState({ screen:'cv' }); return; } this.setState({ screen:'cv', cvStage:'list' }); const m=this.mainRef.current; if(m) m.scrollTop=0; }
+  startNewCv(){ this.setState({ screen:'cv', cvStage:'upload', cvAttached:false, cvFileName:'', jdText:'', jdParsed:false, jdFallbackRole:false }); const m=this.mainRef.current; if(m) m.scrollTop=0; }
+
+  // ---------- inputs ----------
+  attachCv(name){ this.setState({ cvAttached:true, cvFileName:name }); }
+  removeCv(){ this.setState({ cvAttached:false, cvFileName:'' }); }
+  onJdInput(e){ this.setState({ jdText:e.target.value }); }
+  onEmail(e){ this.setState({ email:e.target.value }); }
+  useSampleJd(){
+    this.setState({ jdText:'Senior Product Designer — Meridian\n\nWe are looking for a senior product designer to own end-to-end flows across our core workspace. You will partner with engineering and data to run experiments, and help govern the design system as it scales past 60 components.\n\nWhat you will do\n- Own end-to-end product flows, from problem framing to shipped UI\n- Run experiments and interpret results with our data team\n- Contribute to and help govern our design system\n- Mentor mid-level designers on the team\n\nWhat we look for\n- Comfort with Figma variables and advanced prototyping\n- Evidence of measurable product outcomes' });
+  }
+  parseJd(){ if(!this.state.jdText.trim()) return; this.setState({ jdParsed:true, jdFallbackRole:false }); }
+  clearJd(){ this.setState({ jdParsed:false, jdText:'', jdFallbackRole:false }); }
+  useRoleFallback(){ this.setState({ jdParsed:true, jdFallbackRole:true, jdText:'' }); }
+
+  // ---------- analysis with real progress ----------
+  analyzeCv(){
+    this.setState({ cvStage:'analyzing', analyzeStep:0 });
+    clearInterval(this._an);
+    this._an = setInterval(()=>{
+      this.setState(s=>{
+        const next = s.analyzeStep + 1;
+        if(next >= 4){
+          clearInterval(this._an);
+          clearTimeout(this._t);
+          this._t = setTimeout(()=>{
+            this.setState({ cvStage:'results' });
+            const m=this.mainRef.current; if(m) m.scrollTop=0;
+          }, 700);
+        }
+        return { analyzeStep: Math.min(next, 4) };
+      });
+    }, 900);
+  }
+  viewResult(){ this.setState({ cvStage:'results' }); const m=this.mainRef.current; if(m) m.scrollTop=0; }
+  finishAndList(){ this.setState({ cvStage:'list' }); const m=this.mainRef.current; if(m) m.scrollTop=0; }
+
+  // ---------- interview ----------
+  beginInterview(){
+    this.setState({ ivStage:'live', ivQuestion:0, ivProbe:false, elapsed:0 });
+    clearInterval(this._clock);
+    this._clock = setInterval(()=>this.setState(s=>({ elapsed:s.elapsed+1 })), 1000);
+  }
+  nextQuestion(){
+    const qs = this.questions();
+    const cur = qs[this.state.ivQuestion];
+    if(cur && cur.probe && !this.state.ivProbe){ this.setState({ ivProbe:true }); return; }
+    if(this.state.ivQuestion >= qs.length - 1){ this.finishInterview(); return; }
+    this.setState(s=>({ ivQuestion:s.ivQuestion+1, ivProbe:false }));
+  }
+  finishInterview(){
+    clearInterval(this._clock);
+    this.setState({ ivStage:'feedback' });
+    const m=this.mainRef.current; if(m) m.scrollTop=0;
+  }
+  setMode(m){ this.setState({ ivMode:m }); }
+  toggleVoice(){ this.setState(s=>({ voiceOn:!(s.voiceOn !== false) })); }
+
+  // ---------- revise ----------
+  editClaim(i){ this.setState(s=>({ claims:s.claims.map((c,idx)=> idx===i ? { ...c, status:'editing', draft: c.draft || '' } : c) })); }
+  draftClaim(i,v){ this.setState(s=>({ claims:s.claims.map((c,idx)=> idx===i ? { ...c, draft:v } : c) })); }
+  suggestClaim(i){ this.setState(s=>({ claims:s.claims.map((c,idx)=> idx===i ? { ...c, draft:c.suggestion } : c) })); }
+  saveClaim(i){ this.setState(s=>({ claims:s.claims.map((c,idx)=> idx===i ? { ...c, status: c.draft.trim() ? 'rewritten' : 'open' } : c) })); }
+  cancelClaim(i){ this.setState(s=>({ claims:s.claims.map((c,idx)=> idx===i ? { ...c, status:'open' } : c) })); }
+  cutClaim(i){ this.setState(s=>({ claims:s.claims.map((c,idx)=> idx===i ? { ...c, status:'cut' } : c) })); }
+  standClaim(i){ this.setState(s=>({ claims:s.claims.map((c,idx)=> idx===i ? { ...c, status:'stood' } : c) })); }
+  reopenClaim(i){ this.setState(s=>({ claims:s.claims.map((c,idx)=> idx===i ? { ...c, status:'open' } : c) })); }
+  rescore(){ this.setState({ rescored:true }); }
+  rerun(){ this.setState({ screen:'interview', ivStage:'setup', ivQuestion:0, ivProbe:false, rescored:false }); const m=this.mainRef.current; if(m) m.scrollTop=0; }
+
+  // ---------- data ----------
+  questions(){
+    return [
+      { q:'Your CV says you grew activation 34% after the onboarding revamp. How was that measured?',
+        src:'From your CV · Northwind, bullet 4',
+        probe:'What was the baseline, and over what window?' },
+      { q:'They want someone who can govern a design system past 60 components. Which system have you owned?',
+        src:'From the posting · requirement 3, weighted highest',
+        probe:'Who could contribute to it, and what stopped them shipping something off-pattern?' },
+      { q:'You list "worked with engineers to ship a new analytics dashboard." What did you personally decide on that project?',
+        src:'From your CV · Northwind, bullet 3',
+        probe:null },
+      { q:'The posting asks for experimentation. Walk me through an experiment you ran that returned a result you didn\u2019t want.',
+        src:'From the posting · requirement 2, not found in your CV',
+        probe:null },
+      { q:'You\u2019re at Northwind now. Why leave for this, specifically?',
+        src:'From the posting · Meridian, Senior Product Designer',
+        probe:null }
+    ];
+  }
+
+  spark(points, stroke){
+    const svg = encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="90" height="20" preserveAspectRatio="none" viewBox="0 0 90 20"><polyline points="'+points+'" fill="none" stroke="'+stroke+'" stroke-width="2"/></svg>');
+    return { height:'20px', width:'100%', backgroundImage:'url("data:image/svg+xml,'+svg+'")', backgroundRepeat:'no-repeat', backgroundSize:'100% 100%' };
+  }
+  navStyle(active){
+    return { display:'flex', alignItems:'center', gap:'12px', padding:'11px 16px', borderRadius:'999px',
+      cursor:'pointer', fontSize:'15px', width:'100%', textAlign:'left', fontFamily:"'Hanken Grotesk',sans-serif",
+      background: active ? 'var(--forte-accent, #DCCDFB)' : 'transparent',
+      border: active ? '1.5px solid #161513' : '1.5px solid transparent',
+      color:'#161513', fontWeight: active ? 600 : 500 };
+  }
+
+  track(on){ return { display:'inline-flex', alignItems:'center', width:'42px', height:'24px', flexShrink:0, borderRadius:'999px', border:'1.5px solid #161513', background: on ? '#161513' : '#FFFEF6', padding:'0 3px', justifyContent: on ? 'flex-end' : 'flex-start', transition:'background .16s ease' }; }
+  knob(on){ return { display:'block', width:'14px', height:'14px', borderRadius:'999px', background: on ? '#FDFBEA' : '#161513' }; }
+  renderVals(){
+    const s = this.state;
+    const authed = s.authed;
+    const locked = !authed;
+    const role = s.jdFallbackRole ? 'Senior Product Designer' : 'Senior Product Designer';
+    const company = s.jdFallbackRole ? 'role only · no posting' : 'Meridian';
+    const ivMode = s.ivMode || this.props.interviewMode || 'video';
+    const isVideoMode = ivMode === 'video';
+    const voiceOn = s.voiceOn !== false;
+    const modeCard = (on)=>({ cursor:'pointer', borderRadius:'18px', padding:'20px 22px', transition:'background .18s ease',
+      background: on ? 'var(--forte-accent, #DCCDFB)' : '#FBF6EA', border: on ? '1.5px solid #161513' : '1.5px solid rgba(22,21,19,0.18)' });
+    const modeRadio = (on)=>({ width:'20px', height:'20px', borderRadius:'50%', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center',
+      border:'1.5px solid #161513', background:'#FFFEF6' });
+    const modeDot = (on)=>({ width:'10px', height:'10px', borderRadius:'50%', background: on ? '#161513' : 'transparent' });
+
+    const txScript = [
+      { at:2,  who:'you', text:'Yeah, so — okay. So the onboarding thing. Um. Let me kind of start from the beginning, because I think the context matters here.' },
+      { at:6,  who:'you', text:'So when I joined Northwind it was, I think, two and a half years ago? Maybe closer to three. And at the time the whole activation funnel was kind of… it was a mess, honestly.' },
+      { at:11, who:'you', text:'And there were, like — okay, so there were three teams touching signup, which, you know, that was part of the problem. Nobody really owned it.' },
+      { at:15, who:'ai',  text:'Mm-hm.' },
+      { at:17, who:'you', text:'So we — I mean, I pushed for us to just consolidate it, and eventually we did the revamp, and activation went up like 34%. Which was, yeah. That was big for us.' },
+      { at:22, who:'ai',  text:'34% of what, though?' },
+      { at:24, who:'you', text:'Uh… of, like, activation. Signups who — sorry, people who finished setting up their account.' },
+      { at:28, who:'you', text:'…' },
+      { at:30, who:'you', text:'I think it was roughly a third more? Something in that range. It was in the deck we presented at the quarterly.' },
+      { at:34, who:'ai',  text:'You said 34% a minute ago. Now it\u2019s roughly a third. Which one goes on the CV?' },
+      { at:38, who:'you', text:'I mean — 34%, I\u2019m fairly confident it was 34%. I\u2019d have to check the exact baseline we measured it against.' },
+      { at:43, who:'ai',  text:'That\u2019s the part I\u2019d have pushed on in a real panel. Let\u2019s move on.' }
+    ];
+    const txAll = txScript.filter(t=>t.at <= (s.elapsed||0));
+    const txTurns = txAll.map((t,i)=>{
+      const latest = i === txAll.length - 1, mine = t.who === 'you', pause = t.text === '…';
+      return { who: mine ? 'You' : (s.interviewer==='rina'?'Rina':(s.interviewer==='priya'?'Priya':'Daniel')),
+        text: pause ? 'long pause — 6s' : t.text,
+        whoStyle:{ flexShrink:0, width:'52px', paddingTop:'2px', fontSize:'11px', fontWeight:800, letterSpacing:'.04em', textTransform:'uppercase',
+          color: mine ? '#8d8c84' : 'var(--forte-accent, #DCCDFB)' },
+        textStyle:{ fontSize:'15px', lineHeight:1.5, color: pause ? '#5e5d56' : (latest ? '#FDFBEA' : '#8a897f'),
+          fontStyle: (mine && !pause) ? 'normal' : 'italic', transition:'color .4s ease' } };
+    });
+
+    const ivpId = s.interviewer || 'daniel';
+    const ivpList = [
+      { id:'rina', name:'Rina', role:'Recruiter screen', fill:'#DFE3D3', tag:'Gentlest rep',
+        posture:'Warm, moves fast, takes your first answer at face value.' },
+      { id:'daniel', name:'Daniel', role:'Hiring manager', fill:'var(--forte-accent, #DCCDFB)', tag:'Closest to real',
+        posture:'Interrupts when you ramble. Asks "measured how?" every time.' },
+      { id:'priya', name:'Priya', role:'Panel lead', fill:'#F6A64B', tag:'Hardest rep',
+        posture:'Silent after your answer. Waits to see if you fill the gap.' }
+    ];
+    const ivp = ivpList.find(p=>p.id===ivpId) || ivpList[1];
+    const interviewers = ivpList.map(p=>{
+      const on = p.id===ivpId;
+      return { name:p.name, role:p.role, posture:p.posture, tag:p.tag, onPick:()=>this.setState({ interviewer:p.id }),
+        cardStyle:{ cursor:'pointer', textAlign:'center', borderRadius:'18px', padding:'20px 16px 16px', transition:'box-shadow .18s ease, transform .18s ease',
+          background: on ? '#FFFEF6' : '#FBF6EA', border:'1.5px solid '+(on?'#161513':'rgba(22,21,19,0.18)'),
+          boxShadow: on ? '4px 4px 0 #161513' : 'none' },
+        orbStyle:{ width:'70px', height:'70px', borderRadius:'50%', margin:'0 auto 12px', background:p.fill,
+          border:'1.5px solid '+(on?'#161513':'rgba(22,21,19,0.25)'), display:'flex', alignItems:'center', justifyContent:'center',
+          opacity: on ? 1 : 0.55 },
+        orbInnerStyle:{ width:'18px', height:'18px', borderRadius:'50%', border:'2.5px solid #161513', opacity: on ? 1 : 0.4 },
+        tagStyle:{ marginTop:'10px', display:'inline-block', fontSize:'10.5px', fontWeight:800, letterSpacing:'.06em', textTransform:'uppercase',
+          color: on ? '#161513' : '#a3a294', background: on ? '#DFE3D3' : 'transparent',
+          border:'1px solid '+(on?'#161513':'rgba(22,21,19,0.16)'), borderRadius:'999px', padding:'3px 9px' } };
+    });
+
+    // stepper: ends in Revise
+    let li = 0;
+    if(s.screen==='cv') li = (s.cvStage==='upload' || s.cvStage==='analyzing') ? 0 : 1;
+    else if(s.screen==='interview') li = 2;
+    else if(s.screen==='revise') li = 3;
+    const stepItems = ['Your CV','Score','Interview','Revise'].map((lab,i)=>{
+      const done=i<li, cur=i===li, last=i===3;
+      return { num: done ? '✓' : String(i+1), label: lab, hasLine: !last,
+        wrapStyle:{ display:'flex', alignItems:'flex-start', flex: last ? '0 0 auto' : '1 1 0%' },
+        dotStyle:{ width:'34px', height:'34px', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', font:"700 13.5px 'Hanken Grotesk'", flexShrink:0, background: done?'#161513':(cur?'var(--forte-accent, #DCCDFB)':'#FFFEF6'), color: done?'#FDFBEA':(cur?'#161513':'#a3a294'), border:'1.5px solid '+((done||cur)?'#161513':'#cbcabf'), boxShadow: cur?'2px 2px 0 rgba(22,21,19,0.9)':'none' },
+        labelStyle:{ font:(cur?'700':'600')+" 12px 'Hanken Grotesk'", color:(done||cur)?'#161513':'#a3a294', whiteSpace:'nowrap' },
+        lineStyle:{ flex:1, height:'2.5px', marginTop:'16px', marginLeft:'8px', marginRight:'8px', borderRadius:'2px', background: i<li?'#161513':'#d9d8cc' } };
+    });
+    const showStepper = (s.screen==='cv' && s.cvStage!=='list') || (s.screen==='interview' && s.ivStage!=='live') || s.screen==='revise';
+
+    // four numbers — one scale, /100
+    const rubric = [
+      { label:'Substance', value:'72', tag:'+6', color:'#2f6b3a', pts:'0,17 30,13 60,9 90,5', stroke:'#161513' },
+      { label:'Clarity', value:'78', tag:'+3', color:'#2f6b3a', pts:'0,15 30,12 60,8 90,5', stroke:'#8b6fd6' },
+      { label:'Specificity', value:'51', tag:'flat', color:'#b5701f', pts:'0,16 30,17 60,15 90,14', stroke:'#F6A64B', focus:true },
+      { label:'Confidence', value:'74', tag:'logged', color:'#a3a294', pts:'0,12 30,10 60,11 90,8', stroke:'#cbcabf' }
+    ];
+    const rubricCards = rubric.map(m=>({
+      label:m.label, value:m.value, tag:m.tag,
+      cardStyle:{ border:'1.5px solid #161513', borderRadius:'16px', padding:'14px 16px',
+        background: m.focus ? '#FBF6EA' : '#FFFEF6', boxShadow: m.focus ? '3px 3px 0 #F6A64B' : '3px 3px 0 rgba(22,21,19,0.9)' },
+      labelStyle:{ fontSize:'12px', fontWeight: m.focus?700:600, color: m.focus?'#b5701f':'#5A594F', marginBottom:'5px' },
+      valStyle:{ fontFamily:"'Newsreader',serif", fontSize:'25px', fontWeight:500, color: m.focus?'#b5701f':'#161513' },
+      tagStyle:{ fontSize:'11px', fontWeight:700, color:m.color },
+      spark: this.spark(m.pts, m.stroke)
+    }));
+
+    // CV breakdown, /100, averaging to 82
+    const cvRows = [
+      { label:'Substance', score:'85', w:'85%', note:'Real projects, real scope. Six bullets still lead with activity.' },
+      { label:'Clarity', score:'95', w:'95%', note:'A stranger can follow this on one pass. Your strongest number.' },
+      { label:'Specificity', score:'66', w:'66%', weak:true, note:'One number across eight bullets. This is what drags the mean.' },
+      { label:'Confidence', score:'—', w:'0%', note:'A CV can\u2019t show delivery. Run a mock interview to earn this one.', muted:true }
+    ];
+    const cvBreakdown = cvRows.map(r=>({
+      label:r.label, score:r.score, note:r.note,
+      scoreStyle:{ color: r.weak ? '#b5701f' : (r.muted ? '#a3a294' : '#161513'), fontWeight: r.muted?500:700 },
+      barStyle:{ height:'100%', width:r.w, borderRadius:'999px', background: r.weak ? '#F6A64B' : '#161513' }
+    }));
+
+    // coverage against the posting
+    const cov = [
+      { req:'Own end-to-end product flows, from problem framing to shipped UI', status:'Covered', kind:'ok', evidence:'Earned by: "Redesigned the onboarding flow" + "Grew activation 34%"' },
+      { req:'Mentor mid-level designers on the team', status:'Covered', kind:'ok', evidence:'Earned by: "Led weekly design critiques and mentored two junior designers"' },
+      { req:'Contribute to and help govern our design system', status:'Claimed, not shown', kind:'weak', evidence:'Only appears inside a skills list. No system named, no ownership, no governance.' },
+      { req:'Run experiments and interpret results with our data team', status:'Not found', kind:'miss', evidence:'Nothing in your CV describes an experiment, a hypothesis, or a result.' },
+      { req:'Comfort with Figma variables and advanced prototyping', status:'Not found', kind:'miss', evidence:'"Prototyping" is listed. Figma variables are never mentioned.' }
+    ];
+    const chip = (kind)=>{
+      const map = { ok:{bg:'#DFE3D3',fg:'#2f6b3a'}, weak:{bg:'rgba(246,166,75,0.3)',fg:'#b5701f'}, miss:{bg:'#eeecdd',fg:'#8a897e'} }[kind];
+      return { fontSize:'11px', fontWeight:700, background:map.bg, color:map.fg, border:'1.5px solid #161513', borderRadius:'999px', padding:'4px 11px', whiteSpace:'nowrap', flexShrink:0 };
+    };
+    const coverage = cov.map(r=>({
+      req:r.req, status:r.status, evidence:r.evidence,
+      rowStyle:{ border:'1.5px solid '+(r.kind==='ok'?'#161513':(r.kind==='weak'?'#e8b06a':'#cbcabf')), borderRadius:'16px', padding:'16px 18px', background: r.kind==='ok'?'#FFFEF6':'#FBF6EA' },
+      chipStyle: chip(r.kind),
+      evidenceStyle:{ fontSize:'12.5px', color:'#5A594F', lineHeight:1.5, marginTop:'8px' }
+    }));
+
+    // gate
+    const gateStyle = locked
+      ? { filter:'blur(7px)', opacity:0.55, userSelect:'none', pointerEvents:'none', transition:'filter .6s ease, opacity .6s ease' }
+      : { filter:'none', opacity:1, transition:'filter .6s ease, opacity .6s ease' };
+
+    // analyzing
+    const anSteps = [
+      'Reading resume_v3.pdf',
+      'Found 8 bullets across 2 roles',
+      'Pulled 5 checkable requirements from the posting',
+      'Scoring substance, clarity, specificity'
+    ];
+    const analyzeSteps = anSteps.map((t,i)=>{
+      const done = i < s.analyzeStep, cur = i === s.analyzeStep;
+      return { text:t, mark: done ? '✓' : (cur ? '' : ''),
+        dotStyle:{ width:'20px', height:'20px', borderRadius:'50%', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'11px', fontWeight:700,
+          background: done ? 'var(--forte-accent, #DCCDFB)' : 'transparent', color:'#161513',
+          border: done ? '1.5px solid var(--forte-accent, #DCCDFB)' : '1.5px solid '+(cur?'#FDFBEA':'rgba(253,251,234,0.25)') },
+        textStyle:{ fontSize:'14.5px', color: done ? '#FDFBEA' : (cur ? '#FDFBEA' : '#6b6a62'), fontWeight: cur?600:400 } };
+    });
+    const anPct = Math.round((s.analyzeStep / 4) * 100);
+
+    // interview live
+    const qs = this.questions();
+    const cur = qs[s.ivQuestion] || qs[0];
+    const mm = String(Math.floor(s.elapsed/60)).padStart(2,'0');
+    const ss = String(s.elapsed%60).padStart(2,'0');
+    const isLastStep = (s.ivQuestion >= qs.length-1) && (!cur.probe || s.ivProbe);
+
+    const ivNums = [
+      { label:'Substance', value:'72', delta:'+6' },
+      { label:'Clarity', value:'78', delta:'+3' },
+      { label:'Specificity', value:'51', delta:'+1', focus:true },
+      { label:'Confidence', value:'74', delta:'logged', logged:true }
+    ];
+    const ivNumbers = ivNums.map(n=>({
+      label:n.label, value:n.value, delta:n.delta,
+      cardStyle:{ border:'1.5px solid #161513', borderRadius:'16px', padding:'16px 18px',
+        background: n.focus ? '#FBF6EA' : '#FFFEF6', boxShadow: n.focus ? '3px 3px 0 #F6A64B' : '3px 3px 0 rgba(22,21,19,0.9)' },
+      labelStyle:{ fontSize:'12.5px', fontWeight: n.focus?700:600, color: n.focus?'#b5701f':'#5A594F', marginBottom:'7px' },
+      valStyle:{ fontFamily:"'Newsreader',serif", fontSize:'27px', fontWeight:500, color: n.focus?'#b5701f':'#161513' },
+      deltaStyle:{ fontSize:'11px', fontWeight: n.logged?600:700, color: n.logged?'#a3a294':'#2f6b3a' }
+    }));
+
+    const delivery = [
+      { label:'Time to first word', value:'2.1s', note:'avg after each question — a beat longer than natural' },
+      { label:'Longest mid-answer pause', value:'4.2s', note:'Q2, right after "design system"' },
+      { label:'Times we cut in', value:'3', note:'you passed 90s without landing the point' },
+      { label:'Self-corrections', value:'7', note:'"actually" / "I mean" restarts, 5 of them on Q1' },
+      { label:'Answered a different question', value:'2 of 5', note:'Q2 and Q4 — you answered the one you rehearsed' },
+      { label:'Longest answer', value:'2m 40s', note:'Q1. Recruiters stop listening around 90s.' }
+    ];
+
+    const vEvents = [
+      { at:'02:14', what:'You looked down and to the left, then stopped mid-sentence.',
+        consequence:'It cut in and asked whether the number was in front of you. It was — and you said so, which is the honest answer and the one that cost you.' },
+      { at:'05:41', what:'Fourth trip back to your notes in five minutes.',
+        consequence:'It stopped asking follow-ups on that thread and moved on. Real interviewers do the same thing, silently.' },
+      { at:'08:03', what:'You went still for six seconds after "design system".',
+        consequence:'Instead of waiting you out, it dropped to a smaller question. You recovered — but the panel now knows where the floor is.' }
+    ];
+    const visualEvents = vEvents.map(v=>({ at:v.at, what:v.what, consequence:v.consequence, onPlay:()=>{} }));
+
+    const notMeasured = ['Eye tracking','Emotion or mood','Tone-of-voice score','Confidence read off your face','Personality traits','How you look'];
+
+    const qfb = [
+      { chip:'Q1 · 44', kind:'bad', title:'The 34% claim', body:'You quoted the number, then softened it to "roughly a third", then couldn\u2019t say what it was measured against. This is the single most damaging moment in the session — it turned your best line into a liability.', quote:'"Activation went from 18% to 24% of signups completing setup over two quarters — measured in Amplitude against the pre-launch baseline."' },
+      { chip:'Q2 · 38', kind:'bad', title:'Design system ownership', body:'The posting weights this highest and you had nothing concrete. You described using systems, not governing one. Silence after the follow-up.', quote:null },
+      { chip:'Q3 · 81', kind:'ok', title:'Analytics dashboard', body:'Better — you eventually named the IA and empty-state decisions as yours. But you spent 50 seconds on team context first. Open with what you owned.', quote:null }
+    ];
+    const qFeedback = qfb.map(q=>({
+      chip:q.chip, title:q.title, body:q.body, quote:q.quote, hasQuote: !!q.quote,
+      cardStyle:{ border:'1.5px solid #161513', borderRadius:'18px', padding:'18px 20px', background: q.kind==='bad' ? '#FBF6EA' : '#FFFEF6' },
+      chipStyle:{ fontSize:'11px', fontWeight:700, padding:'4px 10px', borderRadius:'999px', border:'1.5px solid #161513', whiteSpace:'nowrap',
+        background: q.kind==='bad' ? '#F6A64B' : '#DFE3D3', transform: q.kind==='bad' ? 'rotate(-2deg)' : 'none' }
+    }));
+
+    // revise
+    const statusMeta = {
+      open:   { label:'Needs a decision', bg:'#eeecdd', fg:'#8a897e' },
+      editing:{ label:'Editing', bg:'var(--forte-accent, #DCCDFB)', fg:'#161513' },
+      rewritten:{ label:'Rewritten', bg:'#DFE3D3', fg:'#2f6b3a' },
+      cut:    { label:'Cut from CV', bg:'#161513', fg:'#FDFBEA' },
+      stood:  { label:'Standing by it', bg:'rgba(246,166,75,0.3)', fg:'#b5701f' }
+    };
+    const claims = s.claims.map((c,i)=>{
+      const meta = statusMeta[c.status] || statusMeta.open;
+      const resolved = c.status==='rewritten' || c.status==='cut' || c.status==='stood';
+      return {
+        n:String(c.n), where:c.where, original:c.original, probe:c.probe, whyFailed:c.whyFailed, draft:c.draft,
+        statusLabel: meta.label,
+        statusStyle:{ fontSize:'11px', fontWeight:700, background:meta.bg, color:meta.fg, border:'1.5px solid #161513', borderRadius:'999px', padding:'4px 11px' },
+        cardStyle:{ background: resolved ? '#FFFEF6' : '#FFFEF6', border:'1.5px solid #161513', borderRadius:'24px', padding:'26px 28px',
+          boxShadow: resolved ? '4px 4px 0 rgba(22,21,19,0.1)' : '6px 6px 0 rgba(22,21,19,0.9)', opacity: c.status==='cut' ? 0.7 : 1 },
+        originalStyle:{ fontSize:'15px', lineHeight:1.6, padding:'12px 14px', borderRadius:'12px', background:'#FBF6EA',
+          border:'1px solid rgba(22,21,19,0.14)', textDecoration: c.status==='cut' ? 'line-through' : 'none', color: c.status==='cut' ? '#a3a294' : '#161513' },
+        isEditing: c.status==='editing',
+        isRewritten: c.status==='rewritten',
+        isResolved: resolved,
+        showActions: c.status!=='editing' && !resolved,
+        editLabel: c.draft ? 'Continue rewrite' : 'Rewrite it',
+        onEdit:()=>this.editClaim(i), onDraft:(e)=>this.draftClaim(i, e.target.value),
+        onSave:()=>this.saveClaim(i), onSuggest:()=>this.suggestClaim(i), onCancel:()=>this.cancelClaim(i),
+        onCut:()=>this.cutClaim(i), onStand:()=>this.standClaim(i), onReopen:()=>this.reopenClaim(i)
+      };
+    });
+    const resolvedCount = s.claims.filter(c=>c.status==='rewritten'||c.status==='cut'||c.status==='stood').length;
+    const allResolved = resolvedCount === s.claims.length;
+    const openCount = s.claims.length - resolvedCount;
+
+    return {
+      rootRef:this.rootRef, mainRef:this.mainRef, setSentinel:this.setSentinel,
+      authed, locked, role, company,
+
+      // nav
+      navHome:this.navStyle(s.screen==='home'), navCV:this.navStyle(s.screen==='cv'),
+      navIV:this.navStyle(s.screen==='interview'), navRevise:this.navStyle(s.screen==='revise'),
+      navProgress:this.navStyle(s.screen==='progress'),
+      navGoHome:()=>this.gateNav('home'), navGoCV:()=>this.goCVList(),
+      navGoInterview:()=>this.gateNav('interview'), navGoRevise:()=>this.gateNav('revise'),
+      navGoProgress:()=>this.gateNav('progress'),
+      goHome:()=>this.go('home'), goCV:()=>this.goCVList(), goInterview:()=>this.go('interview'),
+      goRevise:()=>this.go('revise'), goProgress:()=>this.go('progress'),
+      lockPip: locked ? '🔒' : '',
+      lockPipStyle:{ marginLeft:'auto', fontSize:'10px', opacity: locked ? 0.5 : 0, display: locked ? 'inline' : 'none' },
+      reviseBadge: authed ? String(openCount) : '',
+      reviseBadgeStyle:{ marginLeft:'auto', fontSize:'11px', fontWeight:800, minWidth:'20px', height:'20px', borderRadius:'999px',
+        display: (authed && openCount>0) ? 'flex' : 'none', alignItems:'center', justifyContent:'center',
+        background:'#F6A64B', color:'#161513', border:'1.5px solid #161513', padding:'0 5px' },
+
+      // wall
+      wallOpen:s.wallOpen, openWall:()=>this.openWall(), dismissWall:()=>this.dismissWall(), unlock:()=>this.unlock(),
+      showStickyBar: locked && s.wallEverOpened && !s.wallOpen && s.screen==='cv' && s.cvStage==='results',
+      email:s.email, onEmail:(e)=>this.onEmail(e),
+      gateStyle,
+
+      // screens
+      isHome:s.screen==='home', isCV:s.screen==='cv', isInterview:s.screen==='interview',
+      isRevise:s.screen==='revise', isProgress:s.screen==='progress',
+      stepItems, showStepper,
+
+      // cv stages
+      cvList:s.cvStage==='list', cvUpload:s.cvStage==='upload', cvAnalyzing:s.cvStage==='analyzing', cvResults:s.cvStage==='results',
+      cvAttached:s.cvAttached, cvNotAttached:!s.cvAttached, cvFileName:s.cvFileName,
+      attachSample:()=>this.attachCv('resume_v3.pdf'), attachPasted:()=>this.attachCv('pasted CV text'),
+      removeCv:()=>this.removeCv(), startNewCv:()=>this.startNewCv(), finishAndList:()=>this.finishAndList(),
+
+      // jd
+      jdText:s.jdText, onJdInput:(e)=>this.onJdInput(e),
+      jdEmpty:!s.jdParsed, jdReady:s.jdParsed,
+      parseJd:()=>this.parseJd(), useSampleJd:()=>this.useSampleJd(), clearJd:()=>this.clearJd(),
+      useRoleFallback:()=>this.useRoleFallback(),
+      jdSourceLabel: s.jdFallbackRole ? 'No posting — role fallback' : 'Read from the posting',
+      jdMeta: s.jdFallbackRole
+        ? 'Generic role benchmark · coverage check unavailable without a posting'
+        : company + ' · ' + String(s.jdText.trim().split(/\s+/).filter(Boolean).length) + ' words · 5 checkable requirements',
+      reqPreview: s.jdFallbackRole
+        ? [{ n:'!', text:'Without a posting we can only score general CV quality — no coverage check, and interview questions stay generic. Paste a JD when you have one.' }]
+        : [
+            { n:'1', text:'Own end-to-end product flows, from problem framing to shipped UI' },
+            { n:'2', text:'Run experiments and interpret results with the data team' },
+            { n:'3', text:'Contribute to and help govern the design system' },
+            { n:'4', text:'Mentor mid-level designers' },
+            { n:'5', text:'Comfort with Figma variables and advanced prototyping' }
+          ],
+      parseJdStyle: s.jdText.trim()
+        ? { background:'#161513', color:'#FDFBEA', border:'1.5px solid #161513', borderRadius:'999px', padding:'12px 24px', font:"600 14px 'Hanken Grotesk'", cursor:'pointer', display:'inline-flex', alignItems:'center', gap:'8px' }
+        : { background:'#eeecdd', color:'#a3a294', border:'1.5px solid #cbcabf', borderRadius:'999px', padding:'12px 24px', font:"600 14px 'Hanken Grotesk'", cursor:'not-allowed', display:'inline-flex', alignItems:'center', gap:'8px' },
+
+      evaluate:()=>{ if(s.cvAttached && s.jdParsed) this.analyzeCv(); },
+      evaluateLabel: s.jdFallbackRole ? 'Score my CV' : 'Score against this posting',
+      evaluateStyle: (s.cvAttached && s.jdParsed)
+        ? { justifySelf:'start', background:'var(--forte-accent, #DCCDFB)', color:'#161513', border:'1.5px solid #161513', borderRadius:'999px', padding:'16px 34px', font:"600 16px 'Hanken Grotesk'", cursor:'pointer', display:'inline-flex', alignItems:'center', gap:'9px', boxShadow:'5px 5px 0 rgba(22,21,19,0.9)' }
+        : { justifySelf:'start', background:'#eeecdd', color:'#a3a294', border:'1.5px solid #cbcabf', borderRadius:'999px', padding:'16px 34px', font:"600 16px 'Hanken Grotesk'", cursor:'not-allowed', display:'inline-flex', alignItems:'center', gap:'9px' },
+
+      // analyzing
+      analyzeSteps,
+      analyzeHeadline: s.analyzeStep >= 3 ? 'Scoring against their five requirements…' : 'Reading between your bullet points…',
+      analyzeSub: 'Usually 30–60 seconds. Don\u2019t close the tab — nothing here needs an account.',
+      analyzeBarStyle:{ height:'100%', width:anPct+'%', borderRadius:'999px', background:'var(--forte-accent, #DCCDFB)', transition:'width .8s ease' },
+
+      // scores
+      rubricCards, cvBreakdown, coverage,
+      readiness:'51', readinessDelta:'+1', readinessDriver:'Specificity',
+      rep:'3', nextRep:'4',
+
+      cvHistoryRows: [
+        { title:'Senior Product Designer · Meridian', file:'resume_v3.pdf', when:'2h ago', score:'82', cover:'2 of 5 covered', kind:'weak' },
+        { title:'Product Designer · Loop Co', file:'resume_v3.pdf', when:'3d ago', score:'76', cover:'3 of 6 covered', kind:'weak' },
+        { title:'Design Systems Lead · Kestrel', file:'resume_v2.pdf', when:'1w ago', score:'64', cover:'1 of 5 covered', kind:'miss' }
+      ].map(r=>({ ...r, onView:()=>this.viewResult(), coverStyle: chip(r.kind) })),
+
+      // interview
+      ivSetup:s.ivStage==='setup', ivLive:s.ivStage==='live', ivFeedback:s.ivStage==='feedback',
+      beginInterview:()=>this.beginInterview(), nextQuestion:()=>this.nextQuestion(),
+      finishInterview:()=>this.finishInterview(),
+      currentQuestion: s.ivProbe && cur.probe ? cur.probe : cur.q,
+      questionSource: cur.src, hasSource: !s.ivProbe,
+      isProbe: s.ivProbe,
+      qLabel: 'Question '+(s.ivQuestion+1)+' of '+qs.length,
+      clock: mm+':'+ss,
+      listeningLabel: voiceOn ? 'Recording — nothing is being scored yet' : 'Type your answer',
+      nextLabel: isLastStep ? 'Finish' : (cur.probe && !s.ivProbe ? 'Done answering' : 'Next question'),
+      voiceOn, isVideoMode, isVoiceMode:!isVideoMode,
+      interviewers, interviewerName:ivp.name,
+      interviewerState: s.ivProbe ? 'following up' : 'listening',
+      pickVoice:()=>this.setMode('voice'), pickVideo:()=>this.setMode('video'),
+      toggleVoice:()=>this.toggleVoice(),
+      voiceModeCardStyle: modeCard(!isVideoMode), videoModeCardStyle: modeCard(isVideoMode),
+      voiceRadioStyle: modeRadio(!isVideoMode), videoRadioStyle: modeRadio(isVideoMode),
+      voiceDotStyle: modeDot(!isVideoMode), videoDotStyle: modeDot(isVideoMode),
+      voiceModeLogs: ['Pauses, self-corrections and time-to-first-word','Whether you answered the question actually asked','Every claim checked line by line against your CV'],
+      videoModeLogs: ['Everything voice mode logs','Timestamped moments it spoke because of what it saw','No gaze percentage, no emotion read — see below'],
+      voiceTrackStyle: this.track(voiceOn), voiceKnobStyle: this.knob(voiceOn),
+      hasTranscript: txTurns.length > 0, txTurns,
+      txRef: (this._txRef = this._txRef || React.createRef()),
+      bigIsAi: (s.bigView || 'ai') === 'ai', bigIsSelf: (s.bigView || 'ai') === 'self',
+      pipLabel: (s.bigView || 'ai') === 'ai' ? 'You' : ivp.name,
+      swapView: ()=>this.setState(st=>({ bigView: (st.bigView || 'ai') === 'ai' ? 'self' : 'ai' })),
+      pipStyle:{ position:'absolute', top:'18px', left:'18px', width:'174px', height:'102px', borderRadius:'13px',
+        overflow:'hidden', cursor:'pointer', border:'1px solid rgba(253,251,234,0.28)', background:'#232220',
+        transition:'border-color .18s ease' },
+      showVisualCue: isVideoMode && s.ivProbe && !!cur.probe,
+      showProbeChip: s.ivProbe && !(isVideoMode && !!cur.probe),
+      visualCue: 'You just checked your notes — is that number in front of you right now?',
+      liveFooter: isVideoMode
+        ? 'Nothing is scored until you finish. Video is read live and never stored.'
+        : 'Nothing is scored until you finish. You\u2019ll get everything at once.',
+      ivNumbers, delivery, visualEvents, notMeasured, qFeedback,
+
+      // revise
+      claims,
+      openClaimLabel: openCount === 0 ? 'All three resolved — re-score your CV' : openCount + ' claims you couldn\u2019t defend',
+      reviseProgressLabel: resolvedCount + ' of ' + s.claims.length + ' resolved',
+      reviseBarStyle:{ height:'100%', width: Math.round((resolvedCount/s.claims.length)*100)+'%', borderRadius:'999px', background:'#161513', transition:'width .4s ease' },
+      rescoreCardStyle:{ marginTop:'20px', background: allResolved ? 'var(--forte-accent, #DCCDFB)' : '#FBF6EA',
+        border:'1.5px solid '+(allResolved ? '#161513' : '#cbcabf'), borderRadius:'24px', padding:'28px 30px',
+        display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:'16px',
+        boxShadow: allResolved ? '6px 6px 0 rgba(22,21,19,0.9)' : 'none' },
+      rescoreTitle: allResolved ? 'Re-score with your revisions' : 'Resolve all three to re-score',
+      rescoreBody: allResolved
+        ? 'Your CV now says only what you can defend. That\u2019s the loop closed — and the only version worth sending.'
+        : 'Every claim needs a decision: rewrite it, cut it, or stand by it. Standing by one is fine — it just means you\u2019ll be asked again.',
+      rescoreLabel: allResolved ? 'Re-score my CV →' : 'Re-score my CV',
+      rescoreBtnStyle: allResolved
+        ? { background:'#161513', color:'#FDFBEA', border:'1.5px solid #161513', borderRadius:'999px', padding:'14px 28px', font:"600 14.5px 'Hanken Grotesk'", cursor:'pointer', whiteSpace:'nowrap' }
+        : { background:'#eeecdd', color:'#a3a294', border:'1.5px solid #cbcabf', borderRadius:'999px', padding:'14px 28px', font:"600 14.5px 'Hanken Grotesk'", cursor:'not-allowed', whiteSpace:'nowrap' },
+      rescore:()=>{ if(allResolved) this.rescore(); },
+      rescored:s.rescored, rerun:()=>this.rerun(),
+      rescoreDeltas:[
+        { label:'Substance', value:'92', delta:'+7' },
+        { label:'Clarity', value:'96', delta:'+1' },
+        { label:'Specificity', value:'84', delta:'+18' }
+      ],
+
+      // progress
+      loopRail: [
+        { num:'✓', label:'Evaluate', done:true },
+        { num:'✓', label:'Score', done:true },
+        { num:'✓', label:'Interview', done:true },
+        { num:'4', label:'Revise', cur:true }
+      ].map(r=>({ num:r.num, label:r.label,
+        dotStyle:{ width:'20px', height:'20px', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'10px', fontWeight:700, flexShrink:0,
+          background: r.done ? '#161513' : 'var(--forte-accent, #DCCDFB)', color: r.done ? '#FDFBEA' : '#161513', border: r.done ? 'none' : '1.5px solid #161513' },
+        labelStyle:{ fontSize:'13.5px', fontWeight: r.cur ? 700 : 600, paddingTop:'1px' } })),
+      repHistory: [
+        { title:'Mock interview · rep 3', sub:'5 questions, 2 follow-up probes · 3 claims flagged', score:'67', accent:true },
+        { title:'CV scored · Meridian posting', sub:'2 of 5 requirements covered', score:'82', accent:false },
+        { title:'Mock interview · rep 2', sub:'5 questions, 1 follow-up probe', score:'62', accent:true }
+      ].map(h=>({ ...h, iconStyle:{ width:'34px', height:'34px', borderRadius:'9px', flexShrink:0, border:'1.5px solid #161513', background: h.accent ? 'var(--forte-accent, #DCCDFB)' : '#DFE3D3' } }))
+    };
+  }
+}
+
+</script>
+</body>
+</html>
