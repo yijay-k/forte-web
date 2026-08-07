@@ -7,9 +7,8 @@ export function ApplicationRow({ row, last }: { row: UsageRow; last?: boolean })
     <Link
       href={`/cv/${row.id}`}
       className={cn(
-        "grid grid-cols-[1.7fr_1.3fr_auto] items-center gap-4.5 px-5 py-4 transition-colors hover:bg-surface-sunk",
+        "grid [grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr))] items-center gap-4.5 px-5 py-4 transition-colors hover:bg-surface-sunk",
         !last && "border-b border-ink/10",
-        "max-[720px]:grid-cols-1 max-[720px]:gap-2",
       )}
     >
       <span className="min-w-0">

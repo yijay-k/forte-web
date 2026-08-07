@@ -21,7 +21,7 @@ export function CvRunRow({ run, last }: { run: CvRun; last?: boolean }) {
         </span>
       </span>
       <Chip tone={VERDICT_CHIP[run.kind]}>{run.cover}</Chip>
-      <span className="w-11.5 text-right font-serif text-[25px] font-medium">
+      <span className="w-11.5 text-right font-serif text-[clamp(15.5px,4.17vw,25px)] font-medium">
         {run.score}
       </span>
       <span className="text-base text-faint" aria-hidden="true">

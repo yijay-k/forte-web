@@ -26,7 +26,7 @@ export function AccountHeader() {
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2.5">
-          <h1 className="m-0 font-serif text-[30px] leading-[1.1] font-medium">
+          <h1 className="m-0 font-serif text-[clamp(18.6px,5vw,30px)] leading-[1.1] font-medium">
             {ACCOUNT_PROFILE.name}
           </h1>
           <span className="rounded-pill border-hair border-ink bg-sky px-2.5 py-0.75 text-[10.5px] font-extrabold tracking-[0.05em] uppercase">

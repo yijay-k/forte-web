@@ -24,7 +24,7 @@ export function FourNumbers() {
       </SectionHeading>
       <p className="mb-3.5 text-[13px] text-muted">{RUBRIC_CAPTION}</p>
 
-      <div className="grid grid-cols-4 gap-3.5 max-[900px]:grid-cols-2">
+      <div className="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(min(100%,148px),1fr))]">
         {rubricCards.map((card) => (
           <StatCard
             key={card.label}

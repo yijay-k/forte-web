@@ -18,7 +18,7 @@ export function DeliveryMetrics({ metrics }: { metrics: readonly DeliveryMetric[
         self-corrections. These are timings, not judgements about you.
       </p>
 
-      <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(196px,1fr))]">
+      <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(min(100%,196px),1fr))]">
         {metrics.map((metric) => (
           <div
             key={metric.label}
@@ -27,7 +27,7 @@ export function DeliveryMetrics({ metrics }: { metrics: readonly DeliveryMetric[
             <div className="mb-1.5 text-[12.5px] font-semibold text-muted">
               {metric.label}
             </div>
-            <div className="font-serif text-[23px] font-medium">{metric.value}</div>
+            <div className="font-serif text-[clamp(14.3px,3.83vw,23px)] font-medium">{metric.value}</div>
             <div className="mt-1 text-xs leading-snug text-faint">{metric.note}</div>
           </div>
         ))}

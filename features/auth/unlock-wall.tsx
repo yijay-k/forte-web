@@ -19,7 +19,7 @@ export function UnlockWall() {
       <div className="mb-3 text-[11.5px] font-extrabold tracking-[0.08em] text-faint uppercase">
         Nothing to re-upload
       </div>
-      <h2 className="mb-3 text-pretty font-serif text-[31px] leading-[1.15] font-medium">
+      <h2 className="mb-3 text-pretty font-serif text-[24px] app:text-[31px] leading-[1.15] font-medium">
         Unlock the rest of your report
       </h2>
       <p className="mb-6.5 text-[14.5px] leading-[1.55] text-muted">
@@ -92,7 +92,7 @@ function SocialButton({
     <button
       type="button"
       onClick={onClick}
-      className="press flex items-center justify-center gap-2.75 rounded-pill border-hair border-ink bg-surface px-5.5 py-3.75 text-[15px] font-semibold shadow-hard-md hover:shadow-hard-xs"
+      className="press flex items-center justify-center gap-2.75 rounded-pill border-hair border-ink bg-surface px-5.5 py-3.75 text-[15px] font-semibold shadow-hard-md hover:shadow-hard-sm"
     >
       {glyph}
       <span>{children}</span>

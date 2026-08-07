@@ -21,7 +21,7 @@ export function InterviewerPicker({ selected, onSelect }: Props) {
         questions, different tolerance for a vague answer.
       </p>
 
-      <div className="grid grid-cols-3 gap-3.5 max-[820px]:grid-cols-1">
+      <div className="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr))]">
         {getInterviewers().map((interviewer) => (
           <InterviewerCard
             key={interviewer.id}

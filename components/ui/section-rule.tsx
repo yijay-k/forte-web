@@ -12,7 +12,7 @@ type Props = {
 export function SectionRule({ children, note, className }: Props) {
   return (
     <div className={cn("mb-3.75 flex items-baseline gap-3.5", className)}>
-      <h3 className="m-0 font-serif text-[22px] font-medium whitespace-nowrap">
+      <h3 className="m-0 font-serif text-[clamp(13.6px,3.67vw,22px)] font-medium whitespace-nowrap">
         {children}
       </h3>
       <span className="h-px flex-1 bg-ink/16" aria-hidden="true" />

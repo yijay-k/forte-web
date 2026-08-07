@@ -7,7 +7,7 @@ type Props = {
   size?: number;
   /** `ink` is the inverted dial used on dark hero cards. */
   tone?: "paper" | "ink";
-  /** Font size of the centred numeral. */
+  /** Font size of the centred numeral. Fluid by default — see below. */
   numeralClassName?: string;
 };
 
@@ -16,12 +16,16 @@ const TRACK = {
   ink: "rgba(253,251,234,0.16)",
 };
 
-/** The donut — score out of 100, drawn as an arc. */
+/**
+ * The donut — score out of 100, drawn as an arc. The ring keeps its pixel size
+ * at every width; only the numeral is fluid, because it is the one part that
+ * would otherwise crowd the "/ 100" beneath it on a phone.
+ */
 export function ScoreDial({
   score,
   size = 132,
   tone = "paper",
-  numeralClassName = "text-[44px]",
+  numeralClassName = "text-[clamp(29px,4.6vw,44px)]",
 }: Props) {
   const clamped = Math.max(0, Math.min(100, score));
   const offset = Math.round(CIRCUMFERENCE * (1 - clamped / 100));

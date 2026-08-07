@@ -25,7 +25,7 @@ export function JdParsedSummary({
           <div className="mb-1.25 text-[11px] font-extrabold tracking-[0.06em] text-faint uppercase">
             {sourceLabel}
           </div>
-          <div className="font-serif text-[22px] leading-tight font-medium">{role}</div>
+          <div className="font-serif text-[clamp(13.6px,3.67vw,22px)] leading-tight font-medium">{role}</div>
           <div className="mt-0.75 text-[13px] text-muted">{meta}</div>
         </div>
         <PillButton variant="outline" size="sm" onClick={onReplace} className="shrink-0">

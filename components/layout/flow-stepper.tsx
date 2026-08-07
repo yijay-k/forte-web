@@ -16,8 +16,10 @@ export function FlowStepper() {
   if (activeIndex === null) return null;
 
   return (
-    <div className="mx-auto max-w-[940px] px-14 pt-8">
-      <ol className="flex items-start">
+    <div className="mx-auto max-w-[940px] px-[clamp(16px,4.5vw,56px)] pt-[clamp(18px,3vw,32px)]">
+      {/* Four fixed-width steps do not fit a phone, and squeezing them would
+          break the connector geometry — so the rail scrolls instead. */}
+      <ol className="flex items-start overflow-x-auto pb-1">
         {FLOW_STEPS.map((label, i) => {
           const done = i < activeIndex;
           const current = i === activeIndex;

@@ -17,12 +17,12 @@ export function InterviewFeedback({ mode }: { mode: InterviewMode }) {
   const report = getInterviewReport();
 
   return (
-    <div className="mx-auto max-w-[940px] px-14 pt-11 pb-21">
+    <div className="mx-auto max-w-[940px] px-[clamp(16px,4.5vw,56px)] pt-[clamp(24px,4.5vw,44px)] pb-21">
       <Chip tone="sage" className="mb-4.5 px-4 py-1.75 text-[12.5px]">
         Interview feedback
       </Chip>
 
-      <h1 className="mt-0 mb-6 font-serif text-[46px] leading-[1.03] font-medium tracking-[-0.02em]">
+      <h1 className="mt-0 mb-6 font-serif text-[clamp(30px,4.8vw,46px)] leading-[1.03] font-medium tracking-[-0.02em]">
         Three claims didn&rsquo;t <em className="italic">hold</em>.
       </h1>
 
@@ -48,7 +48,7 @@ export function InterviewFeedback({ mode }: { mode: InterviewMode }) {
         <div className="relative flex flex-wrap items-center justify-between gap-4 rounded-3xl border-hair border-ink bg-accent p-7.5 shadow-hard-lg">
           <Sticker position="absolute -top-3.5 left-7">step 4 of 4</Sticker>
           <div>
-            <div className="mb-1 font-serif text-[23px] font-medium">Close the loop</div>
+            <div className="mb-1 font-serif text-[clamp(14.3px,3.83vw,23px)] font-medium">Close the loop</div>
             <p className="max-w-[460px] text-sm leading-relaxed text-ink-soft">
               Three bullets on your CV made claims you couldn&rsquo;t back up. Fix them
               on the page and the next recruiter never gets to ask.
@@ -76,11 +76,11 @@ function ScoreGapCard() {
         score={defended}
         size={130}
         tone="ink"
-        numeralClassName="text-[42px]"
+        numeralClassName="text-[clamp(28px,4.4vw,42px)]"
       />
 
       <div className="min-w-60 flex-1">
-        <div className="mb-2.5 font-serif text-[25px] leading-tight font-medium">
+        <div className="mb-2.5 font-serif text-[clamp(15.5px,4.17vw,25px)] leading-tight font-medium">
           Your CV scored {cv}. You defended it at {defended}.
         </div>
         <p className="mb-3 text-[14.5px] leading-[1.55] text-on-ink-muted">

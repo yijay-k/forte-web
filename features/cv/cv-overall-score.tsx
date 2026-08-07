@@ -21,7 +21,7 @@ export function CvOverallScore() {
         <div className="mb-2 text-[12.5px] font-extrabold tracking-[0.06em] text-faint uppercase">
           Overall score
         </div>
-        <div className="mb-3 font-serif text-[26px] leading-tight font-medium">
+        <div className="mb-3 font-serif text-[clamp(16.1px,4.33vw,26px)] leading-tight font-medium">
           {verdict}
         </div>
         <p className="rounded-md border border-ink/14 bg-surface-sunk px-3.5 py-3 text-[13.5px] leading-relaxed text-muted">

@@ -48,7 +48,7 @@ export function InterviewLive({ session }: { session: InterviewSession }) {
           </span>
         </div>
         <div className="flex items-center gap-4.5">
-          <span className="font-serif text-[22px] font-medium text-on-ink tabular-nums">
+          <span className="font-serif text-[clamp(13.6px,3.67vw,22px)] font-medium text-on-ink tabular-nums">
             {formatClock(session.elapsed)}
           </span>
           <span className="text-[13px] font-semibold text-on-ink">
@@ -64,7 +64,7 @@ export function InterviewLive({ session }: { session: InterviewSession }) {
         </div>
       </header>
 
-      <div className="flex min-h-0 flex-1 px-6 pt-5.5">
+      <div className="flex min-h-0 flex-1 px-3 pt-3 app:px-6 app:pt-5.5">
         {isVideo ? (
           <InterviewStage
             interviewerName={interviewer.name}

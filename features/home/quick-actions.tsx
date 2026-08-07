@@ -8,7 +8,7 @@ import { EntitledLink } from "@/features/billing/entitled-link";
  */
 export function QuickActions() {
   return (
-    <div className="mb-9 grid grid-cols-2 gap-4 max-[900px]:grid-cols-1">
+    <div className="mb-9 grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr))]">
       <ActionCard
         href="/cv/new"
         tone="surface"
@@ -52,13 +52,13 @@ function ActionCard({
     <EntitledLink
       href={href}
       className={cn(
-        "press flex items-center gap-4.5 rounded-2xl border-hair border-ink px-6.5 py-6 text-left shadow-hard hover:shadow-hard-sm",
+        "press flex items-center gap-4.5 rounded-2xl border-hair border-ink px-6.5 py-6 text-left shadow-hard hover:shadow-hard-md",
         tone === "accent" ? "bg-accent" : "bg-surface",
       )}
     >
       {glyph}
       <span className="flex-1">
-        <span className="block font-serif text-[19px] font-medium">{title}</span>
+        <span className="block font-serif text-[clamp(11.8px,3.17vw,19px)] font-medium">{title}</span>
         <span
           className={cn(
             "mt-0.5 block text-[13px]",
@@ -69,7 +69,7 @@ function ActionCard({
         </span>
       </span>
       <span
-        className={cn("text-[19px]", tone === "accent" ? "text-ink" : "text-faint")}
+        className={cn("text-[clamp(11.8px,3.17vw,19px)]", tone === "accent" ? "text-ink" : "text-faint")}
         aria-hidden="true"
       >
         →

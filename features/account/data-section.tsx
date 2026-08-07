@@ -62,7 +62,7 @@ export function DataSection() {
           type="button"
           onClick={onDanger}
           className={cn(
-            "shrink-0 rounded-pill border-hair border-danger px-4.25 py-2.25 text-[13px] font-semibold whitespace-nowrap transition-colors",
+            "press shrink-0 rounded-pill border-hair border-danger px-4.25 py-2.25 text-[13px] font-semibold whitespace-nowrap shadow-danger-sm hover:shadow-danger-xs",
             confirming ? "bg-danger text-on-ink" : "bg-transparent text-danger",
           )}
         >

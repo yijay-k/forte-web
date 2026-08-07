@@ -11,12 +11,12 @@ import type { InterviewSession } from "./use-interview-session";
 
 export function InterviewSetup({ session }: { session: InterviewSession }) {
   return (
-    <div className="mx-auto max-w-[940px] px-14 pt-11 pb-21">
+    <div className="mx-auto max-w-[940px] px-[clamp(16px,4.5vw,56px)] pt-[clamp(24px,4.5vw,44px)] pb-21">
       <Chip tone="sage" className="mb-4.5 px-4 py-1.75 text-[12.5px]">
         Mock Interview
       </Chip>
 
-      <h1 className="mt-0 mb-2.5 font-serif text-[46px] leading-[1.03] font-medium tracking-[-0.02em]">
+      <h1 className="mt-0 mb-2.5 font-serif text-[clamp(30px,4.8vw,46px)] leading-[1.03] font-medium tracking-[-0.02em]">
         They&rsquo;ll ask about the <em className="italic">34%</em>.
       </h1>
       <p className="mb-7.5 max-w-[600px] text-base leading-[1.55] text-muted">
@@ -44,7 +44,7 @@ export function InterviewSetup({ session }: { session: InterviewSession }) {
           className="flex flex-wrap items-center justify-between gap-3.5"
         >
           <div>
-            <div className="font-serif text-[19px] font-medium">
+            <div className="font-serif text-[clamp(11.8px,3.17vw,19px)] font-medium">
               {TARGET_ROLE} · {TARGET_COMPANY}
             </div>
             <div className="text-[13.5px] text-muted">

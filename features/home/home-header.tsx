@@ -17,7 +17,7 @@ export function HomeHeader() {
         </Chip>
       </div>
 
-      <h1 className="mt-0 mb-3.5 max-w-[780px] text-pretty font-serif text-[54px] leading-[1.02] font-medium tracking-[-0.025em]">
+      <h1 className="mt-0 mb-3.5 max-w-[780px] text-pretty font-serif text-[clamp(34px,5.4vw,54px)] leading-[1.02] font-medium tracking-[-0.025em]">
         Three claims on your CV didn&rsquo;t{" "}
         <em className="rounded-sm bg-accent px-2.25 [box-decoration-break:clone] italic">
           survive

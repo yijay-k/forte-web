@@ -28,7 +28,9 @@ export function QuestionCard({ prompt, source, showSource, size = "video" }: Pro
       <h2
         className={cn(
           "max-w-[900px] text-pretty font-serif font-normal tracking-[-0.015em] text-on-ink",
-          size === "video" ? "text-[38px] leading-[1.22]" : "text-[40px] leading-[1.2]",
+          size === "video"
+            ? "text-[23px] leading-[1.22] app:text-[38px]"
+            : "text-[clamp(27px,4.2vw,40px)] leading-[1.2]",
         )}
       >
         {prompt}

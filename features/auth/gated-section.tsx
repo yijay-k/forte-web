@@ -57,7 +57,7 @@ export function GatedSection({
               <div className="mb-3 text-[11.5px] font-extrabold tracking-[0.08em] text-faint uppercase">
                 {eyebrow}
               </div>
-              <div className="mb-3 text-pretty font-serif text-[29px] leading-[1.18] font-medium">
+              <div className="mb-3 text-pretty font-serif text-[clamp(18px,4.83vw,29px)] leading-[1.18] font-medium">
                 {headline}
               </div>
               <div className="mb-6 text-[14.5px] leading-[1.55] text-muted">{body}</div>

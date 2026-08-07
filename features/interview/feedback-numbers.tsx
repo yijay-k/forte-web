@@ -10,7 +10,7 @@ export function FeedbackNumbers({ numbers }: { numbers: readonly ScoreDelta[] })
       <CardTitle className="mb-1.5">Your four numbers · this rep</CardTitle>
       <p className="mb-5 text-[13px] text-muted">Out of 100, versus your last rep.</p>
 
-      <div className="grid grid-cols-4 gap-3.5 max-[900px]:grid-cols-2">
+      <div className="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(min(100%,148px),1fr))]">
         {numbers.map((n) => {
           const focus = n.label === "Specificity";
           const logged = n.delta === "logged";
@@ -34,7 +34,7 @@ export function FeedbackNumbers({ numbers }: { numbers: readonly ScoreDelta[] })
               <div className="flex items-baseline gap-1.5">
                 <span
                   className={cn(
-                    "font-serif text-[27px] font-medium",
+                    "font-serif text-[clamp(16.7px,4.5vw,27px)] font-medium",
                     focus ? "text-warn" : "text-ink",
                   )}
                 >

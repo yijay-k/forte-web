@@ -24,7 +24,7 @@ export function ModePicker({ mode, onMode, speakAnswers, onSpeakAnswers }: Props
         would.
       </p>
 
-      <div className="grid grid-cols-2 gap-3.5 max-[820px]:grid-cols-1">
+      <div className="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr))]">
         <ModeCard
           selected={mode === "voice"}
           onSelect={() => onMode("voice")}

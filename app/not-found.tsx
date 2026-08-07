@@ -8,7 +8,7 @@ export default function NotFound() {
         <div className="mb-6 flex justify-center">
           <ForteMark />
         </div>
-        <h1 className="mb-2.5 font-serif text-[32px] leading-tight font-medium">
+        <h1 className="mb-2.5 font-serif text-[clamp(19.8px,5.33vw,32px)] leading-tight font-medium">
           Nothing here to score.
         </h1>
         <p className="mb-7 text-[14.5px] leading-relaxed text-muted">
@@ -16,7 +16,7 @@ export default function NotFound() {
         </p>
         <Link
           href="/cv"
-          className="press inline-block rounded-pill border-hair border-ink bg-accent px-7 py-3.5 text-[14.5px] font-semibold shadow-hard-md hover:shadow-hard-xs"
+          className="press inline-block rounded-pill border-hair border-ink bg-accent px-7 py-3.5 text-[14.5px] font-semibold shadow-hard-md hover:shadow-hard-sm"
         >
           Back to the CV evaluator
         </Link>

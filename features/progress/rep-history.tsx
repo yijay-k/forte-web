@@ -17,7 +17,7 @@ export function RepHistory() {
           tone={entry.accent ? "accent" : "sage"}
           last={i === entries.length - 1}
           trailing={
-            <div className="font-serif text-[19px] font-medium">{entry.score}</div>
+            <div className="font-serif text-[clamp(11.8px,3.17vw,19px)] font-medium">{entry.score}</div>
           }
         />
       ))}

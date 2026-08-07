@@ -12,7 +12,7 @@ type Props = {
 export function CvAnalyzing({ headline, steps, step, percent }: Props) {
   return (
     <div className="rounded-4xl border-hair border-ink bg-ink px-10 py-13 text-on-ink shadow-accent">
-      <div className="mb-2 font-serif text-[32px] leading-[1.15] font-medium">
+      <div className="mb-2 font-serif text-[clamp(19.8px,5.33vw,32px)] leading-[1.15] font-medium">
         {headline}
       </div>
       <div className="mb-7 text-[14.5px] text-on-ink-muted">

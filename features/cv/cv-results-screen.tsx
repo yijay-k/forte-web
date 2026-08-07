@@ -23,7 +23,7 @@ export function CvResultsScreen() {
   const { overall, coverage } = getCvReport();
 
   return (
-    <div className="mx-auto max-w-[940px] px-14 pt-11 pb-21">
+    <div className="mx-auto max-w-[940px] px-[clamp(16px,4.5vw,56px)] pt-[clamp(24px,4.5vw,44px)] pb-21">
       <Chip tone="sage" className="mb-4.5 px-4 py-1.75 text-[12.5px]">
         CV Evaluator
       </Chip>
@@ -31,7 +31,7 @@ export function CvResultsScreen() {
       {authed && (
         <Link
           href="/cv"
-          className="press mb-5.5 inline-flex items-center gap-1.75 rounded-pill border-hair border-ink bg-surface px-4.25 py-2.25 text-[13px] font-semibold shadow-hard-sm hover:shadow-hard-xs"
+          className="press mb-5.5 ml-2 inline-flex items-center gap-1.75 rounded-pill border-hair border-ink bg-surface px-4.25 py-2.25 text-[13px] font-semibold shadow-hard-sm hover:shadow-hard-xs"
         >
           ← All applications
         </Link>

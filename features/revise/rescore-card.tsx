@@ -20,7 +20,7 @@ export function RescoreCard({ allResolved, onRescore }: Props) {
       )}
     >
       <div>
-        <div className="mb-1 font-serif text-[23px] font-medium">
+        <div className="mb-1 font-serif text-[clamp(14.3px,3.83vw,23px)] font-medium">
           {allResolved ? "Re-score with your revisions" : "Resolve all three to re-score"}
         </div>
         <p className="max-w-[460px] text-sm leading-relaxed text-ink-soft">

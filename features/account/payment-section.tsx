@@ -5,7 +5,7 @@ import { useBilling } from "@/features/billing/use-billing";
 import { getReceipts, receiptTotal } from "@/lib/data/account";
 import { SavedCard } from "./saved-card";
 
-const GRID = "grid gap-6.5 [grid-template-columns:minmax(268px,318px)_1fr] items-start mb-11.5 max-[820px]:grid-cols-1";
+const GRID = "grid gap-5.5 [grid-template-columns:repeat(auto-fit,minmax(min(100%,292px),1fr))] items-start mb-11.5";
 
 /** Card on file and receipts. Nothing renews, so there is no subscription UI. */
 export function PaymentSection() {

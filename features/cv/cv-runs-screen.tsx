@@ -8,14 +8,14 @@ export function CvRunsScreen() {
   const runs = getCvRuns();
 
   return (
-    <div className="mx-auto max-w-[940px] px-14 pt-11 pb-21">
+    <div className="mx-auto max-w-[940px] px-[clamp(16px,4.5vw,56px)] pt-[clamp(24px,4.5vw,44px)] pb-21">
       <Chip tone="sage" className="mb-4.5 px-4 py-1.75 text-[12.5px]">
         CV Evaluator
       </Chip>
 
       <div className="mb-6.5 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="mt-0 mb-2 font-serif text-[46px] leading-[1.03] font-medium tracking-[-0.02em]">
+          <h1 className="mt-0 mb-2 font-serif text-[clamp(30px,4.8vw,46px)] leading-[1.03] font-medium tracking-[-0.02em]">
             One CV, scored per <em className="italic">posting</em>.
           </h1>
           <p className="m-0 max-w-[500px] text-[15.5px] leading-relaxed text-muted">
@@ -25,7 +25,7 @@ export function CvRunsScreen() {
         </div>
         <EntitledLink
           href="/cv/new"
-          className="press inline-flex items-center gap-2.25 rounded-pill border-hair border-ink bg-accent px-7 py-3.75 text-[15px] font-semibold shadow-hard-md hover:shadow-hard-xs"
+          className="press inline-flex items-center gap-2.25 rounded-pill border-hair border-ink bg-accent px-7 py-3.75 text-[15px] font-semibold shadow-hard-md hover:shadow-hard-sm"
         >
           + New posting
         </EntitledLink>

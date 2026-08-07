@@ -4,18 +4,23 @@ import { useAuth } from "@/features/auth/use-auth";
 import { READINESS } from "@/lib/data/progress";
 import { SidebarPlanCard } from "./sidebar-plan-card";
 import { SidebarUserMenu } from "./sidebar-user-menu";
+import { useDrawer } from "./drawer";
 
 /** Readiness, entitlements and the account menu — or the unlock CTA when signed out. */
 export function SidebarFooter() {
   const { authed, openWall } = useAuth();
+  const { closeDrawer } = useDrawer();
 
   if (!authed) {
     return (
       <div className="mt-4 flex shrink-0 flex-col gap-3">
         <button
           type="button"
-          onClick={openWall}
-          className="press rounded-pill border-hair border-ink bg-ink px-4.5 py-3.25 text-sm font-semibold text-on-ink shadow-accent-md2 hover:shadow-accent-xs"
+          onClick={() => {
+            closeDrawer();
+            openWall();
+          }}
+          className="press rounded-pill border-hair border-ink bg-ink px-4.5 py-3.25 text-sm font-semibold text-on-ink shadow-accent-md2 hover:shadow-accent-sm"
         >
           Unlock the rest — free
         </button>

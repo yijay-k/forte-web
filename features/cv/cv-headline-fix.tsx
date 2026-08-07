@@ -25,7 +25,7 @@ export function CvHeadlineFix() {
         </Sticker>
 
         {/* The report's h1: the diagnosis is the headline of this page. */}
-        <h1 className="mt-0 mb-5.5 max-w-[660px] text-pretty font-serif text-[32px] leading-[1.18] font-medium">
+        <h1 className="mt-0 mb-5.5 max-w-[660px] text-pretty font-serif text-[clamp(19.8px,5.33vw,32px)] leading-[1.18] font-medium">
           {diagnosis.lead}{" "}
           <em className="text-accent italic">{diagnosis.emphasis1}</em>
           {diagnosis.middle}{" "}

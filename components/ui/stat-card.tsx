@@ -49,7 +49,7 @@ export function StatCard({
       <div className="mb-2 flex items-baseline gap-1.5">
         <span
           className={cn(
-            "font-serif text-[25px] font-medium",
+            "font-serif text-[clamp(15.5px,4.17vw,25px)] font-medium",
             focus ? "text-warn" : "text-ink",
           )}
         >

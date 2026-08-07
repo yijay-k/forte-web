@@ -20,12 +20,13 @@ export function PayModal() {
       onClose={dismissPay}
       label="Buy applications"
       size="wide"
+      scrollLayer
       onCloseButton={dismissPay}
     >
       <div className="mb-3 text-[11.5px] font-extrabold tracking-[0.08em] text-faint uppercase">
         {hasApps ? "Top up" : "You've used your free application"}
       </div>
-      <h2 className="mb-2.5 pr-9 text-pretty font-serif text-[29px] leading-[1.15] font-medium">
+      <h2 className="mb-2.5 pr-9 text-pretty font-serif text-[23px] app:text-[29px] leading-[1.15] font-medium">
         {hasApps ? "Add more applications" : "Get more applications"}
       </h2>
       <p className="mb-2 max-w-[44ch] text-[14.5px] leading-[1.55] text-muted">

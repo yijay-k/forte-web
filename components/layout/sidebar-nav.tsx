@@ -5,6 +5,7 @@ import { cn } from "@/utils/cn";
 import { NAV_ITEMS, type NavItem } from "@/constants/navigation";
 import { useAuth } from "@/features/auth/use-auth";
 import { useClaims } from "@/features/revise/use-claims";
+import { useDrawer } from "./drawer";
 
 const MARK: Record<NavItem["mark"], string> = {
   square: "size-2 rounded-hair bg-current",
@@ -24,8 +25,13 @@ export function SidebarNav() {
   const pathname = usePathname();
   const { authed, openWall } = useAuth();
   const { openCount } = useClaims();
+  const { closeDrawer } = useDrawer();
 
   function go(item: NavItem) {
+    // Opening the wall does not change the URL, so the shell's route-change
+    // close never fires — the drawer has to stand down explicitly.
+    closeDrawer();
+
     if (item.gated && !authed) {
       openWall();
       return;

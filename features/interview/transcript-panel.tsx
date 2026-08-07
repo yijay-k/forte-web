@@ -21,7 +21,7 @@ export function TranscriptPanel({ turns, scrollRef }: Props) {
       </div>
       <div
         ref={scrollRef}
-        className="flex max-h-33 flex-col gap-2.75 overflow-y-auto pr-2"
+        className="scrollbar-none flex max-h-33 flex-col gap-2.75 overflow-y-auto pr-2"
       >
         {turns.map((turn, i) => (
           <TranscriptTurn key={`${turn.who}-${i}`} turn={turn} />

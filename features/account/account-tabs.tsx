@@ -17,7 +17,7 @@ export function AccountTabs() {
   const pathname = usePathname();
 
   return (
-    <nav className="mb-9 flex gap-5.5 border-b-[1.5px] border-ink/16">
+    <nav className="mb-9 flex flex-wrap gap-5.5 border-b-[1.5px] border-ink/16">
       {TABS.map((tab) => {
         const active = pathname === tab.href;
         return (

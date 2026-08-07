@@ -5,7 +5,7 @@ import { SAVED_CARD } from "@/lib/data/account";
 export function SavedCard({ empty }: { empty?: boolean }) {
   if (empty) {
     return (
-      <div className="flex aspect-[1.586] flex-col justify-between overflow-hidden rounded-[20px] border-hair border-dashed border-line px-5.5 py-5 text-[#8a897e]">
+      <div className="flex aspect-[1.586] max-w-[340px] flex-col justify-between overflow-hidden rounded-[clamp(12.4px,3.33vw,20px)] border-hair border-dashed border-line px-5.5 py-5 text-[#8a897e]">
         <div className="flex items-center justify-between gap-3">
           <span className="text-[13px] font-bold text-[#8a897e]">No card saved</span>
           <span className="font-mono text-[10px] tracking-[0.1em] text-[#b3b2a6] uppercase">
@@ -20,8 +20,10 @@ export function SavedCard({ empty }: { empty?: boolean }) {
   }
 
   return (
-    <div>
-      <div className="relative flex aspect-[1.586] flex-col justify-between overflow-hidden rounded-[20px] border-hair border-ink bg-ink px-5.5 py-5 text-on-ink shadow-[6px_6px_0_rgb(22_21_19_/_0.16)]">
+    // Capped: the column is fluid now, and a credit card stretched to 600px
+    // stops reading as a credit card.
+    <div className="max-w-[340px]">
+      <div className="relative flex aspect-[1.586] flex-col justify-between overflow-hidden rounded-[clamp(12.4px,3.33vw,20px)] border-hair border-ink bg-ink px-5.5 py-5 text-on-ink shadow-[6px_6px_0_rgb(22_21_19_/_0.16)]">
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(115%_85%_at_102%_-8%,rgba(23,178,106,0.30),transparent_62%)]"
           aria-hidden="true"

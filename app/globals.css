@@ -8,6 +8,44 @@
 }
 
 @theme inline {
+  /* ---- breakpoints ----------------------------------------------------- */
+  /* The only one. The prototype measures its root with a ResizeObserver and
+     flips a `narrow` flag at 900px; a media query is the same thing without
+     the JS. Mobile-first everywhere: base is narrow, `app:` is wide. */
+  --breakpoint-app: 900px;
+
+  /* ---- the fluid density scale ---------------------------------------- */
+  /* Below 600px the design compresses its large surfaces to 62% — every
+     clamp here is `clamp(v * 0.62, (v / 6)vw, v)`, so the value is full size
+     at a 600px viewport and bottoms out at 372px. Fine detail is deliberately
+     excluded: borders stay 1.5px, radii under 18px and text under 18px stay
+     fixed, because shrinking those reads as blur rather than as density.
+
+     Overriding the numeric spacing steps rather than each call site means all
+     242 padding sites inherit it — and so do the gaps and margins at the same
+     steps, which is what keeps the compression coherent instead of leaving
+     cards tight but their contents still spaced for a desktop. */
+  --spacing-3\.5: clamp(8.7px, 2.33vw, 14px);
+  --spacing-3\.75: clamp(9.3px, 2.5vw, 15px);
+  --spacing-4: clamp(9.9px, 2.67vw, 16px);
+  --spacing-4\.25: clamp(10.5px, 2.83vw, 17px);
+  --spacing-4\.5: clamp(11.2px, 3vw, 18px);
+  --spacing-4\.75: clamp(11.8px, 3.17vw, 19px);
+  --spacing-5: clamp(12.4px, 3.33vw, 20px);
+  --spacing-5\.25: clamp(13px, 3.5vw, 21px);
+  --spacing-5\.5: clamp(13.6px, 3.67vw, 22px);
+  --spacing-6: clamp(14.9px, 4vw, 24px);
+  --spacing-6\.5: clamp(16.1px, 4.33vw, 26px);
+  --spacing-7: clamp(17.4px, 4.67vw, 28px);
+  --spacing-7\.5: clamp(18.6px, 5vw, 30px);
+  --spacing-8: clamp(19.8px, 5.33vw, 32px);
+  --spacing-8\.5: clamp(21.1px, 5.67vw, 34px);
+  --spacing-9: clamp(22.3px, 6vw, 36px);
+  --spacing-10: clamp(24.8px, 6.67vw, 40px);
+  --spacing-18: clamp(44.6px, 12vw, 72px);
+  --spacing-21: clamp(52.1px, 14vw, 84px);
+  --spacing-29: clamp(71.9px, 19.33vw, 116px);
+
   /* ---- ink & paper ---------------------------------------------------- */
   --color-ink: #161513;
   --color-ink-soft: #3a352c;
@@ -54,14 +92,25 @@
      sizes, so the in-between step gets an explicit numeric name. */
   --radius-14: 14px;
   --radius-lg: 16px;
-  --radius-xl: 18px;
-  --radius-2xl: 22px;
-  --radius-3xl: 24px;
-  --radius-4xl: 26px;
-  --radius-5xl: 28px;
+  /* 18px is where a corner stops being a detail and starts being a shape, so
+     it is also where the fluid scale starts. Anything smaller stays fixed. */
+  --radius-xl: clamp(11.2px, 3vw, 18px);
+  --radius-2xl: clamp(13.6px, 3.67vw, 22px);
+  --radius-3xl: clamp(14.9px, 4vw, 24px);
+  --radius-4xl: clamp(16.1px, 4.33vw, 26px);
+  --radius-5xl: clamp(17.4px, 4.67vw, 28px);
+  /* Not scaled. The design's generated pass produced a clamp here too, but a
+     pill is defined by being larger than half its own height — a number, not a
+     size — so it stays a flat 999px. */
   --radius-pill: 999px;
 
   /* ---- the offset-block shadows that define this design language ------- */
+  /* Every interactive tier is a resting/hover *pair* one step apart: hover
+     moves the control 1px and drops the offset 1px, so the block's outer edge
+     never moves. Pick two adjacent names, never two that skip a step. */
+
+  /* primary — ink-bordered controls and every card */
+  --shadow-hard-1: 1px 1px 0 rgb(22 21 19 / 0.9);
   --shadow-hard-xs: 2px 2px 0 rgb(22 21 19 / 0.9);
   --shadow-hard-sm: 3px 3px 0 rgb(22 21 19 / 0.9);
   --shadow-hard-md: 4px 4px 0 rgb(22 21 19 / 0.9);
@@ -69,22 +118,52 @@
   --shadow-hard-lg: 6px 6px 0 rgb(22 21 19 / 0.9);
   --shadow-hard-xl: 9px 9px 0 rgb(22 21 19 / 0.9);
   --shadow-hard-2xl: 10px 10px 0 rgb(22 21 19 / 0.9);
-  --shadow-menu: 0 10px 26px rgb(22 21 19 / 0.16), 0 2px 0 rgb(22 21 19 / 0.9);
+
+  /* secondary — the #cbcabf-bordered tier, where a full-ink block would
+     read as a primary action */
+  --shadow-muted-sm: 3px 3px 0 rgb(22 21 19 / 0.3);
+  --shadow-muted-xs: 2px 2px 0 rgb(22 21 19 / 0.3);
+
+  /* a disabled control keeps its block rather than collapsing flat — the
+     button must not appear to move when it becomes available */
+  --shadow-disabled: 3px 3px 0 rgb(22 21 19 / 0.16);
+
+  /* destructive: the armed "delete" confirm */
+  --shadow-danger-sm: 3px 3px 0 rgb(138 58 42 / 0.55);
+  --shadow-danger-xs: 2px 2px 0 rgb(138 58 42 / 0.55);
+
+  /* soft — resting cards, and the mobile hamburger at the 2/1 end */
   --shadow-soft: 6px 6px 0 rgb(22 21 19 / 0.1);
   --shadow-soft-sm: 5px 5px 0 rgb(22 21 19 / 0.1);
   --shadow-soft-xs: 4px 4px 0 rgb(22 21 19 / 0.1);
+  --shadow-soft-2: 2px 2px 0 rgb(22 21 19 / 0.1);
+  --shadow-soft-1: 1px 1px 0 rgb(22 21 19 / 0.1);
+
+  /* accent — the block is the theme colour, for the one hero CTA per screen */
   --shadow-accent-xs: 2px 2px 0 var(--forte-accent);
-  --shadow-accent-md2: 4px 4px 0 var(--forte-accent);
-  --shadow-drop: 0 3px 0 rgb(22 21 19 / 0.9);
   --shadow-accent-sm: 3px 3px 0 var(--forte-accent);
+  --shadow-accent-md2: 4px 4px 0 var(--forte-accent);
   --shadow-accent-md: 5px 5px 0 var(--forte-accent);
+  --shadow-accent-lg: 6px 6px 0 var(--forte-accent);
   --shadow-accent: 7px 7px 0 var(--forte-accent);
+
   --shadow-amber-sm: 3px 3px 0 #f6a64b;
   --shadow-amber: 6px 6px 0 #f6a64b;
+
+  /* not part of the press system — menus, stickers, the sticky bar */
+  --shadow-menu: 0 10px 26px rgb(22 21 19 / 0.16), 0 2px 0 rgb(22 21 19 / 0.9);
+  --shadow-drop: 0 3px 0 rgb(22 21 19 / 0.9);
   --shadow-lift: 0 2px 10px rgb(22 21 19 / 0.06);
   --shadow-bar: 0 -6px 24px rgb(22 21 19 / 0.18);
 
   /* ---- type ----------------------------------------------------------- */
+  /* Display sizes ride the fluid scale; body sizes (`sm`, `base` and every
+     arbitrary value under 18px) do not — 13px body text compressed to 8px
+     would be the one change that made mobile worse, not better. */
+  --text-lg: clamp(11.2px, 3vw, 18px);
+  --text-xl: clamp(12.4px, 3.33vw, 20px);
+  --text-2xl: clamp(14.9px, 4vw, 24px);
+
   --font-sans: var(--font-hanken), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
   /* dates, amounts, card numbers — anything that should line up in a column */
@@ -117,6 +196,9 @@
 @utility border-t-hair {
   border-top-width: 1.5px;
 }
+@utility border-b-hair {
+  border-bottom-width: 1.5px;
+}
 
 /* Scrolls, but shows no scrollbar. For short panes inside a bordered card,
    where the global 10px track reads as a stray line rather than an affordance. */
@@ -124,25 +206,36 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
   &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
     display: none;
   }
 }
 
-/* The signature press: the card slides into its own shadow on hover.
+/* The signature press: the control slides 1px into its own shadow on hover,
+   and the shadow shrinks by exactly 1px to meet it — so the block's outer
+   edge stays put and only the face moves. Pair this with adjacent shadow
+   tokens (`shadow-hard-sm hover:shadow-hard-xs`), never ones a step apart.
    Colours are listed here too — a separate `transition-colors` utility on the
    same element would replace this whole declaration and kill the movement. */
 @utility press {
   transition:
-    transform 0.14s ease,
-    box-shadow 0.14s ease,
-    background-color 0.14s ease,
-    border-color 0.14s ease,
-    color 0.14s ease;
-  &:hover {
-    transform: translate(2px, 2px);
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+  /* Guarded on purpose. `:hover` sticks after a tap on a touch screen, so an
+     unguarded rule would leave every card and button visibly pressed until you
+     tapped something else. Tailwind wraps its own `hover:` variants this way;
+     a custom utility has to do it itself. */
+  @media (hover: hover) {
+    &:hover {
+      transform: translate(1px, 1px);
+    }
   }
   &:active {
-    transform: translate(3px, 3px);
+    transform: translate(2px, 2px);
   }
 }
 

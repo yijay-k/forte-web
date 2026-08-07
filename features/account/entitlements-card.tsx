@@ -21,13 +21,13 @@ export function EntitlementsCard() {
 
         <Link
           href="/progress"
-          className="press rounded-14 border-hair border-ink bg-surface px-3.5 py-2.5 text-left hover:shadow-[2px_2px_0_rgb(22_21_19_/_0.25)]"
+          className="press rounded-14 border-hair border-ink bg-surface px-3.5 py-2.5 text-left shadow-hard-sm hover:shadow-hard-xs"
         >
           <div className="mb-1 text-[10.5px] font-extrabold tracking-[0.06em] text-faint uppercase">
             Readiness
           </div>
           <div className="flex items-baseline gap-1.75">
-            <span className="font-serif text-[26px] leading-none font-medium">
+            <span className="font-serif text-[clamp(16.1px,4.33vw,26px)] leading-none font-medium">
               {READINESS.score}
             </span>
             <span className="text-[11.5px] font-bold text-good">
@@ -85,7 +85,7 @@ function Counter({
         {label}
       </div>
       <div className="flex items-baseline gap-2">
-        <span className="font-serif text-[38px] leading-none font-medium">{value}</span>
+        <span className="font-serif text-[clamp(23.6px,6.33vw,38px)] leading-none font-medium">{value}</span>
         <span className="text-[12.5px] font-semibold text-ink-soft">{note}</span>
       </div>
     </div>

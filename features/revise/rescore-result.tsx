@@ -9,11 +9,11 @@ export function RescoreResult() {
       <div className="mb-3 text-[11.5px] font-extrabold tracking-[0.08em] text-accent uppercase">
         Rep {CURRENT_REP} closed · rep {CURRENT_REP + 1} open
       </div>
-      <div className="mb-5 font-serif text-[30px] leading-[1.18] font-medium">
+      <div className="mb-5 font-serif text-[clamp(18.6px,5vw,30px)] leading-[1.18] font-medium">
         Specificity 66 → 84. Overall 82 → 91.
       </div>
 
-      <div className="mb-5.5 grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(150px,1fr))]">
+      <div className="mb-5.5 grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))]">
         {RESCORE_DELTAS.map((delta) => (
           <div
             key={delta.label}

@@ -33,7 +33,7 @@ export function CvMarkedUp() {
 
       <article className="rounded-14 border-hair border-ink/16 bg-white px-9 py-8 text-[13.5px] leading-[1.65] text-[#2a2822] shadow-lift">
         <header className="mb-4 border-b-[1.5px] border-ink/14 pb-3.5">
-          <div className="font-serif text-[26px] font-semibold tracking-[-0.01em]">
+          <div className="font-serif text-[clamp(16.1px,4.33vw,26px)] font-semibold tracking-[-0.01em]">
             {markedUp.name}
           </div>
           <div className="mt-0.75 text-[12.5px] text-muted">{markedUp.contact}</div>

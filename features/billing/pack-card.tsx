@@ -16,7 +16,7 @@ export function PackCard({ pack, featured, onBuy }: Props) {
       type="button"
       onClick={onBuy}
       className={cn(
-        "press w-full rounded-xl border-hair bg-surface px-4.75 py-4.25 text-left",
+        "press w-full rounded-xl border-hair bg-surface px-3.5 py-3.25 app:px-4.75 app:py-4.25 text-left",
         featured
           ? "border-ink shadow-accent-md hover:shadow-[4px_4px_0_var(--forte-accent)]"
           : "border-line hover:border-ink hover:shadow-[2px_2px_0_rgb(22_21_19_/_0.35)]",
@@ -36,7 +36,7 @@ export function PackCard({ pack, featured, onBuy }: Props) {
             {pack.unitPrice}
           </div>
         </div>
-        <div className="shrink-0 font-serif text-[27px] leading-none font-medium">
+        <div className="shrink-0 font-serif text-[22px] leading-none app:text-[27px] font-medium">
           {pack.price}
         </div>
         <span
@@ -70,7 +70,7 @@ export function FreeTierCard({
   badge: string;
 }) {
   return (
-    <div className="rounded-xl border-hair border-dashed border-line px-4.75 py-4.25 transition-colors hover:border-faint">
+    <div className="rounded-xl border-hair border-dashed border-line px-3.5 py-3.25 app:px-4.75 app:py-4.25 transition-colors hover:border-faint">
       <div className="mb-3.25 flex items-start gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-baseline gap-2">
@@ -81,7 +81,7 @@ export function FreeTierCard({
           </div>
           <div className="mt-0.75 text-xs font-semibold text-faint">{unitPrice}</div>
         </div>
-        <div className="shrink-0 font-serif text-[27px] leading-none font-medium text-muted">
+        <div className="shrink-0 font-serif text-[22px] leading-none app:text-[27px] font-medium text-muted">
           {price}
         </div>
       </div>
