@@ -1,30 +1,30 @@
 import { cn } from "@/utils/cn";
 
+/**
+ * The "that answer was vague" banner. Rendered by the caller rather than by
+ * QuestionCard, because the two modes place it differently: in video it heads
+ * the caption deck, in voice it sits above the interviewer identity.
+ */
+export function ProbeChip() {
+  return (
+    <div className="self-start rounded-pill border border-amber/50 bg-amber/16 px-3.5 py-1.5 text-xs font-bold text-amber">
+      Follow-up · that answer was vague
+    </div>
+  );
+}
+
 type Props = {
   prompt: string;
   source: string;
   /** Hidden once the follow-up fires — the probe has no separate source. */
   showSource: boolean;
-  showProbeChip: boolean;
   size?: "video" | "voice";
 };
 
 /** The question itself. Serif, large, and the only thing competing for attention. */
-export function QuestionCard({
-  prompt,
-  source,
-  showSource,
-  showProbeChip,
-  size = "video",
-}: Props) {
+export function QuestionCard({ prompt, source, showSource, size = "video" }: Props) {
   return (
     <>
-      {showProbeChip && (
-        <div className="self-start rounded-pill border border-amber/50 bg-amber/16 px-3.5 py-1.5 text-xs font-bold text-amber">
-          Follow-up · that answer was vague
-        </div>
-      )}
-
       <h2
         className={cn(
           "max-w-[900px] text-pretty font-serif font-normal tracking-[-0.015em] text-on-ink",

@@ -20,7 +20,7 @@ export function ClaimEditor({ draft, onDraft, onSave, onSuggest, onCancel }: Pro
         value={draft}
         onChange={(e) => onDraft(e.target.value)}
         aria-label="Your rewrite"
-        className="min-h-24 w-full resize-y rounded-lg border-hair border-ink bg-white px-4 py-3.5 text-sm leading-relaxed outline-none"
+        className="min-h-24 w-full resize-y rounded-14 border-hair border-ink bg-white px-4 py-3.5 text-sm leading-relaxed outline-none"
       />
       <div className="mt-3 flex flex-wrap items-center gap-2.5">
         <PillButton variant="ink" onClick={onSave}>

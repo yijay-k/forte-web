@@ -21,7 +21,7 @@ export function EntitlementsCard() {
 
         <Link
           href="/progress"
-          className="press rounded-lg border-hair border-ink bg-surface px-3.5 py-2.5 text-left hover:shadow-[2px_2px_0_rgb(22_21_19_/_0.25)]"
+          className="press rounded-14 border-hair border-ink bg-surface px-3.5 py-2.5 text-left hover:shadow-[2px_2px_0_rgb(22_21_19_/_0.25)]"
         >
           <div className="mb-1 text-[10.5px] font-extrabold tracking-[0.06em] text-faint uppercase">
             Readiness

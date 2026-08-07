@@ -15,7 +15,7 @@ export function QuickActions() {
         title="Score against a new posting"
         body="Paste a JD, see what you don't cover"
         glyph={
-          <span className="flex size-11.5 shrink-0 items-center justify-center rounded-lg border-hair border-ink bg-sage">
+          <span className="flex size-11.5 shrink-0 items-center justify-center rounded-14 border-hair border-ink bg-sage">
             <span className="h-[19px] w-[15px] rounded-xs border-[2.5px] border-ink" />
           </span>
         }
@@ -26,7 +26,7 @@ export function QuickActions() {
         title="Re-run the same interview"
         body="Same questions, see the delta"
         glyph={
-          <span className="flex size-11.5 shrink-0 items-center justify-center rounded-lg border-hair border-ink bg-surface">
+          <span className="flex size-11.5 shrink-0 items-center justify-center rounded-14 border-hair border-ink bg-surface">
             <span className="size-[17px] rounded-pill border-[3px] border-ink" />
           </span>
         }

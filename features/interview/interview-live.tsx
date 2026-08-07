@@ -5,7 +5,7 @@ import { formatClock } from "@/utils/format-clock";
 import { getInterviewer } from "@/lib/data/interviewers";
 import { TARGET_COMPANY, TARGET_ROLE } from "@/lib/data/job-description";
 import { InterviewStage } from "./interview-stage";
-import { QuestionCard } from "./question-card";
+import { ProbeChip, QuestionCard } from "./question-card";
 import { TranscriptPanel } from "./transcript-panel";
 import { LiveControls } from "./live-controls";
 import { useTranscript } from "./use-transcript";
@@ -31,7 +31,6 @@ export function InterviewLive({ session }: { session: InterviewSession }) {
       prompt={session.prompt}
       source={session.current.src}
       showSource={!session.onProbe}
-      showProbeChip={showProbeChip}
       size={isVideo ? "video" : "voice"}
     />
   );
@@ -74,12 +73,16 @@ export function InterviewLive({ session }: { session: InterviewSession }) {
             onSwap={session.swapView}
             showVisualCue={showVisualCue}
           >
+            {showProbeChip && <ProbeChip />}
             {question}
             <TranscriptPanel turns={turns} scrollRef={scrollRef} />
           </InterviewStage>
         ) : (
           <div className="flex flex-1 items-center justify-center p-4">
             <div className="flex w-full max-w-[840px] flex-col gap-5">
+              {/* Above the interviewer row in voice mode — it banners the
+                  whole exchange, not just the question. */}
+              {showProbeChip && <ProbeChip />}
               <div className="flex items-center gap-3">
                 <span className="flex size-8.5 animate-bob items-center justify-center rounded-pill bg-accent">
                   <span className="size-3 rounded-pill border-[2.5px] border-ink" />

@@ -57,9 +57,10 @@ export function CvResultsScreen() {
           </div>
         </GatedSection>
 
+        {/* Saving returns to the applications list, not a fresh wizard. */}
         {authed && (
           <Link
-            href="/cv/new"
+            href="/cv"
             className="justify-self-start rounded-pill border-hair border-ink px-5.5 py-3 text-sm font-semibold transition-colors hover:bg-sage"
           >
             Save &amp; add another posting →

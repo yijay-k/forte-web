@@ -19,7 +19,7 @@ export function ClaimCard({ claim, index }: { claim: Claim; index: number }) {
     <article
       className={cn(
         "rounded-3xl border-hair border-ink bg-surface px-7 py-6.5",
-        resolved ? "shadow-soft" : "shadow-hard-lg",
+        resolved ? "shadow-soft-xs" : "shadow-hard-lg",
         cut && "opacity-70",
       )}
     >
@@ -68,7 +68,7 @@ export function ClaimCard({ claim, index }: { claim: Claim; index: number }) {
       )}
 
       {claim.status === "rewritten" && (
-        <div className="mt-4.5 rounded-lg border-hair border-good bg-surface px-4 py-3.5">
+        <div className="mt-4.5 rounded-14 border-hair border-good bg-surface px-4 py-3.5">
           <div className="mb-1.5 text-[11px] font-bold tracking-[0.08em] text-good uppercase">
             Now reads
           </div>

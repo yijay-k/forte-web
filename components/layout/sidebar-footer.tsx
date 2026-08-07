@@ -15,7 +15,7 @@ export function SidebarFooter() {
         <button
           type="button"
           onClick={openWall}
-          className="press rounded-pill border-hair border-ink bg-ink px-4.5 py-3.25 text-sm font-semibold text-on-ink shadow-accent-sm hover:shadow-none"
+          className="press rounded-pill border-hair border-ink bg-ink px-4.5 py-3.25 text-sm font-semibold text-on-ink shadow-accent-md2 hover:shadow-accent-xs"
         >
           Unlock the rest — free
         </button>
@@ -25,7 +25,7 @@ export function SidebarFooter() {
 
   return (
     <div className="mt-4 flex shrink-0 flex-col gap-3">
-      <div className="rounded-lg border-hair border-ink bg-accent px-3 py-2.5">
+      <div className="rounded-14 border-hair border-ink bg-accent px-3 py-2.5">
         <div className="flex items-baseline gap-1.75">
           <div className="text-[9.5px] font-extrabold tracking-[0.06em] text-ink-soft uppercase">
             Readiness

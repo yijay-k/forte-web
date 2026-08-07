@@ -52,8 +52,9 @@ export function InterviewSetup({ session }: { session: InterviewSession }) {
               · ~12 min
             </div>
           </div>
+          {/* Back to the saved postings to pick another, not a fresh upload. */}
           <Link
-            href="/cv/new"
+            href="/cv"
             className="rounded-pill border-hair border-ink px-4.75 py-2.5 text-[13px] font-semibold transition-colors hover:bg-sage"
           >
             Change posting

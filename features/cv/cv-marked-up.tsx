@@ -31,7 +31,7 @@ export function CvMarkedUp() {
         </Legend>
       </div>
 
-      <article className="rounded-lg border-hair border-ink/16 bg-white px-9 py-8 text-[13.5px] leading-[1.65] text-[#2a2822] shadow-lift">
+      <article className="rounded-14 border-hair border-ink/16 bg-white px-9 py-8 text-[13.5px] leading-[1.65] text-[#2a2822] shadow-lift">
         <header className="mb-4 border-b-[1.5px] border-ink/14 pb-3.5">
           <div className="font-serif text-[26px] font-semibold tracking-[-0.01em]">
             {markedUp.name}

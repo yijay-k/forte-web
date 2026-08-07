@@ -11,7 +11,7 @@ export function SidebarPlanCard() {
     <button
       type="button"
       onClick={openPay}
-      className="flex w-full items-center gap-2 rounded-lg border-hair border-line bg-surface-sunk px-3 py-2.25 text-left transition-colors hover:border-ink"
+      className="flex w-full items-center gap-2 rounded-14 border-hair border-line bg-surface-sunk px-3 py-2.25 text-left transition-colors hover:border-ink"
     >
       <span className="min-w-0">
         <span className="block text-[10px] font-extrabold tracking-[0.05em] text-[#8a897e] uppercase">

@@ -17,7 +17,7 @@ export function RescoreResult() {
         {RESCORE_DELTAS.map((delta) => (
           <div
             key={delta.label}
-            className="rounded-lg border border-paper/16 bg-paper/6 px-4 py-3.5"
+            className="rounded-14 border border-paper/16 bg-paper/6 px-4 py-3.5"
           >
             <div className="mb-1.5 text-xs font-semibold text-on-ink-faint">
               {delta.label}
