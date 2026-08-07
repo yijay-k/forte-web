@@ -3,6 +3,7 @@
 import { PaperCard } from "@/components/ui/paper-card";
 import { CardTitle } from "@/components/ui/section-heading";
 import { PillButton } from "@/components/ui/pill-button";
+import { IconDocument, IconUpload } from "@/components/ui/icons";
 
 type Props = {
   fileName: string | null;
@@ -19,7 +20,7 @@ export function CvAttachPanel({ fileName, onAttach, onRemove }: Props) {
       {fileName ? (
         <div className="flex items-center gap-3.5 rounded-xl border-hair border-ink bg-surface-sunk px-5 py-4.5">
           <span className="flex size-11 shrink-0 items-center justify-center rounded-md border-hair border-ink bg-accent">
-            <span className="h-[19px] w-[15px] rounded-xs border-[2.5px] border-ink" />
+            <IconDocument size={20} />
           </span>
           <div className="flex-1">
             <div className="text-[14.5px] font-semibold">{fileName}</div>
@@ -34,7 +35,7 @@ export function CvAttachPanel({ fileName, onAttach, onRemove }: Props) {
       ) : (
         <div className="rounded-xl border-2 border-dashed border-[#C4AEF5] bg-surface-sunk px-6 py-10 text-center">
           <div className="mx-auto mb-3.5 flex size-13 items-center justify-center rounded-lg border-hair border-ink bg-accent">
-            <span className="h-5 w-4 rounded-xs border-[2.5px] border-ink" />
+            <IconUpload size={24} />
           </div>
           <div className="mb-1 text-[15.5px] font-semibold">
             Drop your CV here, or browse

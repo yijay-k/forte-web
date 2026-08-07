@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import { Modal } from "@/components/ui/modal";
+import { GoogleMark, LinkedInMark } from "@/components/brand/provider-marks";
 import { useAuth } from "./use-auth";
 
 /** The signup modal. Every path through it unlocks — there is no backend yet. */
@@ -28,16 +29,10 @@ export function UnlockWall() {
       </p>
 
       <div className="mb-5 flex flex-col gap-2.75">
-        <SocialButton
-          onClick={unlock}
-          glyph={<span className="size-5 shrink-0 rounded-pill border-[2.5px] border-ink" />}
-        >
+        <SocialButton onClick={unlock} glyph={<GoogleMark />}>
           Continue with Google
         </SocialButton>
-        <SocialButton
-          onClick={unlock}
-          glyph={<span className="size-5 shrink-0 rounded-[5px] bg-ink" />}
-        >
+        <SocialButton onClick={unlock} glyph={<LinkedInMark />}>
           Continue with LinkedIn
         </SocialButton>
       </div>

@@ -2,8 +2,10 @@
 export type NavItem = {
   readonly href: string;
   readonly label: string;
-  /** Which glyph `SidebarNav` draws — each nav item has a distinct mark. */
-  readonly mark: "square" | "circle" | "ring" | "diamond" | "bar";
+  /** Which glyph `SidebarNav` draws. A key, not a component — this file is
+   *  data, and importing JSX here would make every consumer of the route table
+   *  pull in the icon set. */
+  readonly icon: "document" | "home" | "mic" | "pencil" | "trend";
   readonly gated: boolean;
   /** Marks this item active for any URL beneath it, not just an exact match. */
   readonly matchPrefix?: boolean;
@@ -25,11 +27,11 @@ export const GATED_ROUTE_PREFIXES: readonly string[] = [
 ];
 
 export const NAV_ITEMS: readonly NavItem[] = [
-  { href: "/cv", label: "CV Evaluator", mark: "square", gated: false, matchPrefix: true },
-  { href: "/", label: "Home", mark: "circle", gated: true },
-  { href: "/interview", label: "Mock Interview", mark: "ring", gated: true },
-  { href: "/revise", label: "Revise", mark: "diamond", gated: true },
-  { href: "/progress", label: "Progress", mark: "bar", gated: true },
+  { href: "/cv", label: "CV Evaluator", icon: "document", gated: false, matchPrefix: true },
+  { href: "/", label: "Home", icon: "home", gated: true },
+  { href: "/interview", label: "Mock Interview", icon: "mic", gated: true },
+  { href: "/revise", label: "Revise", icon: "pencil", gated: true },
+  { href: "/progress", label: "Progress", icon: "trend", gated: true },
 ];
 
 /** The four-step rail across the top of the flow. Order matters. */

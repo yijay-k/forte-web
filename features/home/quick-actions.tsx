@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { IconDocument, IconLoop } from "@/components/ui/icons";
 import { cn } from "@/utils/cn";
 import { EntitledLink } from "@/features/billing/entitled-link";
 
@@ -16,7 +17,7 @@ export function QuickActions() {
         body="Paste a JD, see what you don't cover"
         glyph={
           <span className="flex size-11.5 shrink-0 items-center justify-center rounded-14 border-hair border-ink bg-sage">
-            <span className="h-[19px] w-[15px] rounded-xs border-[2.5px] border-ink" />
+            <IconDocument size={21} />
           </span>
         }
       />
@@ -27,7 +28,7 @@ export function QuickActions() {
         body="Same questions, see the delta"
         glyph={
           <span className="flex size-11.5 shrink-0 items-center justify-center rounded-14 border-hair border-ink bg-surface">
-            <span className="size-[17px] rounded-pill border-[3px] border-ink" />
+            <IconLoop size={21} />
           </span>
         }
       />

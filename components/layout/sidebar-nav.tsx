@@ -1,18 +1,27 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
+import type { ComponentType } from "react";
+import {
+  IconDocument,
+  IconHome,
+  IconMic,
+  IconPencil,
+  IconTrend,
+  IconLock,
+} from "@/components/ui/icons";
 import { cn } from "@/utils/cn";
 import { NAV_ITEMS, type NavItem } from "@/constants/navigation";
 import { useAuth } from "@/features/auth/use-auth";
 import { useClaims } from "@/features/revise/use-claims";
 import { useDrawer } from "./drawer";
 
-const MARK: Record<NavItem["mark"], string> = {
-  square: "size-2 rounded-hair bg-current",
-  circle: "size-2 rounded-pill bg-current",
-  ring: "size-2 rounded-pill border-2 border-current",
-  diamond: "size-2 rotate-45 rounded-[1px] bg-current",
-  bar: "h-0.5 w-2.25 bg-current",
+const ICON: Record<NavItem["icon"], ComponentType<{ size?: number }>> = {
+  document: IconDocument,
+  home: IconHome,
+  mic: IconMic,
+  pencil: IconPencil,
+  trend: IconTrend,
 };
 
 /**
@@ -52,9 +61,10 @@ export function SidebarNav() {
           ? pathname === item.href || pathname.startsWith(`${item.href}/`)
           : pathname === item.href;
         const badge = item.href === "/revise" && authed && openCount > 0;
-        // Revise carries the open-claim badge instead of a pip — the prototype
-        // never draws a lock on that row.
+        // Revise carries the open-claim badge instead of a lock — the prototype
+        // never draws one on that row.
         const locked = item.gated && !authed && item.href !== "/revise";
+        const NavIcon = ICON[item.icon];
 
         return (
           <button
@@ -69,11 +79,11 @@ export function SidebarNav() {
                 : "border-transparent font-medium text-ink hover:bg-ink/4",
             )}
           >
-            <span className={MARK[item.mark]} aria-hidden="true" />
+            <NavIcon size={18} />
             {item.label}
             {locked && (
-              <span className="ml-auto text-[10px] opacity-50" aria-label="locked">
-                🔒
+              <span className="ml-auto text-faint" aria-label="locked">
+                <IconLock size={13} />
               </span>
             )}
             {badge && (
