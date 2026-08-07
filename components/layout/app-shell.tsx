@@ -134,10 +134,16 @@ export function AppShell({ children }: { children: ReactNode }) {
                 )}
               />
 
+              {/* The app's one scrolling element, and its scrollbar is hidden:
+                  a 10px track running the full height of every screen is a
+                  permanent vertical line down a layout whose only other lines
+                  are deliberate. Scrolling itself is untouched — wheel, trackpad,
+                  touch, and keyboard all still work, and the page never traps a
+                  scroll it cannot show. */}
               <main
                 ref={mainRef}
                 data-scroll-container
-                className="relative h-full min-w-0 flex-1 overflow-y-auto"
+                className="scrollbar-none relative h-full min-w-0 flex-1 overflow-y-auto"
               >
                 <MobileTopBar />
                 {!stepperHidden && !redirecting && <FlowStepper />}
