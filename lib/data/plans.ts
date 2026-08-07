@@ -9,8 +9,9 @@ const PACKS: readonly Pack[] = [
   {
     id: "full",
     name: "12 applications",
-    price: "$19",
-    unitPrice: "$1.58 an application",
+    price: "$15",
+    localPrice: "(RM59)",
+    unitPrice: "$1.25 an application",
     apps: 12,
     sessions: 15,
     badge: "Best value",
@@ -24,8 +25,9 @@ const PACKS: readonly Pack[] = [
   {
     id: "starter",
     name: "3 applications",
-    price: "$9",
-    unitPrice: "$3 an application",
+    price: "$7",
+    localPrice: "(RM29)",
+    unitPrice: "$2.33 an application",
     apps: 3,
     sessions: 3,
     features: [

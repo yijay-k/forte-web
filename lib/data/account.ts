@@ -78,13 +78,13 @@ const ALL_RECEIPTS: readonly Receipt[] = [
     id: "r1",
     what: "12 applications + 15 coaching sessions",
     date: "24 Jul 2026",
-    amount: "$19.00",
+    amount: "$15.00",
   },
   {
     id: "r2",
     what: "3 applications + 3 coaching sessions",
     date: "11 Jul 2026",
-    amount: "$9.00",
+    amount: "$7.00",
   },
 ];
 

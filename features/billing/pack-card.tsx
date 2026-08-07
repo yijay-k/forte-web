@@ -36,8 +36,17 @@ export function PackCard({ pack, featured, onBuy }: Props) {
             {pack.unitPrice}
           </div>
         </div>
-        <div className="shrink-0 font-serif text-[22px] leading-none app:text-[27px] font-medium">
-          {pack.price}
+        {/* Right-aligned so the two packs' prices stack against a common edge
+            whether or not a local amount sits under them. */}
+        <div className="shrink-0 text-right">
+          <div className="font-serif text-[22px] leading-none app:text-[27px] font-medium">
+            {pack.price}
+          </div>
+          {pack.localPrice && (
+            <div className="mt-1 text-[11.5px] font-semibold text-faint">
+              {pack.localPrice}
+            </div>
+          )}
         </div>
         <span
           className={cn(

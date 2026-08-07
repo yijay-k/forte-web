@@ -17,6 +17,12 @@ export type Pack = {
   readonly id: Exclude<PlanId, "free">;
   readonly name: string;
   readonly price: string;
+  /**
+   * The same amount in the buyer's local currency, shown under the price.
+   * Presentational only — checkout still charges `price`. Optional because the
+   * free tier has no amount to convert.
+   */
+  readonly localPrice?: string;
   readonly unitPrice: string;
   readonly apps: number;
   readonly sessions: number;
