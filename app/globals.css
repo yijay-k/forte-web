@@ -118,6 +118,16 @@
   border-top-width: 1.5px;
 }
 
+/* Scrolls, but shows no scrollbar. For short panes inside a bordered card,
+   where the global 10px track reads as a stray line rather than an affordance. */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* The signature press: the card slides into its own shadow on hover.
    Colours are listed here too — a separate `transition-colors` utility on the
    same element would replace this whole declaration and kill the movement. */
