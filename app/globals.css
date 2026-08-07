@@ -5,6 +5,13 @@
    Everything else below is fixed. */
 :root {
   --forte-accent: #dccdfb;
+
+  /* The app's overall density, as a single knob. The design's pixel values are
+     drawn for a viewport that reads about 10% larger than this one, so at 100%
+     browser zoom everything sat oversized and you had to zoom to 90% to read it
+     comfortably. This makes that 90% the default. Set it to 1 to get the
+     design's literal sizes back. */
+  --app-zoom: 0.9;
 }
 
 @theme inline {
@@ -193,6 +200,30 @@
     #cbcabf 0 5px,
     transparent 5px 10px
   );
+}
+
+/**
+ * The shell's own box, carrying the density scale.
+ *
+ * `zoom` rather than `transform: scale()`. Zoom participates in layout, so
+ * percentage widths re-resolve against the scaled box and `w-full` still fills
+ * the window with no compensation; a transform would need a 111% width, would
+ * make the shell the containing block for every fixed and sticky descendant,
+ * and would scale a rasterised layer rather than laying out at the real size.
+ *
+ * `dvh` is the one thing zoom cannot re-resolve — it is absolute, not relative
+ * to the parent — so the height is divided back out. Without that the shell
+ * stops 10% short of the bottom of the window.
+ *
+ * Guarded, because a browser without `zoom` would apply the 111% height and
+ * nothing else, leaving the layout overflowing by a tenth of the viewport.
+ */
+@utility app-frame {
+  height: 100dvh;
+  @supports (zoom: 1) {
+    zoom: var(--app-zoom);
+    height: calc(100dvh / var(--app-zoom));
+  }
 }
 
 /* Every border in this design is 1.5px. Not 1, not 2. */

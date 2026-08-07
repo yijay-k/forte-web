@@ -116,7 +116,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               of the layout. */}
             <div
               ref={setFrameEl}
-              className="relative flex h-dvh w-full overflow-hidden bg-paper text-ink"
+              className="app-frame relative flex w-full overflow-hidden bg-paper text-ink"
             >
               <Sidebar />
 
