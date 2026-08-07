@@ -18,7 +18,7 @@ export function MobileTopBar() {
   const { open, openDrawer } = useDrawer();
 
   return (
-    <div className="sticky top-0 z-40 flex items-center gap-2.25 border-b-hair border-ink bg-paper/96 px-3.5 py-2.75 backdrop-blur-[10px] app:hidden">
+    <div className="sticky top-0 z-40 flex items-center gap-2.25 border-b-hair border-ink bg-paper/96 px-[14px] py-[11px] backdrop-blur-[10px] app:hidden">
       <button
         type="button"
         onClick={openDrawer}
@@ -44,7 +44,7 @@ export function MobileTopBar() {
           <span className="font-mono text-[9px] font-bold tracking-[0.1em] uppercase opacity-62">
             Ready
           </span>
-          <span className="font-serif text-lg leading-none font-medium tabular-nums">
+          <span className="font-serif text-[18px] leading-none font-medium tabular-nums">
             {READINESS.score}
           </span>
         </span>

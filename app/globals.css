@@ -24,7 +24,13 @@
      Overriding the numeric spacing steps rather than each call site means all
      242 padding sites inherit it — and so do the gaps and margins at the same
      steps, which is what keeps the compression coherent instead of leaving
-     cards tight but their contents still spaced for a desktop. */
+     cards tight but their contents still spaced for a desktop.
+
+     ONE RULE COMES WITH THAT. A value that only ever renders below 900px — the
+     mobile top bar, or the base half of a `foo app:foo` pair — is *already* the
+     mobile value, and running it through this scale compresses it twice. Those
+     sites use flat `px-[14px]`-style values on purpose; do not "tidy" them back
+     onto the spacing scale. */
   --spacing-3\.5: clamp(8.7px, 2.33vw, 14px);
   --spacing-3\.75: clamp(9.3px, 2.5vw, 15px);
   --spacing-4: clamp(9.9px, 2.67vw, 16px);

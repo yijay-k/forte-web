@@ -15,7 +15,7 @@ const SIZE = {
     bars: "h-[19px] gap-[3px]",
     heights: ["h-[9px]", "h-[18px]", "h-[13px]"],
     width: "w-[3.5px]",
-    word: "text-[clamp(13px,3.5vw,21px)]",
+    word: "text-[21px]",
   },
   md: {
     row: "gap-2.75",

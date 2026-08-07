@@ -31,11 +31,11 @@ const SIZE = {
 
 /** Narrow → wide. Both panels ramp the same block; only padding differs. */
 const PANEL_SHELL =
-  "animate-rise rounded-[clamp(12.4px,3.33vw,20px)] border-hair border-ink bg-paper shadow-hard outline-none app:rounded-5xl app:shadow-hard-2xl";
+  "animate-rise rounded-[20px] border-hair border-ink bg-paper shadow-hard outline-none app:rounded-5xl app:shadow-hard-2xl";
 
 const PANEL_PADDING = {
-  default: "px-5 py-6 app:p-9",
-  wide: "px-4 py-5.5 app:p-[34px]",
+  default: "px-[20px] py-[24px] app:p-9",
+  wide: "px-[16px] py-[22px] app:p-[34px]",
 };
 
 /**
@@ -158,7 +158,7 @@ export function Modal({
         // of a panel taller than the layer, putting the ✕ out of reach.
         <div
           onClick={onLayerClick}
-          className="absolute inset-0 z-1 flex items-center-safe justify-center overflow-x-hidden overflow-y-auto px-2.5 pt-2.5 pb-5 scrollbar-none app:px-7 app:pt-7 app:pb-[42px]"
+          className="absolute inset-0 z-1 flex items-center-safe justify-center overflow-x-hidden overflow-y-auto px-2.5 pt-2.5 pb-[20px] scrollbar-none app:px-7 app:pt-7 app:pb-[42px]"
         >
           {panel}
         </div>

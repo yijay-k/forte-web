@@ -25,10 +25,10 @@ export function InterviewStage({
   const bigIsAi = view === "ai";
 
   return (
-    <div className="relative flex min-h-65 flex-1 flex-col overflow-hidden rounded-[clamp(11.2px,3vw,18px)] border border-paper/16 bg-[repeating-linear-gradient(135deg,#242320_0_11px,#1e1d1a_11px_22px)] app:min-h-85 app:rounded-4xl">
+    <div className="relative flex min-h-65 flex-1 flex-col overflow-hidden rounded-[18px] border border-paper/16 bg-[repeating-linear-gradient(135deg,#242320_0_11px,#1e1d1a_11px_22px)] app:min-h-85 app:rounded-4xl">
       {/* The top padding is what holds the orb clear of the picture-in-picture;
           both shrink together below 900px or they collide. */}
-      <div className="flex min-h-24 flex-1 flex-col items-center justify-center gap-2.5 px-3.5 pt-14.5 pb-2.5 app:min-h-37.5 app:gap-3.5 app:px-6 app:pt-29 app:pb-3.5">
+      <div className="flex min-h-24 flex-1 flex-col items-center justify-center gap-2.5 px-[14px] pt-14.5 pb-2.5 app:min-h-37.5 app:gap-3.5 app:px-6 app:pt-29 app:pb-3.5">
         {bigIsAi ? (
           <>
             <div className="flex size-28 animate-bob items-center justify-center rounded-pill bg-accent">
@@ -87,7 +87,7 @@ export function InterviewStage({
         watching
       </div>
 
-      <div className="flex shrink-0 flex-col gap-2.5 bg-gradient-to-t from-[rgba(16,15,14,0.97)] via-[rgba(16,15,14,0.9)] to-[rgba(16,15,14,0.55)] px-4 pt-5 pb-4.5 app:gap-3.25 app:px-11 app:pt-7.5 app:pb-8">
+      <div className="flex shrink-0 flex-col gap-2.5 bg-gradient-to-t from-[rgba(16,15,14,0.97)] via-[rgba(16,15,14,0.9)] to-[rgba(16,15,14,0.55)] px-[16px] pt-[20px] pb-[18px] app:gap-3.25 app:px-11 app:pt-7.5 app:pb-8">
         {children}
 
         {showVisualCue && (

@@ -16,7 +16,7 @@ export function PackCard({ pack, featured, onBuy }: Props) {
       type="button"
       onClick={onBuy}
       className={cn(
-        "press w-full rounded-xl border-hair bg-surface px-3.5 py-3.25 app:px-4.75 app:py-4.25 text-left",
+        "press w-full rounded-xl border-hair bg-surface px-[14px] py-[13px] app:px-4.75 app:py-4.25 text-left",
         featured
           ? "border-ink shadow-accent-md hover:shadow-[4px_4px_0_var(--forte-accent)]"
           : "border-line hover:border-ink hover:shadow-[2px_2px_0_rgb(22_21_19_/_0.35)]",
